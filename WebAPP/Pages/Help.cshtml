@@ -1,0 +1,84 @@
+﻿@page
+@model HelpModel
+@{
+    ViewData["Title"] = "Centro de Ayuda";
+}
+
+<div class="help-container">
+    <h1 class="help-title">Help Center</h1>
+    <div class="help-box">
+        <div class="help-tabs">
+            <div class="help-tab">⚙️ General</div>
+            <div class="help-tab">💰 Billing</div>
+            <div class="help-tab">🔧 Instruments</div>
+        </div>
+        <div class="help-content">
+            <h2>Quick Answers</h2>
+            <ul>
+                <li>Answer 1</li>
+                <li>Answer 2</li>
+                <li>Answer 3</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- **Estilos CSS Mejorados** -->
+<style>
+    .help-container {
+        background: black;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .help-title {
+        font-size: 50px;
+        color: white;
+        margin-bottom: 40px;
+    }
+
+    .help-box {
+        background: black;
+        width: 90%; /* Más ancho */
+        height: 50vh; /* Más alto */
+        padding: 50px;
+        border-radius: 15px;
+        box-shadow: 0px 6px 12px rgba(255, 255, 255, 0.2);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .help-tabs {
+        display: flex;
+        justify-content: space-evenly;
+        padding: 20px 0;
+        gap: 25px;
+    }
+
+    .help-tab {
+        font-size: 24px;
+        padding: 20px 30px;
+        background: #00D395;
+        border-radius: 12px;
+        color: black;
+        font-weight: bold;
+        text-align: center;
+        flex: 1;
+    }
+
+    .help-content {
+        margin-top: 30px;
+        font-size: 24px;
+    }
+
+        .help-content ul {
+            list-style-type: disc;
+            padding-left: 25px;
+        }
+</style>

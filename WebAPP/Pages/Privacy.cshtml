@@ -1,0 +1,56 @@
+﻿@page
+@model PrivacyModel
+@{
+    ViewData["Title"] = "Privacidad, Términos y Condiciones";
+}
+
+<div class="privacy-container d-flex flex-column justify-content-center align-items-center text-center">
+    <h1 class="privacy-title">Privacidad, Términos y Condiciones</h1>
+    <p class="privacy-text">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus euismod felis sed purus gravida, vel suscipit odio gravida.
+        Integer dapibus libero nec lorem gravida, vel posuere ex malesuada. Donec aliquam, felis at facilisis elementum,
+        odio lorem fermentum libero, vel pharetra metus purus ut neque.
+    </p>
+    <a href="#" class="btn-read-more">Leer más</a>
+</div>
+
+<style>
+    .privacy-container {
+        flex-grow: 1;
+        text-align: center;
+        padding: 50px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .privacy-title {
+        font-size: 32px;
+        color: white;
+        margin-bottom: 20px;
+    }
+
+    .privacy-text {
+        font-size: 18px;
+        color: white;
+        width: 60%;
+        margin-bottom: 30px;
+        line-height: 1.6;
+    }
+
+    .btn-read-more {
+        display: inline-block;
+        background: #00D395;
+        color: black;
+        padding: 10px 20px;
+        border-radius: 20px;
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+        .btn-read-more:hover {
+            background: #00FFB4;
+        }
+</style>

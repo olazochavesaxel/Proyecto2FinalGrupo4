@@ -1,0 +1,109 @@
+﻿@page
+@model ContactModel
+@{
+    ViewData["Title"] = "Contacto";
+}
+
+<div class="contact-container">
+    <!-- Sección Izquierda (Formulario) -->
+    <div class="contact-form">
+        <h1 class="contact-title">Contáctanos</h1>
+        <form>
+            <div class="form-group">
+                <label for="email">Correo Electrónico</label>
+                <input type="email" id="email" class="form-control" placeholder="Tu correo electrónico">
+            </div>
+            <div class="form-group">
+                <label for="message">Mensaje</label>
+                <textarea id="message" class="form-control" placeholder="Escribe tu mensaje aquí..."></textarea>
+            </div>
+            <button type="submit" class="btn-submit">Enviar</button>
+        </form>
+    </div>
+
+    <!-- Sección Derecha (Información de Contacto) -->
+    <div class="contact-info">
+        <h2 class="contact-subtitle">Llámanos a nuestra línea telefónica</h2>
+        <p class="contact-details">📞 +506 88889999</p>
+
+        <h2 class="contact-subtitle">Escríbenos en nuestras redes sociales</h2>
+        <p class="contact-details">📱 FinancialWebApp</p>
+    </div>
+</div>
+
+<!-- ESTILOS CSS -->
+<style>
+    .contact-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 50px;
+        height: 100vh;
+        background: black;
+        color: white;
+    }
+
+    /* ---- Formulario (Sección Izquierda) ---- */
+    .contact-form {
+        width: 50%;
+        padding: 20px;
+    }
+
+    .contact-title {
+        font-size: 32px;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        border-radius: 5px;
+        border: none;
+        font-size: 16px;
+        color: black;
+    }
+
+    /* Caja de mensaje más grande */
+    #message {
+        height: 150px;
+    }
+
+    /* Botón de Enviar */
+    .btn-submit {
+        background: #00D395;
+        color: black;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+    }
+
+    /* ---- Información de Contacto (Sección Derecha) ---- */
+    .contact-info {
+        width: 40%;
+        padding: 20px;
+        text-align: left;
+    }
+
+    .contact-subtitle {
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .contact-details {
+        font-size: 20px;
+        margin-bottom: 20px;
+        color: #8F5AF5;
+    }
+</style>
