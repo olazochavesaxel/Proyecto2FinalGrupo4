@@ -123,10 +123,26 @@ namespace DataAccess.CRUDs
             return default(T);
         }
 
-        public T RetrieveByCedula<T>(string Cedula)
+        public T RetrieveByCedula<T>(int Cedula)
         {
             var sqlOperation = new SqlOperation() { ProcedureName = "RETRIEVE_USER_BY_CEDULA" };
-            sqlOperation.AddStringParameter("P_CEDULA", Cedula);
+            sqlOperation.AddIntParameter("P_CEDULA", Cedula);
+            var lstResults = _sqlDAO.ExecuteQueryProcedure(sqlOperation);
+
+            if (lstResults.Count > 0)
+            {
+                var row = lstResults[0];
+                var user = BuildUser(row);
+                return (T)Convert.ChangeType(user, typeof(T));
+            }
+
+            return default(T);
+        }
+
+        public T RetrieveByCorreo<T>(string Cedula)
+        {
+            var sqlOperation = new SqlOperation() { ProcedureName = "RETRIEVE_USER_BY_CORREO" };
+            sqlOperation.AddStringParameter("P_CORREO", Cedula);
             var lstResults = _sqlDAO.ExecuteQueryProcedure(sqlOperation);
 
             if (lstResults.Count > 0)
