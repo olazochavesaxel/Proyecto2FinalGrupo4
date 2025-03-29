@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -185,32 +185,6 @@ namespace DataAccess.CRUDs
         }
 
 
-        // Convierte un diccionario en un DTO Usuario
-
-        /*
-        private Admin BuildUser(Dictionary<string, object> row)
-        {
-            var newUser = new Admin()
-            {
-                Id = (int)row["id"],
-                Cedula = (string)row["Cedula"],
-                Nombre = (string)row["Nombre"],
-                PrimerApellido = (string)row["PrimerApellido"],
-                SegundoApellido = (string)row["SegundoApellido"],
-                Direccion = (string)row["Direccion"],
-                FotoPerfil = (string)row["FotoPerfil"],
-                Contrasenna = (string)row["Contrasenna"],
-                Telefono = (string)row["Telefono"],
-                Estado = (string)row["Estado"],
-                Rol = (string)row["Rol"],
-                FechaNacimiento = (DateTime)row["FechaNacimiento"],
-                FechaExpiracionOTP = (DateTime)row["FechaExpiracionOTP"],
-                Created = (DateTime)row["FechaCreacion"],
-                Correo = (string)row["Correo"],
-            };
-
-            return newUser;
-        }
-        */
+      
     }
 }
