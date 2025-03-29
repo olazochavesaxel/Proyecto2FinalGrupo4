@@ -10,7 +10,6 @@ namespace DTO
     {
         public string Tipo { get; set; }
         public string Nombre { get; set; }
-
         public double Porcentaje { get; set; }
         public decimal Tarifa1 { get; set; }
         public decimal Tarifa2 { get; set; }
