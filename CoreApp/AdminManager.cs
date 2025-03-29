@@ -30,6 +30,7 @@ namespace CoreApp
             }
         }
 
+
         public void Update(Admin usuario)
         {
             if (IsOver18(usuario))

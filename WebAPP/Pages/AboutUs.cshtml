@@ -1,0 +1,105 @@
+﻿@page
+@{
+    ViewData["Title"] = "Meet the team!";
+}
+
+<div class="about-container">
+    <h1 class="about-title">Conoce el team !</h1>
+
+    <div class="team-members">
+        <div class="member">
+            <img src="~/img/Melina.jpeg" alt="Melina">
+            <h2>Melina Soto</h2>
+            <p>Quality Assurance</p>
+        </div>
+
+        <div class="member">
+            <img src="~/img/Gabriel.jpeg" alt="Gabriel">
+            <h2>Gabriel Barquero</h2>
+            <p>Back-end Developer</p>
+        </div>
+
+        <div class="member">
+            <img src="~/img/Daniela.jpeg" alt="Daniela">
+            <h2>Daniela Morales</h2>
+            <p>Front-end Developer & Scrum Master</p>
+        </div>
+
+        <div class="member">
+            <img src="~/img/Axel.jpeg" alt="Axel">
+            <h2>Axel Chaves</h2>
+            <p>Full-stack developer</p>
+        </div>
+    </div>
+</div>
+
+
+<!-- ESTILOS CSS -->
+<style>
+    /* Fondo general */
+    body {
+        background-color: #000;
+        color: white;
+        font-family: Arial, sans-serif;
+    }
+
+    /* Contenedor principal */
+    .about-container {
+        text-align: center;
+        padding: 50px;
+    }
+
+    /* Título */
+    .about-title {
+        font-size: 36px;
+        color: white;
+        margin-bottom: 30px;
+    }
+
+    /* Contenedor del equipo */
+    .team-members {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+
+    /* Cada miembro del equipo */
+    .member {
+        background: #111;
+        padding: 20px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0px 4px 10px #8F5AF5;
+        width: 250px;
+        transition: transform 0.3s;
+        border: 2px solid #8F5AF5;
+        box-shadow: 0 0 10px #8F5AF5;
+    }
+
+        /* Animación hover */
+        .member:hover {
+            transform: scale(1.05);
+        }
+
+        /* Imágenes redondas */
+        .member img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid #8F5AF5;
+        }
+
+        /* Nombre del miembro */
+        .member h2 {
+            font-size: 20px;
+            margin: 10px 0;
+            color: #00ffcc;
+        }
+
+        /* Descripción */
+        .member p {
+            font-size: 16px;
+            color: #bbb;
+        }
+</style>

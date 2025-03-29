@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace WebAPP.Pages
 {
-    public class UserProfileModel : PageModel
+    public class UserManagementModel : PageModel
     {
         public void OnGet()
         {

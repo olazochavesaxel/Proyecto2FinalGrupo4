@@ -37,7 +37,7 @@ namespace DataAccess.CRUDs
             sqlOperation.AddDateTimeParameter("P_FECHA_NACIMIENTO", asesor.FechaNacimiento);
             sqlOperation.AddDateTimeParameter("P_FECHA_EXPIRACION_OTP", asesor.FechaExpiracionOTP);
             sqlOperation.AddStringParameter("P_CORREO", asesor.Correo);
-            sqlOperation.AddDoubleParameter("P_INGRESO_COMISIONES", asesor.IngresoComisiones);  // Balance financiero
+            sqlOperation.AddDoubleParameter("P_INGRESO_COMISIONES", asesor.IngresoComisiones);
 
             // Ejecutar procedimiento en el DAO
             _sqlDAO.ExecuteProcedure(sqlOperation);
