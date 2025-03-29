@@ -85,7 +85,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var listResults = _userManager.RetrieveByCedula(correo);
+                var listResults = _userManager.RetrieveByCorreo(correo);
                 return Ok(listResults);
             }
             catch (Exception ex)
