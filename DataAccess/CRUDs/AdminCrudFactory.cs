@@ -71,7 +71,6 @@ namespace DataAccess.CRUDs
             _sqlDAO.ExecuteProcedure(sqlOperation);
         }
 
-
         public override void Delete(BaseDTO dto)
         {
             // Convertir DTO en Usuario
@@ -86,6 +85,7 @@ namespace DataAccess.CRUDs
             // Ejecutar procedimiento en el DAO
             _sqlDAO.ExecuteProcedure(sqlOperation);
         }
+        
         public override T Retrieve<T>()
         {
             throw new NotImplementedException();
@@ -126,6 +126,7 @@ namespace DataAccess.CRUDs
         }
 
 
+
         public T RetrieveByCedula<T>(string Cedula)
         {
             var sqlOperation = new SqlOperation() { ProcedureName = "RETRIEVE_ADMIN_BY_CEDULA" };
@@ -142,6 +143,7 @@ namespace DataAccess.CRUDs
 
             return default(T);
         }
+
 
         public T RetrieveByCorreo<T>(string Correo)
         {
@@ -163,6 +165,8 @@ namespace DataAccess.CRUDs
         {
             var newUser = new Admin()
             {
+
+
                 // Asignar directamente los valores, sin valor predeterminado
                 Id = (int)row["id"], // Aquí usamos default(int?) para permitir que el valor sea null
                 Cedula = row.ContainsKey("Cedula") && row["Cedula"] != DBNull.Value ? (string)row["Cedula"] : string.Empty,
@@ -179,12 +183,13 @@ namespace DataAccess.CRUDs
                 FechaExpiracionOTP = row.ContainsKey("FechaExpiracionOTP") && row["FechaExpiracionOTP"] != DBNull.Value ? (DateTime)row["FechaExpiracionOTP"] : DateTime.MinValue,
                 Created = row.ContainsKey("FechaCreacion") && row["FechaCreacion"] != DBNull.Value ? (DateTime)row["FechaCreacion"] : DateTime.MinValue,
                 Correo = row.ContainsKey("Correo") && row["Correo"] != DBNull.Value ? (string)row["Correo"] : string.Empty,
+
             };
 
             return newUser;
         }
 
-
       
     }
 }
+
