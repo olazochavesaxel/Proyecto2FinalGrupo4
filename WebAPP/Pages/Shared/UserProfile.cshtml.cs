@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace WebAPP.Pages
+namespace InterfazLogInP2.Pages
 {
     public class UserProfileModel : PageModel
     {
