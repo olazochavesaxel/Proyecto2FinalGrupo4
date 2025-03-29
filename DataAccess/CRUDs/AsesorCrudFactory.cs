@@ -23,7 +23,7 @@ namespace DataAccess.CRUDs
             var sqlOperation = new SqlOperation() { ProcedureName = "CRE_ASESOR_PR" };
 
             // Agregar parámetros al procedimiento almacenado para tblUsuario
-           
+
             sqlOperation.AddStringParameter("P_CEDULA", asesor.Cedula);
             sqlOperation.AddStringParameter("P_NOMBRE", asesor.Nombre);
             sqlOperation.AddStringParameter("P_PRIMER_APELLIDO", asesor.PrimerApellido);
@@ -37,7 +37,7 @@ namespace DataAccess.CRUDs
             sqlOperation.AddDateTimeParameter("P_FECHA_NACIMIENTO", asesor.FechaNacimiento);
             sqlOperation.AddDateTimeParameter("P_FECHA_EXPIRACION_OTP", asesor.FechaExpiracionOTP);
             sqlOperation.AddStringParameter("P_CORREO", asesor.Correo);
-            sqlOperation.AddDoubleParameter("P_INGRESO_COMISIONES", asesor.IngresoComisiones);  // Balance financiero
+            sqlOperation.AddDoubleParameter("P_INGRESO_COMISIONES", asesor.IngresoComisiones);
 
             // Ejecutar procedimiento en el DAO
             _sqlDAO.ExecuteProcedure(sqlOperation);
