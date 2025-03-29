@@ -17,7 +17,6 @@ namespace WebAPI.Controllers
         }
 
         // POST -> Create
-        
         [HttpPost]
         [Route("Create")]
         public ActionResult Create([FromBody] Admin user)
@@ -68,17 +67,35 @@ namespace WebAPI.Controllers
         // get -> retrieve by User code
 
         [HttpGet]
-        [Route("RetrieveByCorreo")]
-        public ActionResult RetrieveByUserCode(string cedula)
+
+        [Route("RetrieveByCedula")]
+        public ActionResult RetrieveByCedula(string cedula)
         {
             try
             {
-                var listResults = _userManager.RetrieveByCorreo(cedula);
+                var listResults = _userManager.RetrieveByCedula(cedula);
                 return Ok(listResults);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error al recuperar administrador: {ex.Message}");
+                return StatusCode(500, $"Error al recuperar admin: {ex.Message}");
+            }
+        }
+
+        [HttpGet]
+        [Route("RetrieveByCorreo")]
+        public ActionResult RetrieveByCorreo(string correo)
+        {
+            try
+            {
+                var listResults = _userManager.RetrieveByCorreo(correo);
+
+                return Ok(listResults);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al recuperar asesor: {ex.Message}");
+
             }
         }
 
@@ -114,4 +131,6 @@ namespace WebAPI.Controllers
             }
         }
     }
+
 }
+

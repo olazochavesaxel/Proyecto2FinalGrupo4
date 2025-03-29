@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -52,7 +52,6 @@ namespace CoreApp
         {
             return usuarioCrud.RetrieveAll<Admin>();
         }
-
         public Admin RetrieveById(int id)
         {
             return usuarioCrud.RetrieveById<Admin>(id);
@@ -81,3 +80,4 @@ namespace CoreApp
         }
     }
 }
+

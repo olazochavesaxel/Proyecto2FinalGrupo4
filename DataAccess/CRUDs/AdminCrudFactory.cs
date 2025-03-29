@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -85,7 +85,7 @@ namespace DataAccess.CRUDs
             // Ejecutar procedimiento en el DAO
             _sqlDAO.ExecuteProcedure(sqlOperation);
         }
-
+        
         public override T Retrieve<T>()
         {
             throw new NotImplementedException();
@@ -125,10 +125,13 @@ namespace DataAccess.CRUDs
             return default(T);
         }
 
+
+
         public T RetrieveByCedula<T>(string Cedula)
         {
             var sqlOperation = new SqlOperation() { ProcedureName = "RETRIEVE_ADMIN_BY_CEDULA" };
             sqlOperation.AddStringParameter("P_CEDULA", Cedula);
+
             var lstResults = _sqlDAO.ExecuteQueryProcedure(sqlOperation);
 
             if (lstResults.Count > 0)
@@ -140,6 +143,7 @@ namespace DataAccess.CRUDs
 
             return default(T);
         }
+
 
         public T RetrieveByCorreo<T>(string Correo)
         {
@@ -157,30 +161,35 @@ namespace DataAccess.CRUDs
             return default(T);
         }
 
-
-        // Convierte un diccionario en un DTO Usuario
         private Admin BuildUser(Dictionary<string, object> row)
         {
             var newUser = new Admin()
             {
-                Id = (int)row["id"],
-                Cedula = (string)row["Cedula"],
-                Nombre = (string)row["Nombre"],
-                PrimerApellido = (string)row["PrimerApellido"],
-                SegundoApellido = (string)row["SegundoApellido"],
-                Direccion = (string)row["Direccion"],
-                FotoPerfil = (string)row["FotoPerfil"],
-                Contrasenna = (string)row["Contrasenna"],
-                Telefono = (string)row["Telefono"],
-                Estado = (string)row["Estado"],
-                Rol = (string)row["Rol"],
-                FechaNacimiento = (DateTime)row["FechaNacimiento"],
-                FechaExpiracionOTP = (DateTime)row["FechaExpiracionOTP"],
-                Created = (DateTime)row["FechaCreacion"],
-                Correo = (string)row["Correo"],
+
+
+                // Asignar directamente los valores, sin valor predeterminado
+                Id = (int)row["id"], // Aquí usamos default(int?) para permitir que el valor sea null
+                Cedula = row.ContainsKey("Cedula") && row["Cedula"] != DBNull.Value ? (string)row["Cedula"] : string.Empty,
+                Nombre = row.ContainsKey("Nombre") && row["Nombre"] != DBNull.Value ? (string)row["Nombre"] : string.Empty,
+                PrimerApellido = row.ContainsKey("PrimerApellido") && row["PrimerApellido"] != DBNull.Value ? (string)row["PrimerApellido"] : string.Empty,
+                SegundoApellido = row.ContainsKey("SegundoApellido") && row["SegundoApellido"] != DBNull.Value ? (string)row["SegundoApellido"] : string.Empty,
+                Direccion = row.ContainsKey("Direccion") && row["Direccion"] != DBNull.Value ? (string)row["Direccion"] : string.Empty,
+                FotoPerfil = row.ContainsKey("FotoPerfil") && row["FotoPerfil"] != DBNull.Value ? (string)row["FotoPerfil"] : string.Empty,
+                Telefono = row.ContainsKey("Telefono") && row["Telefono"] != DBNull.Value ? (string)row["Telefono"] : string.Empty,
+                Estado = row.ContainsKey("Estado") && row["Estado"] != DBNull.Value ? (string)row["Estado"] : string.Empty,
+                Contrasenna = row.ContainsKey("Contrasenna") && row["Contrasenna"] != DBNull.Value ? (string)row["Contrasenna"] : string.Empty,
+                Rol = row.ContainsKey("Rol") && row["Rol"] != DBNull.Value ? (string)row["Rol"] : string.Empty,
+                FechaNacimiento = row.ContainsKey("FechaNacimiento") && row["FechaNacimiento"] != DBNull.Value ? (DateTime)row["FechaNacimiento"] : DateTime.MinValue,
+                FechaExpiracionOTP = row.ContainsKey("FechaExpiracionOTP") && row["FechaExpiracionOTP"] != DBNull.Value ? (DateTime)row["FechaExpiracionOTP"] : DateTime.MinValue,
+                Created = row.ContainsKey("FechaCreacion") && row["FechaCreacion"] != DBNull.Value ? (DateTime)row["FechaCreacion"] : DateTime.MinValue,
+                Correo = row.ContainsKey("Correo") && row["Correo"] != DBNull.Value ? (string)row["Correo"] : string.Empty,
+
             };
 
             return newUser;
         }
+
+      
     }
 }
+
