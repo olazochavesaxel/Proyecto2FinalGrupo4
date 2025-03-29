@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +8,7 @@ using DTO;
 
 namespace DataAccess.CRUDs
 {
-    public class AsesorCrudFactory: CrudFactory
+    public class AsesorCrudFactory : CrudFactory
     {
         public AsesorCrudFactory()
         {
@@ -23,7 +23,7 @@ namespace DataAccess.CRUDs
             var sqlOperation = new SqlOperation() { ProcedureName = "CRE_ASESOR_PR" };
 
             // Agregar parámetros al procedimiento almacenado para tblUsuario
-           
+
             sqlOperation.AddStringParameter("P_CEDULA", asesor.Cedula);
             sqlOperation.AddStringParameter("P_NOMBRE", asesor.Nombre);
             sqlOperation.AddStringParameter("P_PRIMER_APELLIDO", asesor.PrimerApellido);
@@ -51,7 +51,7 @@ namespace DataAccess.CRUDs
             var sqlOperation = new SqlOperation() { ProcedureName = "UDP_ASESOR_PR" };
 
             // Agregar parámetros al procedimiento almacenado para tblUsuario y tblCliente
-            sqlOperation.AddIntParameter("P_ID", asesor.Id);
+            sqlOperation.AddIntParameter("P_USER_ID", asesor.Id);
             sqlOperation.AddStringParameter("P_CEDULA", asesor.Cedula);
             sqlOperation.AddStringParameter("P_NOMBRE", asesor.Nombre);
             sqlOperation.AddStringParameter("P_PRIMER_APELLIDO", asesor.PrimerApellido);
@@ -73,17 +73,29 @@ namespace DataAccess.CRUDs
 
         public override void Delete(BaseDTO dto)
         {
-            var asesor = dto as Asesor;
+            // Convertir DTO en Asesor
+            var user = dto as Asesor;
 
-            // Crear instrucción de ejecución para eliminar usuario
+            // Crear instrucción de ejecución
             var sqlOperation = new SqlOperation() { ProcedureName = "DELETE_ASESOR_BY_ID" };
 
             // Agregar parámetros al procedimiento almacenado
-            sqlOperation.AddIntParameter("P_ID", asesor.Id);
+            sqlOperation.AddIntParameter("P_ID", user.Id);
 
-            // Ejecutar procedimiento en el DAO
-            _sqlDAO.ExecuteProcedure(sqlOperation);
+            try
+            {
+                // Ejecutar procedimiento en el DAO
+                _sqlDAO.ExecuteProcedure(sqlOperation);
+            }
+            catch (Exception ex)
+            {
+                // Manejo de excepciones
+                Console.WriteLine($"Error al eliminar el asesor: {ex.Message}");
+                // Podrías lanzar una nueva excepción o registrar el error de alguna manera
+                throw new Exception("Ocurrió un error al eliminar el asesor.", ex);
+            }
         }
+
         public override List<T> RetrieveAll<T>()
         {
             var lstUsers = new List<T>();
@@ -182,4 +194,3 @@ namespace DataAccess.CRUDs
         }
     }
 }
-
