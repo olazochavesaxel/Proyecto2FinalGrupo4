@@ -30,7 +30,7 @@ namespace DataAccess.DAOs
         private SqlDAO()
         {
            
-            _connectionString = @"Data Source=CARLOS;Initial Catalog=Proyecto_2;Integrated Security=True;Encrypt=True;Trust Server Certificate=True";
+            _connectionString = @"Data Source=MELILAPTOP;Initial Catalog=Proyecto_2;Integrated Security=True;Encrypt=True;Trust Server Certificate=True";
         }
 
         /*Paso 3 Definir metodo que expone la unica instancia de SqlDAO*/
