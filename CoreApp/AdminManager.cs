@@ -51,7 +51,6 @@ namespace CoreApp
         {
             return usuarioCrud.RetrieveAll<Admin>();
         }
-
         public Admin RetrieveById(int id)
         {
             return usuarioCrud.RetrieveById<Admin>(id);
@@ -59,7 +58,7 @@ namespace CoreApp
 
         public Admin RetrieveByCedula(string cedula)
         {
-            return usuarioCrud.RetrieveByCedula<Admin   >(cedula);
+            return usuarioCrud.RetrieveByCedula<Admin>(cedula);
         }
 
         public Admin RetrieveByCorreo(string correo)
@@ -68,7 +67,7 @@ namespace CoreApp
         }
 
         // Validaciones
-        protected bool IsOver18(Admin  usuario)
+        protected bool IsOver18(Admin usuario)
         {
             var currentDate = DateTime.Now;
             int age = currentDate.Year - usuario.FechaNacimiento.Year;
