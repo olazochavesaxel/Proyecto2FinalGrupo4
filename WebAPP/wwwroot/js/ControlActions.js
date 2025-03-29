@@ -1,4 +1,4 @@
-﻿function ControlActions() {
+function ControlActions() {
 	//Ruta base del API
 	this.URL_API = "https://localhost:5207/api/";
 

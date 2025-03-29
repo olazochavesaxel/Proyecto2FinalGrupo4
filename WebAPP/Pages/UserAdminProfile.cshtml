@@ -1,5 +1,6 @@
 ﻿@page
 @model UserAdminProfileModel
+
 @{
     ViewData["Title"] = "Perfil de Administrador";
 }
@@ -9,7 +10,7 @@
     <div class="sidebar">
         <ul>
             <li><a href="#">General</a></li>
-            <li><a href="#">Users</a></li>
+            <li><a href="/UserManagement">Users</a></li>
             <li><a href="#">Comisión</a></li>
             <li><a href="#">Reports</a></li>
             <li><a href="#">Revenue</a></li>
@@ -61,17 +62,20 @@
     .profile-page {
         display: flex;
         flex-direction: row;
-        margin-top: 20px; /* para que no tape el navbar */
+        margin-top: 60px;
     }
 
     .sidebar {
         background-color: #00D395;
         width: 220px;
-        height: calc(100vh - 60px); /* Resta espacio del navbar */
+        height: calc(100vh - 60px);
+        position: fixed;
+        top: 60px;
+        left: 0;
         padding-top: 30px;
-        position: relative;
-        top: 0;
+        z-index: 1000;
     }
+
         .sidebar ul {
             list-style: none;
             padding: 0;
@@ -79,7 +83,7 @@
         }
 
             .sidebar ul li {
-				margin: 20px 0;
+                margin: 20px 0;
                 text-align: center;
             }
 
@@ -89,8 +93,10 @@
                     font-weight: bold;
                     font-size: 16px;
                 }
+
     .content {
         flex: 1;
+        margin-left: 220px;
         padding: 40px;
     }
 
@@ -127,4 +133,8 @@
         width: 100%;
     }
 </style>
+
+
+
+
 

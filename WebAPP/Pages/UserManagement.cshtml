@@ -1,0 +1,172 @@
+﻿@page
+@model WebAPP.Pages.UserManagementModel
+@{
+    ViewData["Title"] = "Gestión de Usuarios";
+}
+
+<div class="user-management-page">
+    <div class="sidebar">
+        <ul>
+            <li><a href="/UserAdminProfile">Volver</a></li>
+        </ul>
+    </div>
+
+    <div class="content">
+        <h1>Gestión de Usuarios</h1>
+
+        <!-- Tabla Clientes -->
+        <section class="user-section">
+            <h2>Clientes</h2>
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí van los clientes -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Tabla Asesores -->
+        <section class="user-section">
+            <h2>Asesores</h2>
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí van los asesores -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Tabla Administradores -->
+        <section class="user-section">
+            <h2>Administradores</h2>
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Aquí van los admins -->
+                </tbody>
+            </table>
+        </section>
+    </div>
+</div>
+
+<style>
+    body, html {
+        background-color: black;
+        color: white;
+        margin: 0;
+        padding: 0;
+    }
+
+    .user-management-page {
+        display: flex;
+        flex-direction: row;
+        margin-top: 60px;
+    }
+
+    .sidebar {
+        background-color: #00D395;
+        width: 220px;
+        height: calc(100vh - 60px);
+        position: fixed;
+        top: 60px;
+        left: 0;
+        padding-top: 30px;
+        z-index: 1000;
+    }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+            .sidebar ul li {
+                margin: 20px 0;
+                text-align: center;
+            }
+
+                .sidebar ul li a {
+                    text-decoration: none;
+                    color: black;
+                    font-weight: bold;
+                    font-size: 16px;
+                }
+
+    .content {
+        flex: 1;
+        margin-left: 220px;
+        padding: 40px;
+    }
+
+    h1, h2 {
+        color: #fff;
+    }
+
+    .user-section {
+        margin-bottom: 50px;
+    }
+
+    .user-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        background-color: #111;
+        color: white;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+        .user-table th, .user-table td {
+            padding: 12px;
+            border: 1px solid #333;
+            text-align: center;
+        }
+
+        .user-table th {
+            background-color: #222;
+        }
+
+        .user-table tbody tr:hover {
+            background-color: #222;
+        }
+
+    .btn-action {
+        background-color: #8F5AF5;
+        color: white;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 12px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+</style>
+
+
+
+
+
+
