@@ -1,4 +1,5 @@
-﻿function AsesorViewController() {
+function AsesorViewController() {
+
     this.ViewName = "TablaAsesor";
     this.ApiEndPointName = "Asesor";
 

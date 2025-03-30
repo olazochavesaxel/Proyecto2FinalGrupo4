@@ -1,7 +1,10 @@
-﻿@page
+
+@page
 @model WebAPP.Pages.TablaClienteModel
 @{
+    ViewData["Title"] = "Tabla Cliente";
 }
+
 <script src="~/js/Pages/ClienteTable.js"></script>
 
 
@@ -9,6 +12,7 @@
 <div class="bs-docs-section">
     <div class="row">
         <legend>Lista de CLientes</legend>
+
         <div class="col-lg-12">
             <table id="tblClientes" class="display" style="width:100%">
                 <thead>
@@ -32,12 +36,5 @@
     </div>
 
 </div>
-
-
-
-
-
-
-
 
 

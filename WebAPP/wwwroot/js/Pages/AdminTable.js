@@ -1,4 +1,4 @@
-﻿
+
 function AdminViewController() {
     this.ViewName = "TablaAdmin";
     this.ApiEndPointName = "Admin";

@@ -1,4 +1,6 @@
-﻿function ComisionViewController() {
+
+function ComisionViewController() {
+
     this.ViewName = "TablaComision";
     this.ApiEndPointName = "Comision";
 
