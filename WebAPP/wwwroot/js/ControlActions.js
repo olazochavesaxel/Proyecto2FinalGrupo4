@@ -1,6 +1,6 @@
 ﻿function ControlActions() {
 	//Ruta base del API
-	this.URL_API = "https://localhost:5207/api/";
+	this.URL_API = "https://localhost:7057/api/";
 
 	this.GetUrlApiService = function (service) {
 		return this.URL_API + service;
@@ -110,33 +110,30 @@
 
 
 	this.PutToAPI = function (service, data, callBackFunction) {
-		var jqxhr = $.put(this.GetUrlApiService(service), data, function (response) {
-			var ctrlActions = new ControlActions();
-
-			Swal.fire(
-				'Good job!',
-				'Transaction completed!',
-				'success'
-			)
-
-			if (callBackFunction) {
-				callBackFunction(response);
-			}
-
-		})
-			.fail(function (response) {
+		$.ajax({
+			url: this.GetUrlApiService(service),
+			type: "PUT",
+			data: JSON.stringify(data),
+			contentType: "application/json",
+			success: function (response) {
+				Swal.fire("¡Éxito!", "Actualización completada", "success");
+				if (callBackFunction) {
+					callBackFunction(response);
+				}
+			},
+			error: function (response) {
 				var data = response.responseJSON;
-				var errors = data.errors;
-				var errorMessages = Object.values(errors).flat();
-				message = errorMessages.join("<br/> ");
+				var errorMessages = data ? Object.values(data.errors || {}).flat() : ["Error desconocido"];
 				Swal.fire({
-					icon: 'error',
-					title: 'Oops...',
-					html: message,
-					footer: 'UCenfotec'
-				})
-			})
+					icon: "error",
+					title: "Oops...",
+					html: errorMessages.join("<br/>"),
+					footer: "UCenfotec",
+				});
+			}
+		});
 	};
+
 
 	this.DeleteToAPI = function (service, data, callBackFunction) {
 		var jqxhr = $.delete(this.GetUrlApiService(service), data, function (response) {

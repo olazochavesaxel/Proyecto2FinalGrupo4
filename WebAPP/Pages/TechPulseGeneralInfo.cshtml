@@ -1,0 +1,87 @@
+﻿@page
+@{
+    ViewData["Title"] = "TechPulse - Sobre Nosotros";
+}
+
+<div class="techpulse-container">
+    <div class="logo-container">
+        <img src="~/img/Logo.JPG" alt="TechPulse Logo">
+    </div>
+
+    <h1 class="company-name">TechPulse</h1>
+    <h2 class="slogan">“Code. Create. Conquer.”</h2>
+
+    <div class="info-section">
+        <h2>Misión</h2>
+        <p>
+            Nuestra misión es desarrollar soluciones de software innovadoras y eficientes,
+            proporcionando tecnología de vanguardia que impulse el crecimiento y la transformación digital
+            de nuestros clientes en un mundo cada vez más conectado.
+        </p>
+    </div>
+
+    <div class="info-section">
+        <h2>Visión</h2>
+        <p>
+            Ser una empresa líder en el desarrollo de software a nivel global,
+            reconocida por la calidad, innovación y excelencia en cada uno de nuestros proyectos.
+            Aspiramos a transformar la industria tecnológica y ser referentes en soluciones digitales.
+        </p>
+    </div>
+</div>
+
+<!-- ESTILOS CSS -->
+<style>
+    body {
+        background-color: #000;
+        color: white;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 50px;
+    }
+
+    .techpulse-container {
+        max-width: 800px;
+        margin: auto;
+    }
+
+    .logo-container img {
+        width: 250px;
+        height: 250px;
+        margin: auto;
+        display: block;
+        border-radius: 20px;
+        border: 3px solid #8F5AF5;
+        box-shadow: 0px 0px 15px #8F5AF5;
+    }
+
+    .company-name {
+        font-size: 40px;
+        color: #8F5AF5;
+        margin-bottom: 10px;
+    }
+
+    .slogan {
+        font-size: 24px;
+        font-style: italic;
+        color: #00ffcc;
+        margin-bottom: 30px;
+    }
+
+    .info-section {
+        background: #111;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0px 4px 10px #8F5AF5;
+    }
+
+        .info-section h2 {
+            color: #8F5AF5;
+        }
+
+        .info-section p {
+            font-size: 18px;
+            color: #bbb;
+        }
+</style>
