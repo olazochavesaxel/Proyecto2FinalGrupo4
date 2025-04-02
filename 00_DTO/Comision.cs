@@ -11,9 +11,9 @@ namespace DTO
         public string Tipo { get; set; }
         public string Nombre { get; set; }
         public double Porcentaje { get; set; }
-        public decimal Tarifa1 { get; set; }
-        public decimal Tarifa2 { get; set; }
-        public decimal Tarifa3 { get; set; }
+        public double Tarifa1 { get; set; }
+        public double Tarifa2 { get; set; }
+        public double Tarifa3 { get; set; }
         public int idAdmin { get; set; }
     }
 }

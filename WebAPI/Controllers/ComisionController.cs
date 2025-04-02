@@ -38,14 +38,18 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var listResults = _userManager.RetrieveAll();
+                var listResults = _userManager.RetrieveAll() ?? new List<Comision>();
+                Console.WriteLine($"📡 Datos enviados: {System.Text.Json.JsonSerializer.Serialize(listResults)}");
                 return Ok(listResults);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error al recuperar comisiones: {ex.Message}");
+                Console.WriteLine($"❌ Error en RetrieveAll: {ex.Message}");
+                return StatusCode(500, new { error = $"Error al recuperar comisiones: {ex.Message}" });
             }
         }
+
+
 
         // Get -> Retrieve By Id
         [HttpGet]
