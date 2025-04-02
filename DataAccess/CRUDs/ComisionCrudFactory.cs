@@ -32,9 +32,9 @@ namespace DataAccess.CRUDs
             sqlOperation.AddStringParameter("@P_TIPO", comision.Tipo);
             sqlOperation.AddIntParameter("@P_IDADMIN", comision.idAdmin);
             sqlOperation.AddDoubleParameter("@P_PORCENTAJE", comision.Porcentaje);
-            sqlOperation.AddDecimalParameter("@P_TARIFA1", comision.Tarifa1);
-            sqlOperation.AddDecimalParameter("@P_TARIFA2", comision.Tarifa2);
-            sqlOperation.AddDecimalParameter("@P_TARIFA3", comision.Tarifa3);
+            sqlOperation.AddDoubleParameter("@P_TARIFA1", comision.Tarifa1);
+            sqlOperation.AddDoubleParameter("@P_TARIFA2", comision.Tarifa2);
+            sqlOperation.AddDoubleParameter("@P_TARIFA3", comision.Tarifa3);
 
 
 
@@ -57,9 +57,9 @@ namespace DataAccess.CRUDs
             sqlOperation.AddStringParameter("@P_TIPO", comision.Tipo);
             sqlOperation.AddIntParameter("@P_IDADMIN", comision.idAdmin);
             sqlOperation.AddDoubleParameter("@P_PORCENTAJE", comision.Porcentaje);
-            sqlOperation.AddDecimalParameter("@P_TARIFA1", comision.Tarifa1);
-            sqlOperation.AddDecimalParameter("@P_TARIFA2", comision.Tarifa2);
-            sqlOperation.AddDecimalParameter("@P_TARIFA3", comision.Tarifa3);
+            sqlOperation.AddDoubleParameter("@P_TARIFA1", comision.Tarifa1);
+            sqlOperation.AddDoubleParameter("@P_TARIFA2", comision.Tarifa2);
+            sqlOperation.AddDoubleParameter("@P_TARIFA3", comision.Tarifa3);
 
 
             // Ejecutar procedimiento en el DAO
@@ -143,9 +143,9 @@ namespace DataAccess.CRUDs
                 Tipo = (string)row["tipo"],
                 Created = (DateTime)row["fechaCreacion"],
                 Porcentaje = (double)row["porcentaje"],
-                Tarifa1 = (decimal)row["tarifa1"],
-                Tarifa2 = (decimal)row["tarifa2"],
-                Tarifa3 = (decimal)row["tarifa3"],
+                Tarifa1 = (double)row["tarifa1"],
+                Tarifa2 = (double)row["tarifa2"],
+                Tarifa3 = (double)row["tarifa3"],
                 idAdmin = (int)row["idAdmin"]
             };
 

@@ -1,6 +1,7 @@
 ﻿
 function ClienteViewController() {
     this.ViewName = "TablaCliente";
+
 this.ApiEndPointName = "Cliente";
 
 this.InitView = function() {
@@ -49,6 +50,7 @@ this.LoadTable = function() {
         $('#tblClientes').dataTable({
         "ajax": {
             "url": urlService,
+
                 "dataSrc": ""
             },
             columns: columns // Corrección en el nombre de la propiedad

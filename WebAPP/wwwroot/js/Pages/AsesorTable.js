@@ -1,5 +1,5 @@
-﻿
 function AsesorViewController() {
+
     this.ViewName = "TablaAsesor";
     this.ApiEndPointName = "Asesor";
 
@@ -61,6 +61,5 @@ $(document).ready(function () {
     var vc = new AsesorViewController(); // Corrección del controlador
     vc.InitView();
 });
-
 
 
