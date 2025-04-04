@@ -34,7 +34,7 @@ namespace DataAccess.DAOs
             
 
 
-            _connectionString = @"Data Source=DESKTOP-S248HQ3;Initial Catalog=Proyecto_2;Integrated Security=True;Encrypt=True;Trust Server Certificate=True";
+            _connectionString = @"Data Source=.;Initial Catalog=Proyecto_2;Integrated Security=True;Trust Server Certificate=True";
 
         }
 
