@@ -165,6 +165,8 @@ namespace DataAccess.CRUDs
                 Nombre = (string)row["Nombre"],
                 PrimerApellido = (string)row["PrimerApellido"],
                 SegundoApellido = (string)row["SegundoApellido"],
+                Correo = (string)row["Correo"],
+
                 Direccion = (string)row["Direccion"],
                 FotoPerfil = (string)row["FotoPerfil"],
                 Contrasenna = (string)row["Contrasenna"],
