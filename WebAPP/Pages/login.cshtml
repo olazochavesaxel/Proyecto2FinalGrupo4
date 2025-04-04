@@ -7,7 +7,8 @@
 <div class="login-container">
     <div class="login-box">
         <div class="profile-picture">
-            <img src="~/img/profile-placeholder.png" alt="Foto de perfil">
+            <img src="~/img/ph.png" alt="Foto de perfil">
+
         </div>
         <h2>¡Bienvenido de nuevo!</h2>
         <form>
@@ -105,7 +106,55 @@
         }
 </style>
 
+<!--  Script de login -->
+<script>
+    document.querySelector(".btn-green").addEventListener("click", async function (e) {
+        e.preventDefault();
 
+        const correo = document.getElementById("email").value;
+        const contrasena = document.getElementById("password").value;
+
+        if (!correo || !contrasena) {
+            alert("Por favor, completa ambos campos.");
+            return;
+        }
+
+        try {
+         const response = await fetch("http://localhost:5197/api/auth/validar", {
+
+
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ correo, contrasena })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const rol = data.usuario.rol.toLowerCase();
+
+                // Redirige según el rol
+                if (rol === "cliente") {
+                    window.location.href = "/UserProfile";
+                } else if (rol === "asesor") {
+                    window.location.href = "/UserAdvisorProfile";
+                } else if (rol === "admin") {
+                    window.location.href = "/UserAdminProfile";
+                } else {
+                    alert("Rol desconocido. Contacte al administrador.");
+                }
+            } else {
+                const errorText = await response.text();
+                console.log("Respuesta del servidor:", response.status, errorText);
+                alert("Error al iniciar sesión: " + errorText);
+            }
+        } catch (error) {
+            console.error("Error de red:", error);
+            alert("Ocurrió un error al procesar el login.");
+        }
+    });
+</script>
 
 
 

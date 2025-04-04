@@ -1,7 +1,7 @@
 ﻿
 using _00_DTO;
 using DataAccess.CRUDs;
-using TransaccionAsesor = DTOs.TransaccionAsesorDTO;
+using TransaccionAsesor = DTOs.TransaccionAsesor;
 
 
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using _00_DTO;
 using CoreApp;
-using TransaccionAsesor = DTOs.TransaccionAsesorDTO;
+using TransaccionAsesor = DTOs.TransaccionAsesor;
 
 
 
