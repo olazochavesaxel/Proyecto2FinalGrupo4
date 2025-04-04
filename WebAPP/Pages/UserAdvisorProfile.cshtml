@@ -129,3 +129,22 @@
         width: 100%;
     }
 </style>
+<<<<<<< Updated upstream
+=======
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const usuario = JSON.parse(localStorage.getItem("usuario"));
+        if (usuario) {
+            document.getElementById("nombre-usuario").textContent = usuario.nombre;
+            document.getElementById("rol-usuario").textContent = usuario.rol;
+            document.getElementById("nombre").textContent = usuario.nombre;
+            document.getElementById("primer-apellido").textContent = usuario.primerApellido;
+            document.getElementById("segundo-apellido").textContent = usuario.segundoApellido;
+            document.getElementById("correo").textContent = usuario.correo;
+        }
+    });
+</script>
+
+<!-- comentario de prueba -->
+>>>>>>> Stashed changes
