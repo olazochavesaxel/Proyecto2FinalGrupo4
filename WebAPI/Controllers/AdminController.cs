@@ -50,19 +50,26 @@ namespace WebAPI.Controllers
 
         // Get -> Retrieve By Id
         [HttpGet]
-        [Route("RetrieveById")]
+        [Route("RetrieveById/{id}")]  // <-- Asegúrate de que la ruta acepta el ID como parámetro
         public ActionResult RetrieveById(int id)
         {
             try
             {
-                var listResults = _userManager.RetrieveById(id);
-                return Ok(listResults);
+                var admin = _userManager.RetrieveById(id);
+
+                if (admin == null)
+                {
+                    return NotFound($"No se encontró el administrador con ID {id}");
+                }
+
+                return Ok(admin);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Error al recuperar al administrador: {ex.Message}");
             }
         }
+
 
         // get -> retrieve by User code
 
@@ -99,13 +106,25 @@ namespace WebAPI.Controllers
             }
         }
 
-        // PUT -> Update
         [HttpPut]
-        [Route("Update")]
-        public ActionResult Update([FromBody] Admin user)
+        [Route("Update/{id}")]
+        public ActionResult Update(int id, [FromBody] Admin user)
         {
             try
             {
+                if (user == null)
+                {
+                    return BadRequest("El objeto Admin es nulo.");
+                }
+
+                // Verifica si el usuario con el ID proporcionado existe en la base de datos.
+                var existingUser = _userManager.RetrieveById(id);
+                if (existingUser == null)
+                {
+                    return NotFound($"No se encontró el usuario con el ID {id}");
+                }
+
+                // Actualiza solo si el usuario existe
                 _userManager.Update(user);
                 return Ok(user);
             }
@@ -114,6 +133,7 @@ namespace WebAPI.Controllers
                 return StatusCode(500, $"Error al actualizar administrador: {ex.Message}");
             }
         }
+
 
         // DELETE -> DeleteUser
         [HttpDelete]

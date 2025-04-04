@@ -29,15 +29,13 @@ namespace DataAccess.DAOs
         /*Paso 2 Redifinir constructor defualt en privado*/
         private SqlDAO()
         {
-<<<<<<< Updated upstream
-           
-            _connectionString = @"Data Source=MELILAPTOP;Initial Catalog=Proyecto_2;Integrated Security=True;Encrypt=True;Trust Server Certificate=True";
-=======
-
-            _connectionString = @"Data Source=.;Initial Catalog=Proyecto_2;Integrated Security=True;Trust Server Certificate=True";
 
 
->>>>>>> Stashed changes
+            
+
+
+            _connectionString = @"Data Source=DESKTOP-S248HQ3;Initial Catalog=Proyecto_2;Integrated Security=True;Encrypt=True;Trust Server Certificate=True";
+
         }
 
         /*Paso 3 Definir metodo que expone la unica instancia de SqlDAO*/

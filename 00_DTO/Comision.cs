@@ -8,9 +8,12 @@ namespace DTO
 {
     public class Comision : BaseDTO
     {
-        public string Tipo {get;set;}
+        public string Tipo { get; set; }
         public string Nombre { get; set; }
-        public string Descripcion { get; set; }
         public double Porcentaje { get; set; }
+        public double Tarifa1 { get; set; }
+        public double Tarifa2 { get; set; }
+        public double Tarifa3 { get; set; }
+        public int idAdmin { get; set; }
     }
 }

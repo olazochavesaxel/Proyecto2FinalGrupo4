@@ -1,11 +1,11 @@
-﻿@page
+@page
 @model WebAPP.Pages.TablaAdminModel
 @{
     ViewData["Title"] = "Tabla Administrador";
 }
-<script src="~/js/admintable.js"></script>
 
-<p>Bienvenido a tu panel de Administrador.</p>
+<script src="~/js/Pages/AdminTable.js"></script>
+
 
 
 <div class="bs-docs-section">
@@ -32,22 +32,62 @@
             </table>
         </div>
     </div>
-
-</div>
-    @* <div class="row">
+    <div class="row">
         <div class="col-lg-6">
             <div class="bs-component">
                 <form>
                     <fieldset>
-                        <legend>User registration form</legend>
+                        <legend>Formulario de registro</legend>
                         <div class="form-group">
-                            <label for="txtId" class="form-label mt-4">User ID</label>
-                            <input id="txtId" readonly="readonly" type="number" class="form-control" aria-describedby="emailHelp">
+                            <label for="txtCedula" class="form-label mt-4">Cedula</label>
+                            <input id="txtCedula" type="number" class="form-control" aria-describedby="emailHelp" placeholder="Enter your cedula">
                         </div>
 
                         <div class="form-group">
-                            <label for="txtUserCode" class="form-label mt-4">User code</label>
-                            <input type="text" class="form-control" id="txtUserCode" aria-describedby="emailHelp" readonly="readonly">
+                            <label for="txtNombre" class="form-label mt-4">Nombre</label>
+                            <input type="text" class="form-control" id="txtNombre" aria-describedby="emailHelp" placeholder="Enter your name">
+                            <small id="emailHelp" class="form-text text-muted">Use your name.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtPrimerApellido" class="form-label mt-4">PrimerApellido</label>
+                            <input type="text" class="form-control" id="txtPrimerApellido" aria-describedby="emailHelp" placeholder="Enter your last name">
+                            <small id="emailHelp" class="form-text text-muted">Use your name.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtSegundoApellido" class="form-label mt-4">Segundo Apellido</label>
+                            <input type="text" class="form-control" id="txtSegundoApellido" aria-describedby="emailHelp" placeholder="Enter your last name">
+                            <small id="emailHelp" class="form-text text-muted">Use your name.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtDirecion" class="form-label mt-4">Direccion </label>
+                            <input type="text" class="form-control" id="txtDireccion" aria-describedby="emailHelp" placeholder="Enter your last name">
+                            <small id="emailHelp" class="form-text text-muted">Use your name.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtTelefono" class="form-label mt-4">Numero de Telefono </label>
+                            <input type="number" class="form-control" id="txtTelefono" aria-describedby="emailHelp" placeholder="Enter your phone number">
+                            <small id="emailHelp" class="form-text text-muted">Use your phone.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="selectEstado" class="form-label mt-4">Estado</label>
+                            <select class="form-control" id="selectEstado">
+                                <option value="activo">Activo</option>
+                                <option value="inactivo">Inactivo</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="selectRol" class="form-label mt-4">Rol</label>
+                            <select class="form-control" id="selectRol">
+                                <option value="asesor">Asesor</option>
+                                <option value="administrador">Administrador</option>
+                                <option value="cliente">Cliente</option>
+                            </select>
                         </div>
 
                         <div class="form-group">
@@ -56,33 +96,17 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="txtEmail" class="form-label mt-4">Email address</label>
+                            <label for="txtBirthDate" class="form-label mt-4">Fecha de Nacimiento</label>
+                            <input type="date" class="form-control" id="txtBirthDate" aria-describedby="emailHelp" placeholder="Enter your birthdate">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtEmail" class="form-label mt-4">Correo </label>
                             <input id="txtEmail" type="email" class="form-control" aria-describedby="emailHelp" placeholder="Enter email">
                             <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                         </div>
 
-                        <div class="form-group">
-                            <label for="txtName" class="form-label mt-4">Name</label>
-                            <input type="text" class="form-control" id="txtName" aria-describedby="emailHelp" placeholder="Enter your name">
-                            <small id="emailHelp" class="form-text text-muted">Use your name.</small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="txtLastName" class="form-label mt-4">Last Name</label>
-                            <input type="text" class="form-control" id="txtLastName" aria-describedby="emailHelp" placeholder="Enter your last name">
-                            <small id="emailHelp" class="form-text text-muted">Use your name.</small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="txtPhone" class="form-label mt-4">Phone Number</label>
-                            <input type="number" class="form-control" id="txtPhone" aria-describedby="emailHelp" placeholder="Enter your phone number">
-                            <small id="emailHelp" class="form-text text-muted">Use your phone.</small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="txtBirthDate" class="form-label mt-4">Birth date</label>
-                            <input type="date" class="form-control" id="txtBirthDate" aria-describedby="emailHelp" placeholder="Enter your birthdate">
-                        </div>
+                        
                     </fieldset>
                 </form>
                 <br />
@@ -99,59 +123,15 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="bs-component">
-                <form>
-                    <fieldset>
-                        <legend>User registration form</legend>
-                        <div class="form-group">
-                            <label for="txtId" class="form-label mt-4">User ID</label>
-                            <input id="txtId" readonly="readonly" type="number" class="form-control" aria-describedby="emailHelp">
-                        </div>
-                        <div class="form-group">
-                            <label for="txtUserCode" class="form-label mt-4">User code</label>
-                            <input type="text" class="form-control" id="txtUserCode" aria-describedby="emailHelp" readonly="readonly">
-                        </div>
-                        <div class="form-group">
-                            <label for="txtPassword" class="form-label mt-4">Password</label>
-                            <input type="password" class="form-control" id="txtPassword" aria-describedby="emailHelp" placeholder="Enter your password">
-                        </div>
-                        <div class="form-group">
-                            <label for="txtEmail" class="form-label mt-4">Email address</label>
-                            <input id="txtEmail" type="email" class="form-control" aria-describedby="emailHelp" placeholder="Enter email">
-                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="txtName" class="form-label mt-4">Name</label>
-                            <input type="text" class="form-control" id="txtName" aria-describedby="emailHelp" placeholder="Enter your name">
-                            <small id="emailHelp" class="form-text text-muted">Use your name.</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="txtLastName" class="form-label mt-4">Last Name</label>
-                            <input type="text" class="form-control" id="txtLastName" aria-describedby="emailHelp" placeholder="Enter your last name">
-                            <small id="emailHelp" class="form-text text-muted">Use your name.</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="txtPhone" class="form-label mt-4">Phone Number</label>
-                            <input type="number" class="form-control" id="txtPhone" aria-describedby="emailHelp" placeholder="Enter your phone number">
-                            <small id="emailHelp" class="form-text text-muted">Use your phone.</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="txtBirthDate" class="form-label mt-4">Birth date</label>
-                            <input type="date" class="form-control" id="txtBirthDate" aria-describedby="emailHelp" placeholder="Enter your birthdate">
-                        </div>
-                    </fieldset>
-                </form>
-                <br />
-                <button id="btnCreate" class="source-button btn btn-primary btn-xs" type="button" tabindex="0"><i class="bi bi-code">Save</i></button>
-                <button id="btnUpdate" class="source-button btn btn-info btn-xs" type="button" tabindex="0"><i class="bi bi-code">Update</i></button>
-                <button id="btnDelete" class="source-button btn btn-danger btn-xs" type="button" tabindex="0"><i class="bi bi-code">Delete</i></button>
-            </div>
-        </div>
-    </div> *@
-
+    
 </div>
+
+
+
+
+     
+
+
 
 
 

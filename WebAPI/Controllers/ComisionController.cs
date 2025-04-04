@@ -1,0 +1,119 @@
+﻿using CoreApp;
+using DTO;
+using Microsoft.AspNetCore.Mvc;
+
+namespace WebAPI.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ComisionController : ControllerBase
+    {
+        private readonly ComisionManager _userManager;
+
+        public ComisionController()
+        {
+            _userManager = new ComisionManager(); // Se recomienda inyección de dependencias en lugar de instanciarlo aquí.
+        }
+
+        // POST -> Create
+        [HttpPost]
+        [Route("Create")]
+        public ActionResult Create([FromBody] Comision comision)
+        {
+            try
+            {
+                _userManager.Create(comision);
+                return Ok(comision);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al crear la comisión: {ex.Message}");
+            }
+        }
+
+        // GET -> RetrieveAll
+        [HttpGet]
+        [Route("RetrieveAll")]
+        public ActionResult RetrieveAll()
+        {
+            try
+            {
+                var listResults = _userManager.RetrieveAll() ?? new List<Comision>();
+                Console.WriteLine($"📡 Datos enviados: {System.Text.Json.JsonSerializer.Serialize(listResults)}");
+                return Ok(listResults);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error en RetrieveAll: {ex.Message}");
+                return StatusCode(500, new { error = $"Error al recuperar comisiones: {ex.Message}" });
+            }
+        }
+
+
+
+        // Get -> Retrieve By Id
+        [HttpGet]
+        [Route("RetrieveById")]
+        public ActionResult RetrieveById(int id)
+        {
+            try
+            {
+                var listResults = _userManager.RetrieveById(id);
+                return Ok(listResults);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al recuperar la comisión: {ex.Message}");
+            }
+        }
+
+        // get -> retrieve by User code
+
+        [HttpGet]
+        [Route("RetrieveByTipo")]
+        public ActionResult RetrieveByTipo(string tipo)
+        {
+            try
+            {
+                var listResults = _userManager.RetrieveByTipo(tipo);
+                return Ok(listResults);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al recuperar la comisón: {ex.Message}");
+            }
+        }
+
+        // PUT -> Update
+        [HttpPut]
+        [Route("Update")]
+        public ActionResult Update([FromBody] Comision comision)
+        {
+            try
+            {
+                _userManager.Update(comision);
+                return Ok(comision);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al actualizar la comisión: {ex.Message}");
+            }
+        }
+
+        // DELETE -> DeleteUser
+        [HttpDelete]
+        [Route("Delete")]
+        public ActionResult Delete(Comision user)
+        {
+            try
+            {
+                _userManager.Delete(user);
+                return Ok("Comisión eliminada correctamente.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al eliminar comisión: {ex.Message}");
+            }
+        }
+    }
+}

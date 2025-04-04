@@ -2,7 +2,9 @@
 using DataAccess.DAOs;
 using DTO;
 using DTOs;
-using TransaccionAsesor = DTOs.TransaccionAsesor;
+
+using TransaccionAsesor = DTOs.TransaccionAsesorDTO;
+
 
 
 namespace DataAccess.CRUDs

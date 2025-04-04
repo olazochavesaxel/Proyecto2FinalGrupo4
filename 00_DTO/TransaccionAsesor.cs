@@ -4,7 +4,9 @@ using _00_DTO;
 
 namespace DTOs
 {
-    public class TransaccionAsesor : BaseDTO
+
+    public class TransaccionAsesorDTO : BaseDTO
+
     {
         public int Id { get; set; }
         public double Monto { get; set; }

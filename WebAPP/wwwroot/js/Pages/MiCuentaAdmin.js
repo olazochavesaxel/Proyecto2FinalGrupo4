@@ -27,7 +27,7 @@ function AdminTableViewController() {
 
         //URL a invocar http://localhost:5207/api/Product/RetrieveAll
         var ca = new ControlActions();
-        var service = this.ApiEndPointName + "/RetrieveAll";
+        var service = this.ApiEndPointName + "/RetrieveById";
 
         var urlService = ca.GetUrlApiService(service);
 
