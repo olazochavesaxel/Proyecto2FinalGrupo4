@@ -8,7 +8,6 @@
     <div class="login-box">
         <div class="profile-picture">
             <img src="~/img/ph.png" alt="Foto de perfil">
-
         </div>
         <h2>¡Bienvenido de nuevo!</h2>
         <form>
@@ -30,7 +29,6 @@
     <div class="background-section"></div>
 </div>
 
-<!-- **Estilos CSS actualizados** -->
 <style>
     .login-container {
         height: 100vh;
@@ -106,7 +104,6 @@
         }
 </style>
 
-<!--  Script de login -->
 <script>
     document.querySelector(".btn-green").addEventListener("click", async function (e) {
         e.preventDefault();
@@ -120,9 +117,7 @@
         }
 
         try {
-         const response = await fetch("http://localhost:5197/api/auth/validar", {
-
-
+            const response = await fetch("http://localhost:5197/api/auth/validar", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -132,9 +127,13 @@
 
             if (response.ok) {
                 const data = await response.json();
-                const rol = data.usuario.rol.toLowerCase();
+                const usuario = data.usuario;
+                const rol = usuario.rol.toLowerCase();
 
-                // Redirige según el rol
+                // Guardar el usuario en localStorage
+                localStorage.setItem("usuario", JSON.stringify(usuario));
+
+                // Redirigir según el rol
                 if (rol === "cliente") {
                     window.location.href = "/UserProfile";
                 } else if (rol === "asesor") {
@@ -155,8 +154,6 @@
         }
     });
 </script>
-
-
 
 
 
