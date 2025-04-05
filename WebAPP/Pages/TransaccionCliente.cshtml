@@ -1,0 +1,224 @@
+﻿@page
+@model WebAPP.Pages.TransaccionClienteModel
+@{
+    ViewData["Title"] = "Transacciones del Cliente";
+}
+
+<div class="profile-page">
+    <!-- Menú lateral -->
+    <div class="sidebar">
+        <ul>
+            <li><a href="/UserProfile">Perfil</a></li>
+            <li><a href="#">Mis Transacciones</a></li>
+        </ul>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="content">
+        <h1>Registrar Transacción</h1>
+        <div class="form-box">
+            <div class="form-group">
+                <label for="monto">Monto:</label>
+                <input type="number" id="monto" class="form-control" placeholder="Ingrese el monto">
+            </div>
+
+            <div class="form-group">
+                <label for="tipo">Tipo de transacción:</label>
+                <select id="tipo" class="form-control">
+                    <option value="">Seleccione...</option>
+                    <option value="Compra">Compra</option>
+                    <option value="Venta">Venta</option>
+                    <option value="Retiro">Retiro</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="estado">Estado:</label>
+                <select id="estado" class="form-control">
+                    <option value="Procesada">Procesada</option>
+                    <option value="Pendiente">Pendiente</option>
+                </select>
+            </div>
+
+            <button id="btnRegistrar" class="btn-green">Registrar</button>
+        </div>
+
+        <h2 class="mt-5">Mis Transacciones</h2>
+        <table class="table-trans">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Monto</th>
+                    <th>Tipo</th>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody id="tablaTransacciones"></tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    body, html {
+        background-color: black;
+        color: white;
+        margin: 0;
+        padding: 0;
+    }
+
+    .profile-page {
+        display: flex;
+        flex-direction: row;
+        margin-top: 60px;
+    }
+
+    .sidebar {
+        background-color: #00D395;
+        width: 220px;
+        height: calc(100vh - 60px);
+        position: fixed;
+        top: 60px;
+        left: 0;
+        padding-top: 30px;
+        z-index: 1000;
+    }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+            .sidebar ul li {
+                margin: 20px 0;
+                text-align: center;
+            }
+
+                .sidebar ul li a {
+                    text-decoration: none;
+                    color: black;
+                    font-weight: bold;
+                    font-size: 16px;
+                }
+
+    .content {
+        flex: 1;
+        margin-left: 220px;
+        padding: 40px;
+    }
+
+    .form-box {
+        background-color: #111;
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 40px;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        max-width: 600px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: none;
+    }
+
+    .btn-green {
+        background: #00D395;
+        color: black;
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .table-trans {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+        .table-trans th, .table-trans td {
+            border: 1px solid white;
+            padding: 10px;
+            text-align: center;
+        }
+</style>
+
+<script>
+    document.getElementById("btnRegistrar").addEventListener("click", async () => {
+        const monto = parseFloat(document.getElementById("monto").value);
+        const tipo = document.getElementById("tipo").value;
+        const estado = document.getElementById("estado").value;
+        const user = JSON.parse(localStorage.getItem("usuario"));
+
+        if (!user || user.rol.toLowerCase() !== "cliente") {
+            alert("Solo los clientes pueden registrar transacciones.");
+            return;
+        }
+
+        if (!monto || !tipo || !estado) {
+            alert("Por favor complete todos los campos.");
+            return;
+        }
+
+        const trans = {
+            monto,
+            tipo,
+            estado,
+            idCliente: user.id
+        };
+
+        try {
+            const res = await fetch("http://localhost:5197/api/transaccioncliente", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(trans)
+            });
+
+            const txt = await res.text();
+            alert(txt);
+            cargarTransacciones();
+        } catch (err) {
+            alert("Error al registrar transacción.");
+            console.error(err);
+        }
+    });
+
+    async function cargarTransacciones() {
+        const tabla = document.getElementById("tablaTransacciones");
+        tabla.innerHTML = "";
+
+        const user = JSON.parse(localStorage.getItem("usuario"));
+        if (!user) return;
+
+        try {
+            const res = await fetch("http://localhost:5197/api/transaccioncliente");
+            const data = await res.json();
+
+            const misTrans = data.filter(t => t.idCliente === user.id);
+
+            for (const t of misTrans) {
+                const fila = `<tr>
+                    <td>${t.id}</td>
+                    <td>${t.monto}</td>
+                    <td>${t.tipo}</td>
+                    <td>${t.estado}</td>
+                    <td>${new Date(t.created).toLocaleString()}</td>
+                </tr>`;
+                tabla.innerHTML += fila;
+            }
+        } catch (err) {
+            console.error("Error cargando transacciones", err);
+        }
+    }
+
+    window.onload = cargarTransacciones;
+</script>
