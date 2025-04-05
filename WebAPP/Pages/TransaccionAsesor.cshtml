@@ -1,0 +1,176 @@
+﻿@page
+@model WebAPP.Pages.TransaccionAsesorModel
+@{
+    ViewData["Title"] = "Transacciones del Asesor";
+}
+
+<div class="profile-page">
+    <!-- Menú lateral -->
+    <div class="sidebar">
+        <ul>
+            <li><a href="/UserAdvisorProfile">General</a></li>
+            <li><a href="#">Clientes asignados</a></li>
+            <li><a href="#">Inversiones</a></li>
+            <li><a href="#">Historial</a></li>
+        </ul>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="content">
+        <h1>Registrar Transacción para Cliente</h1>
+        <div class="profile-box">
+            <form id="transaccionForm">
+                <div class="form-group">
+                    <label for="idCliente">ID del Cliente</label>
+                    <input type="number" id="idCliente" class="form-control" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="monto">Monto</label>
+                    <input type="number" id="monto" class="form-control" step="0.01" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="tipo">Tipo</label>
+                    <select id="tipo" class="form-control" required>
+                        <option value="">Seleccione...</option>
+                        <option value="Compra">Compra</option>
+                        <option value="Venta">Venta</option>
+                        <option value="Retiro">Retiro</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="estado">Estado</label>
+                    <input type="text" id="estado" class="form-control" placeholder="Ej. Completado" required />
+                </div>
+
+                <button type="submit" class="btn-green">Registrar Transacción</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    body, html {
+        background-color: black;
+        color: white;
+    }
+
+    .profile-page {
+        display: flex;
+        flex-direction: row;
+        margin-top: 20px;
+    }
+
+    .sidebar {
+        background-color: #00D395;
+        width: 220px;
+        height: calc(100vh - 60px);
+        padding-top: 30px;
+        position: relative;
+    }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+            .sidebar ul li {
+                margin: 20px 0;
+                text-align: center;
+            }
+
+                .sidebar ul li a {
+                    text-decoration: none;
+                    color: black;
+                    font-weight: bold;
+                    font-size: 16px;
+                }
+
+    .content {
+        flex: 1;
+        padding: 30px;
+    }
+
+    .profile-box {
+        background-color: #111;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: none;
+    }
+
+    .btn-green {
+        background: #00D395;
+        color: black;
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+        .btn-green:hover {
+            background: #00FFB4;
+        }
+</style>
+
+<script>
+    document.getElementById("transaccionForm").addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const idCliente = parseInt(document.getElementById("idCliente").value);
+        const idAsesor = JSON.parse(localStorage.getItem("usuario"))?.id;
+        const monto = parseFloat(document.getElementById("monto").value);
+        const tipo = document.getElementById("tipo").value;
+        const estado = document.getElementById("estado").value;
+
+        if (!idCliente || !idAsesor || !monto || !tipo || !estado) {
+            alert("Todos los campos son obligatorios.");
+            return;
+        }
+
+        const transaccion = {
+            idCliente,
+            idAsesor,
+            monto,
+            tipo,
+            estado
+        };
+
+        try {
+            const response = await fetch("http://localhost:5197/api/TransaccionAsesor", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(transaccion)
+            });
+
+            if (response.ok) {
+                alert("✅ Transacción registrada correctamente.");
+                document.getElementById("transaccionForm").reset();
+            } else {
+                const error = await response.text();
+                alert("❌ Error: " + error);
+            }
+        } catch (error) {
+            alert("❌ Error al conectar con la API: " + error);
+        }
+    });
+</script>

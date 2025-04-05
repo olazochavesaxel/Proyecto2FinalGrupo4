@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using _00_DTO;
 using DataAccess.DAOs;
+using _00_DTO;
 using DTO;
 
 namespace DataAccess.CRUDs
@@ -23,8 +20,7 @@ namespace DataAccess.CRUDs
             var sqlOperation = new SqlOperation() { ProcedureName = "CRE_TRANSACCION_CLIENTE" };
 
             sqlOperation.AddDoubleParameter("P_MONTO", trans.Monto);
-            sqlOperation.AddIntParameter("P_IDCLIENTE", trans.cliente.Id);
-
+            sqlOperation.AddIntParameter("P_IDCLIENTE", trans.IdCliente);
             sqlOperation.AddStringParameter("P_TIPO", trans.Tipo);
             sqlOperation.AddStringParameter("P_ESTADO", trans.Estado);
 
@@ -39,7 +35,7 @@ namespace DataAccess.CRUDs
 
             sqlOperation.AddIntParameter("P_ID", trans.Id);
             sqlOperation.AddDoubleParameter("P_MONTO", trans.Monto);
-            sqlOperation.AddIntParameter("P_IDCLIENTE", trans.cliente.Id);
+            sqlOperation.AddIntParameter("P_IDCLIENTE", trans.IdCliente);
             sqlOperation.AddStringParameter("P_TIPO", trans.Tipo);
             sqlOperation.AddStringParameter("P_ESTADO", trans.Estado);
 
@@ -52,6 +48,7 @@ namespace DataAccess.CRUDs
 
             var sqlOperation = new SqlOperation() { ProcedureName = "DELETE_TRANSACCION_CLIENTES" };
 
+            // 🔧 Este valor es el ID de la transacción, no del cliente
             sqlOperation.AddIntParameter("P_ID", trans.Id);
 
             _sqlDAO.ExecuteProcedure(sqlOperation);
@@ -65,7 +62,7 @@ namespace DataAccess.CRUDs
         public override List<T> RetrieveAll<T>()
         {
             var lstTrans = new List<T>();
-            var sqlOperation = new SqlOperation() { ProcedureName = "SELECT_ALL_TRANSACCION_CLIENTE" };
+            var sqlOperation = new SqlOperation() { ProcedureName = "SELECT_TRANSACCIONES_CLIENTE" };
             var lstResults = _sqlDAO.ExecuteQueryProcedure(sqlOperation);
 
             if (lstResults.Count > 0)
@@ -100,15 +97,19 @@ namespace DataAccess.CRUDs
         {
             var trans = new TransaccionCliente()
             {
-                Id = (int)row["Id"],
-                Monto = Convert.ToSingle(row["Monto"]),
-                Created = (DateTime)row["FechaCreacion"],
+                Id = Convert.ToInt32(row["Id"]),
+                Monto = Convert.ToDouble(row["Monto"]),
+                Created = Convert.ToDateTime(row["FechaCreacion"]),
                 Tipo = row["Tipo"].ToString(),
-                Estado = row["Estado"].ToString()
+                Estado = row["Estado"].ToString(),
+
+                // ✅ Asegurarse de obtener IdCliente directamente
+                IdCliente = Convert.ToInt32(row["IdCliente"])
             };
 
             return trans;
         }
     }
 }
+
 

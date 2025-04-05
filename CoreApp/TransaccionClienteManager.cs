@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,8 +29,8 @@ namespace CoreApp
         {
             try
             {
-                // Validar cliente
-                var cliente = usuarioCrud.RetrieveById<Usuario>(trans.cliente.Id);
+                // Validar cliente por ID
+                var cliente = usuarioCrud.RetrieveById<Usuario>(trans.IdCliente);
                 if (cliente == null || cliente.Rol != "Cliente")
                     throw new Exception("El cliente no existe o no tiene el rol adecuado.");
 
@@ -46,7 +45,7 @@ namespace CoreApp
                 // Validar saldo si es Retiro
                 if (trans.Tipo == "Retiro")
                 {
-                    if (!TieneSaldoSuficiente(cliente.Id, trans.Monto))
+                    if (!TieneSaldoSuficiente(trans.IdCliente, trans.Monto))
                         throw new Exception("Saldo insuficiente para retiro.");
                 }
 
@@ -56,7 +55,7 @@ namespace CoreApp
                 // Registrar fecha actual
                 trans.Created = DateTime.Now;
 
-                // Aplicar cambios (por ahora no se descuenta del balance porque no está implementado aún)
+                // Crear la transacción
                 transCrud.Create(trans);
 
                 Console.WriteLine($"✅ Transacción registrada con éxito. Comisión aplicada: ${comision}");
@@ -71,7 +70,7 @@ namespace CoreApp
         {
             try
             {
-                // Similar lógica de validación
+                // Validar tipo
                 if (!EsTipoValido(trans.Tipo))
                     throw new Exception("Tipo de transacción inválido.");
 
@@ -98,14 +97,14 @@ namespace CoreApp
             return transCrud.RetrieveById<TransaccionCliente>(id);
         }
 
-        // 🔍 Validación de tipo permitido
+        // Validación de tipo permitido
         private bool EsTipoValido(string tipo)
         {
             string[] tiposValidos = { "Compra", "Venta", "Retiro" };
             return tiposValidos.Contains(tipo);
         }
 
-        // 💸 Simulación de validación de saldo
+        // Simulación de validación de saldo
         private bool TieneSaldoSuficiente(int idCliente, double monto)
         {
             // En un futuro: obtener balance real del cliente desde la base de datos
@@ -113,7 +112,7 @@ namespace CoreApp
             return monto <= saldoSimulado;
         }
 
-        // 💰 Cálculo de comisión según monto
+        // Cálculo de comisión según monto
         private double CalcularComision(double monto)
         {
             if (monto >= MontoAltoLimite)
