@@ -66,7 +66,7 @@ function AdminViewController() {
                 $('#txtSegundoApellido').val(userDTO.segundoApellido);
                 $('#txtDireccion').val(userDTO.direccion);
                 $('#txtTelefono').val(userDTO.telefono);
-                $('#selectEstado').val(userDTO.estado);
+                $('#selectEstado').val(userDTO.estado.toLowerCase());
                 $('#selectRol').val(userDTO.rol);
                 $('#txtPassword').val(userDTO.contrasenna);
                 $('#txtEmail').val(userDTO.correo);

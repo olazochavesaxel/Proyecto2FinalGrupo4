@@ -101,7 +101,7 @@ function ClienteViewController() {
         userDTO.direccion = $("#txtDireccion").val();
         userDTO.telefono = $("#txtTelefono").val();
         userDTO.estado = $("#selectEstado").val();
-        userDTO.rol = "cliente"; // fijo
+        userDTO.rol = "Cliente"; // fijo
         userDTO.contrasenna = $("#txtPassword").val();
         userDTO.fechaNacimiento = $("#txtBirthDate").val()
         userDTO.correo = $("#txtEmail").val();

@@ -93,7 +93,7 @@ function AsesorViewController() {
         userDTO.direccion = $("#txtDireccion").val();
         userDTO.telefono = $("#txtTelefono").val();
         userDTO.estado = $("#selectEstado").val();
-        userDTO.rol = "asesor"; // fijo
+        userDTO.rol = "Asesor"; // fijo
         userDTO.contrasenna = $("#txtPassword").val();
         userDTO.fechaNacimiento = $("#txtBirthDate").val();
         userDTO.correo = $("#txtEmail").val();
