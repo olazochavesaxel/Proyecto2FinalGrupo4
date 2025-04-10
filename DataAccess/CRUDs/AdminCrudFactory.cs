@@ -47,6 +47,8 @@ namespace DataAccess.CRUDs
             // Convertir DTO en Usuario
             var user = dto as Admin;
 
+            Console.WriteLine("Correo recibido en Update(): " + user.Correo);
+
             // Crear instrucción de ejecución
             var sqlOperation = new SqlOperation() { ProcedureName = "UDP_ADMIN_PR" };
 
@@ -69,6 +71,8 @@ namespace DataAccess.CRUDs
 
             // Ejecutar procedimiento en el DAO
             _sqlDAO.ExecuteProcedure(sqlOperation);
+            
+
         }
 
         public override void Delete(BaseDTO dto)

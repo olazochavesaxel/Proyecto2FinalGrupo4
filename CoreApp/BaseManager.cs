@@ -8,8 +8,11 @@ namespace CoreApp
 {
     public class BaseManager
     {
-        protected void ManageException(Exception exception) {
-            Console.Write("Se creo una excepción " + exception.ToString());
-                }
+        protected void ManageException(Exception exception)
+        {
+            
+            Console.WriteLine("Se creó una excepción: " + exception.ToString());
+            throw exception;
+        }
     }
 }
