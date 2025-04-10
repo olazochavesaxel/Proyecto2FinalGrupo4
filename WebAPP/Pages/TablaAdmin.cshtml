@@ -15,19 +15,19 @@
             <table id="tblAdmins" class="display" style="width:100%">
                 <thead>
                     <tr>
-                        <th>Id</th>
-                        <th>Cédula</th>
-                        <th>Nombre</th>
-                        <th>Primer Apellido</th>
-                        <th>Segundo Apellido</th>
-                        <th>Dirección</th>
-                        <th>Telefono</th>
-                        <th>Estado</th>
-                        <th>Rol</th>
-                        <th>Fecha de Nacimiento</th>
-                        <th>Correo Electrónico</th>
-                        <th>Fecha  Creación</th>
-                    </tr>
+						<th>Id</th>
+						<th>Cédula</th>
+						<th>Nombre</th>
+						<th>Primer Apellido</th>
+						<th>Segundo Apellido</th>
+						<th>Dirección</th>
+						<th>Telefono</th>
+						<th>Estado</th>
+						<th>Rol</th>
+						<th>Fecha de Nacimiento</th>
+						<th>Correo Electrónico</th>
+						<th>Fecha  Creación</th>
+					</tr>
                 </thead>
             </table>
         </div>
@@ -37,40 +37,36 @@
             <div class="bs-component">
                 <form>
                     <fieldset>
-                        <legend>Formulario de registro</legend>
+                        <legend>Formulario de Registro</legend>
+                        <input type="hidden" id="txtId">
                         <div class="form-group">
-                            <label for="txtCedula" class="form-label mt-4">Cedula</label>
-                            <input id="txtCedula" type="number" class="form-control" aria-describedby="emailHelp" placeholder="Enter your cedula">
+                            <label for="txtCedula" class="form-label mt-4">Cédula</label>
+                            <input id="txtCedula" type="number" class="form-control" placeholder="Ingrese su cédula">
                         </div>
 
                         <div class="form-group">
                             <label for="txtNombre" class="form-label mt-4">Nombre</label>
-                            <input type="text" class="form-control" id="txtNombre" aria-describedby="emailHelp" placeholder="Enter your name">
-                            <small id="emailHelp" class="form-text text-muted">Use your name.</small>
+                            <input type="text" class="form-control" id="txtNombre" placeholder="Ingrese su nombre">
                         </div>
 
                         <div class="form-group">
-                            <label for="txtPrimerApellido" class="form-label mt-4">PrimerApellido</label>
-                            <input type="text" class="form-control" id="txtPrimerApellido" aria-describedby="emailHelp" placeholder="Enter your last name">
-                            <small id="emailHelp" class="form-text text-muted">Use your name.</small>
+                            <label for="txtPrimerApellido" class="form-label mt-4">Primer Apellido</label>
+                            <input type="text" class="form-control" id="txtPrimerApellido" placeholder="Ingrese su primer apellido">
                         </div>
 
                         <div class="form-group">
                             <label for="txtSegundoApellido" class="form-label mt-4">Segundo Apellido</label>
-                            <input type="text" class="form-control" id="txtSegundoApellido" aria-describedby="emailHelp" placeholder="Enter your last name">
-                            <small id="emailHelp" class="form-text text-muted">Use your name.</small>
+                            <input type="text" class="form-control" id="txtSegundoApellido" placeholder="Ingrese su segundo apellido">
                         </div>
 
                         <div class="form-group">
-                            <label for="txtDirecion" class="form-label mt-4">Direccion </label>
-                            <input type="text" class="form-control" id="txtDireccion" aria-describedby="emailHelp" placeholder="Enter your last name">
-                            <small id="emailHelp" class="form-text text-muted">Use your name.</small>
+                            <label for="txtDireccion" class="form-label mt-4">Dirección</label>
+                            <input type="text" class="form-control" id="txtDireccion" placeholder="Ingrese su dirección">
                         </div>
 
                         <div class="form-group">
-                            <label for="txtTelefono" class="form-label mt-4">Numero de Telefono </label>
-                            <input type="number" class="form-control" id="txtTelefono" aria-describedby="emailHelp" placeholder="Enter your phone number">
-                            <small id="emailHelp" class="form-text text-muted">Use your phone.</small>
+                            <label for="txtTelefono" class="form-label mt-4">Número de Teléfono</label>
+                            <input type="number" class="form-control" id="txtTelefono" placeholder="Ingrese su número de teléfono">
                         </div>
 
                         <div class="form-group">
@@ -82,46 +78,43 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="selectRol" class="form-label mt-4">Rol</label>
-                            <select class="form-control" id="selectRol">
-                                <option value="asesor">Asesor</option>
-                                <option value="administrador">Administrador</option>
-                                <option value="cliente">Cliente</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="txtPassword" class="form-label mt-4">Password</label>
-                            <input type="password" class="form-control" id="txtPassword" aria-describedby="emailHelp" placeholder="Enter your password">
+                            <label for="txtPassword" class="form-label mt-4">Contraseña</label>
+                            <input type="password" class="form-control" id="txtPassword" placeholder="Ingrese su contraseña">
                         </div>
 
                         <div class="form-group">
                             <label for="txtBirthDate" class="form-label mt-4">Fecha de Nacimiento</label>
-                            <input type="date" class="form-control" id="txtBirthDate" aria-describedby="emailHelp" placeholder="Enter your birthdate">
+                            <input type="date" class="form-control" id="txtBirthDate">
                         </div>
 
                         <div class="form-group">
-                            <label for="txtEmail" class="form-label mt-4">Correo </label>
-                            <input id="txtEmail" type="email" class="form-control" aria-describedby="emailHelp" placeholder="Enter email">
-                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                            <label for="txtEmail" class="form-label mt-4">Correo Electrónico</label>
+                            <input id="txtEmail" type="email" class="form-control" placeholder="Ingrese su correo electrónico">
                         </div>
 
-                        
+                        <div class="form-group">
+                            <label for="txtFotoPerfil" class="form-label mt-4">Foto de Perfil</label>
+                            <input id="txtFotoPerfil" type="text" class="form-control" placeholder="Ingrese la URL de la imagen o el nombre del archivo">
+                            <small class="form-text text-muted">Por ahora, ingrese una URL o un nombre de archivo.</small>
+                        </div>
+
+                        <input type="hidden" id="selectRol" value="Administrador">
                     </fieldset>
                 </form>
                 <br />
-                <button id="btnCreate" class="source-button btn btn-primary btn-xs" type="button" tabindex="0">
-                    <i class="bi bi-code">Save</i>
+                <button id="btnCreate" class="source-button btn btn-primary btn-xs" type="button">
+                    <i class="bi bi-save"> Guardar</i>
                 </button>
-                <button id="btnUpdate" class="source-button btn btn-info btn-xs" type="button" tabindex="0">
-                    <i class="bi bi-code">Update</i>
+                <button id="btnUpdate" class="source-button btn btn-info btn-xs" type="button">
+                    <i class="bi bi-pencil"> Actualizar</i>
                 </button>
-                <button id="btnDelete" class="source-button btn btn-danger btn-xs" type="button" tabindex="0">
-                    <i class="bi bi-code">Delete</i>
+                <button id="btnDelete" class="source-button btn btn-danger btn-xs" type="button">
+                    <i class="bi bi-trash"> Eliminar</i>
                 </button>
             </div>
         </div>
     </div>
+
 
     
 </div>

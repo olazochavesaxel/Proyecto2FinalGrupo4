@@ -58,6 +58,7 @@ namespace DataAccess.CRUDs
             sqlOperation.AddStringParameter("P_ESTADO", cliente.Estado);
             sqlOperation.AddStringParameter("P_ROL", "Cliente");
             sqlOperation.AddDateTimeParameter("P_FECHA_NACIMIENTO", cliente.FechaNacimiento);
+
             sqlOperation.AddDateTimeParameter("P_FECHA_EXPIRACION_OTP", cliente.FechaExpiracionOTP);
             sqlOperation.AddStringParameter("P_CORREO", cliente.Correo);  // Agregar correo
             sqlOperation.AddDoubleParameter("P_BALANCE_FINANCIERO", cliente.BalanceFinanciero);  // Balance financiero
@@ -162,6 +163,7 @@ namespace DataAccess.CRUDs
                 Estado = (string)row["Estado"],
                 Rol = (string)row["Rol"],
                 FechaNacimiento = (DateTime)row["FechaNacimiento"],
+                Correo= (string)row["Correo"],
                 FechaExpiracionOTP = (DateTime)row["FechaExpiracionOTP"],
                 Created = (DateTime)row["FechaCreacion"],
                 BalanceFinanciero = (double)row["BalanceFinanciero"],

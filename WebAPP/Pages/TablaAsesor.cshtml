@@ -18,6 +18,7 @@
             <table id="tblAsesores" class="display" style="width:100%">
                 <thead>
                     <tr>
+                        <th>Id</th>
                         <th>Cédula</th>
                         <th>Nombre</th>
                         <th>Primer Apellido</th>
@@ -36,8 +37,98 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="bs-component">
+                <form>
+                    <fieldset>
+                        <legend>Formulario de Registro</legend>
+                        <input type="hidden" id="txtId">
+                        <div class="form-group">
+                            <label for="txtCedula" class="form-label mt-4">Cédula</label>
+                            <input id="txtCedula" type="number" class="form-control" placeholder="Ingrese su cédula">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtNombre" class="form-label mt-4">Nombre</label>
+                            <input type="text" class="form-control" id="txtNombre" placeholder="Ingrese su nombre">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtPrimerApellido" class="form-label mt-4">Primer Apellido</label>
+                            <input type="text" class="form-control" id="txtPrimerApellido" placeholder="Ingrese su primer apellido">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtSegundoApellido" class="form-label mt-4">Segundo Apellido</label>
+                            <input type="text" class="form-control" id="txtSegundoApellido" placeholder="Ingrese su segundo apellido">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtDireccion" class="form-label mt-4">Dirección</label>
+                            <input type="text" class="form-control" id="txtDireccion" placeholder="Ingrese su dirección">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtTelefono" class="form-label mt-4">Número de Teléfono</label>
+                            <input type="number" class="form-control" id="txtTelefono" placeholder="Ingrese su número de teléfono">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtIngresoComisiones" class="form-label mt-4">Ingreso por Comisiones</label>
+                            <input type="number" class="form-control" id="txtIngresoComisiones" placeholder="Ingrese el monto de comisiones" step="0.01">
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="selectEstado" class="form-label mt-4">Estado</label>
+                            <select class="form-control" id="selectEstado">
+                                <option value="activo">Activo</option>
+                                <option value="inactivo">Inactivo</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtPassword" class="form-label mt-4">Contraseña</label>
+                            <input type="password" class="form-control" id="txtPassword" placeholder="Ingrese su contraseña">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtBirthDate" class="form-label mt-4">Fecha de Nacimiento</label>
+                            <input type="date" class="form-control" id="txtBirthDate">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtEmail" class="form-label mt-4">Correo Electrónico</label>
+                            <input id="txtEmail" type="email" class="form-control" placeholder="Ingrese su correo electrónico">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtFotoPerfil" class="form-label mt-4">Foto de Perfil</label>
+                            <input id="txtFotoPerfil" type="text" class="form-control" placeholder="Ingrese la URL de la imagen o el nombre del archivo">
+                            <small class="form-text text-muted">Por ahora, ingrese una URL o un nombre de archivo.</small>
+                        </div>
+
+                        <input type="hidden" id="selectRol" value="asesor">
+
+                    </fieldset>
+                </form>
+                <br />
+                <button id="btnCreate" class="source-button btn btn-primary btn-xs" type="button">
+                    <i class="bi bi-save"> Guardar</i>
+                </button>
+                <button id="btnUpdate" class="source-button btn btn-info btn-xs" type="button">
+                    <i class="bi bi-pencil"> Actualizar</i>
+                </button>
+                <button id="btnDelete" class="source-button btn btn-danger btn-xs" type="button">
+                    <i class="bi bi-trash"> Eliminar</i>
+                </button>
+            </div>
+        </div>
+    </div>
+
 
 </div>
 
-</div>
+
 
