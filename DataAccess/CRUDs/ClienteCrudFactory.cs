@@ -167,7 +167,7 @@ namespace DataAccess.CRUDs
                 FechaExpiracionOTP = (DateTime)row["FechaExpiracionOTP"],
                 Created = (DateTime)row["FechaCreacion"],
                 BalanceFinanciero = (double)row["BalanceFinanciero"],
-                Correo = (string)row["Correo"]
+                
             };
 
             return newUser;
