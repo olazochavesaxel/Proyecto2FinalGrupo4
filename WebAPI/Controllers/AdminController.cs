@@ -23,12 +23,18 @@ namespace WebAPI.Controllers
         {
             try
             {
-                _userManager.Create(user);
-                return Ok(user);
+                var mng = new AdminManager();
+                mng.Create(user);  
+                return Ok(new { success = true });
+            }
+            catch (ArgumentException ex)
+            {
+                // Enviar el mensaje de error con la estructura adecuada
+                return BadRequest(new { errors = new { general = new[] { ex.Message } } });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error al crear el administrador: {ex.Message}");
+                return StatusCode(500, new { errors = new { general = new[] { "Error interno del servidor." } } });
             }
         }
 
@@ -107,26 +113,33 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut]
-        [Route("Update/{id}")]
-        public ActionResult Update(int id, [FromBody] Admin user)
+        [Route("Update")]
+        public ActionResult Update([FromBody] Admin user)
         {
             try
             {
-                if (user == null)
-                {
-                    return BadRequest("El objeto Admin es nulo.");
-                }
-
-                // Verifica si el usuario con el ID proporcionado existe en la base de datos.
-                var existingUser = _userManager.RetrieveById(id);
+                var existingUser = _userManager.RetrieveById(user.Id);
                 if (existingUser == null)
                 {
-                    return NotFound($"No se encontró el usuario con el ID {id}");
+                    return NotFound("Usuario no encontrado.");
                 }
 
-                // Actualiza solo si el usuario existe
-                _userManager.Update(user);
-                return Ok(user);
+                // Actualizar los datos
+                existingUser.Cedula = user.Cedula;
+                existingUser.Nombre = user.Nombre;
+                existingUser.PrimerApellido = user.PrimerApellido;
+                existingUser.SegundoApellido = user.SegundoApellido;
+                existingUser.Direccion = user.Direccion;
+                existingUser.Telefono = user.Telefono;
+                existingUser.Estado = user.Estado;
+                existingUser.Rol = user.Rol;
+                existingUser.Contrasenna = user.Contrasenna;
+                existingUser.FechaNacimiento = user.FechaNacimiento;
+                existingUser.Correo = user.Correo;
+                existingUser.FotoPerfil = user.FotoPerfil;
+
+                _userManager.Update(existingUser);
+                return Ok("Administrador actualizado correctamente.");
             }
             catch (Exception ex)
             {
@@ -135,13 +148,20 @@ namespace WebAPI.Controllers
         }
 
 
-        // DELETE -> DeleteUser
+
+
         [HttpDelete]
-        [Route("Delete")]
-        public ActionResult Delete(Admin user)
+        [Route("Delete/{id}")]
+        public ActionResult Delete(int id)
         {
             try
             {
+                var user = _userManager.RetrieveById(id);
+                if (user == null)
+                {
+                    return NotFound("Usuario no encontrado.");
+                }
+
                 _userManager.Delete(user);
                 return Ok("Administrador eliminado correctamente.");
             }
@@ -150,6 +170,7 @@ namespace WebAPI.Controllers
                 return StatusCode(500, $"Error al eliminar administrador: {ex.Message}");
             }
         }
+
     }
 
 }

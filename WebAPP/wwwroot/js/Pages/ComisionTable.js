@@ -1,5 +1,6 @@
-﻿
+
 function ComisionViewController() {
+
     this.ViewName = "TablaComision";
     this.ApiEndPointName = "Comision";
 
@@ -11,34 +12,18 @@ function ComisionViewController() {
     // Cargar la tabla con datos de administradores desde la API
     this.LoadTable = function () {
         var ca = new ControlActions();
+        console.log("🔹 ControlActions cargado:", ca); // 🔹 Verifica si ControlActions está definido
+
         var service = this.ApiEndPointName + "/RetrieveAll";
         var urlService = ca.GetUrlApiService(service);
 
-        /* th>Id</th>
+        console.log("URL de la API:", urlService); // 🔹 Verifica la URL generada
 
-        th>Cédula</th>
-                        <th>Id</th>
-                        <th>Tipo</th>
-                        <th>Nombre</th>
-                        <th>Porcentaje</th>
-                        <th>Tarifa 1</th>
-                        <th>Tarifa 2</th>
-                        <th>Tarifa 3</th>
-                        <th>Id Amin</th>
-                        
-                                {
-  "id": 0,
-  "created": "2025-03-29T09:49:35.951Z",
-  "tipo": "string",
-  "nombre": "string",
-  "porcentaje": 0,
-  "tarifa1": 0,
-  "tarifa2": 0,
-  "tarifa3": 0,
-  "idAdmin": 0
-}
-                         
-          */
+        // Verifica si la API devuelve datos
+        fetch(urlService)
+            .then(response => response.json())
+            .then(data => console.log("Datos de la API:", data)) // 🔹 Muestra los datos de la API en la consola
+            .catch(error => console.error("Error al obtener datos:", error));
 
         var columns = [];
         columns[0] = { 'data': 'id' };
@@ -49,21 +34,23 @@ function ComisionViewController() {
         columns[5] = { 'data': 'tarifa2' };
         columns[6] = { 'data': 'tarifa3' };
         columns[7] = { 'data': 'idAdmin' };
- 
 
-        $('#tblComision').dataTable({
+        $('#tblComision').DataTable({
+            "destroy": true, // 🔹 Permite recargar la tabla sin errores
             "ajax": {
                 "url": urlService,
                 "dataSrc": ""
             },
-            columns: columns // Corrección en el nombre de la propiedad
+            columns: columns
         });
-    }
+    };
+
 }
 
 // $ referencia a jQuery
 $(document).ready(function () {
-    var vc = new ComisionViewController(); // Corrección del controlador
+    console.log("Document Ready - Inicializando ComisionViewController");
+    var vc = new ComisionViewController();
     vc.InitView();
 });
 

@@ -81,8 +81,8 @@ function ControlActions() {
 			success: function (data) {
 				if (callBackFunction) {
 					Swal.fire(
-						'Good job!',
-						'Transaction completed!',
+						'¡Éxito!',
+						'Usuario creado correctamente.',
 						'success'
 					)
 					callBackFunction(data);
@@ -110,60 +110,62 @@ function ControlActions() {
 
 
 	this.PutToAPI = function (service, data, callBackFunction) {
-		var jqxhr = $.put(this.GetUrlApiService(service), data, function (response) {
-			var ctrlActions = new ControlActions();
+		$.ajax({
+			url: this.GetUrlApiService(service),
+			type: "PUT",
+			data: JSON.stringify(data),
+			contentType: "application/json",
+			success: function (response) {
+				Swal.fire("¡Éxito!", "Usuario actualizado correctamente.", "success");
 
-			Swal.fire(
-				'Good job!',
-				'Transaction completed!',
-				'success'
-			)
-
-			if (callBackFunction) {
-				callBackFunction(response);
-			}
-
-		})
-			.fail(function (response) {
+				if (callBackFunction) {
+					callBackFunction(response);
+				}
+			},
+			error: function (response) {
 				var data = response.responseJSON;
-				var errors = data.errors;
-				var errorMessages = Object.values(errors).flat();
-				message = errorMessages.join("<br/> ");
+				var errors = data?.errors || ["Error desconocido"];
+				var errorMessages = Object.values(errors).flat().join("<br/>");
+
 				Swal.fire({
-					icon: 'error',
-					title: 'Oops...',
-					html: message,
-					footer: 'UCenfotec'
-				})
-			})
+					icon: "error",
+					title: "Oops...",
+					html: errorMessages,
+					footer: "UCenfotec"
+				});
+			}
+		});
 	};
 
-	this.DeleteToAPI = function (service, data, callBackFunction) {
-		var jqxhr = $.delete(this.GetUrlApiService(service), data, function (response) {
-			var ctrlActions = new ControlActions();
-			Swal.fire(
-				'Good job!',
-				'Transaction completed!',
-				'success'
-			)
 
-			if (callBackFunction) {
-				callBackFunction(response);
-			}
-		})
-			.fail(function (response) {
+
+
+	this.DeleteToAPI = function (service, id, callBackFunction) {
+		$.ajax({
+			url: this.GetUrlApiService(service) + "/" + id, // Pasar ID en la URL
+			type: "DELETE",
+			success: function (response) {
+				Swal.fire("¡Éxito!", "Usuario eliminado correctamente.", "success");
+
+				if (callBackFunction) {
+					callBackFunction(response);
+				}
+			},
+			error: function (response) {
 				var data = response.responseJSON;
-				var errors = data.errors;
-				var errorMessages = Object.values(errors).flat();
-				message = errorMessages.join("<br/> ");
+				var errors = data?.errors || ["Error desconocido"];
+				var errorMessages = Object.values(errors).flat().join("<br/>");
+
 				Swal.fire({
-					icon: 'error',
-					title: 'Oops...',
-					html: message,
-					footer: 'UCenfotec'
-				})
-			})
+					icon: "error",
+					title: "Oops...",
+					html: errorMessages,
+					footer: "UCenfotec"
+				});
+			}
+		});
 	};
+
 
 	this.GetToApi = function (service, callBackFunction) {
 		var jqxhr = $.get(this.GetUrlApiService(service), function (response) {

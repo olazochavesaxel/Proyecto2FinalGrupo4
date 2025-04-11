@@ -23,12 +23,19 @@ namespace WebAPI.Controllers
         {
             try
             {
-                _userManager.Create(user);
-                return Ok(user);
+                var mng = new AsesorManager();
+                mng.Create(user);
+                return Ok(new { success = true });
+
+            }
+            catch (ArgumentException ex)
+            {
+                // Enviar el mensaje de error con la estructura adecuada
+                return BadRequest(new { errors = new { general = new[] { ex.Message } } });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error al crear el asesor: {ex.Message}");
+                return StatusCode(500, new { errors = new { general = new[] { "Error interno del servidor." } } });
             }
         }
 
@@ -102,28 +109,40 @@ namespace WebAPI.Controllers
         {
             try
             {
-                _userManager.Update(user);
-                return Ok(user);
+                var mng = new AsesorManager();
+                mng.Update(user);  // Se llama al método Update de AsesorManager
+                return Ok(new { success = true });
+            }
+            catch (ArgumentException ex)
+            {
+                // Enviar el mensaje de error con la estructura adecuada
+                return BadRequest(new { errors = new { general = new[] { ex.Message } } });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error al actualizar asesor: {ex.Message}");
+                return StatusCode(500, new { errors = new { general = new[] { "Error interno del servidor." } } });
             }
         }
 
-        // DELETE -> DeleteUser
+
         [HttpDelete]
-        [Route("Delete")]
-        public ActionResult Delete(Asesor user)
+        [Route("Delete/{id}")]
+        public ActionResult Delete(int id)
         {
             try
             {
+                var user = _userManager.RetrieveById(id);
+                if (user == null)
+                {
+                    return NotFound("Asesor no encontrado.");
+                }
+
                 _userManager.Delete(user);
                 return Ok("Asesor eliminado correctamente.");
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error al eliminar asesor: {ex.Message}");
+                return StatusCode(500, $"Error al eliminar Asesor: {ex.Message}");
             }
         }
     }

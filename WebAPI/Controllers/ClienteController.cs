@@ -22,12 +22,18 @@ namespace WebAPI.Controllers
         {
             try
             {
-                _userManager.Create(user);
-                return Ok(user);
+                var mng = new ClienteManager();
+                mng.Create(user);  // Se llama al método Update de AsesorManager
+                return Ok(new { success = true });
+            }
+            catch (ArgumentException ex)
+            {
+                // Enviar el mensaje de error con la estructura adecuada
+                return BadRequest(new { errors = new { general = new[] { ex.Message } } });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error al crear el cliente: {ex.Message}");
+                return StatusCode(500, new { errors = new { general = new[] { "Error interno del servidor." } } });
             }
         }
 
@@ -101,30 +107,45 @@ namespace WebAPI.Controllers
         {
             try
             {
-                _userManager.Update(user);
-                return Ok(user);
+                var mng = new ClienteManager();
+                mng.Update(user);  // Se llama al método Update de AsesorManager
+                return Ok(new { success = true });
+            }
+            catch (ArgumentException ex)
+            {
+                // Enviar el mensaje de error con la estructura adecuada
+                return BadRequest(new { errors = new { general = new[] { ex.Message } } });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error al actualizar cliente: {ex.Message}");
+                return StatusCode(500, new { errors = new { general = new[] { "Error interno del servidor." } } });
             }
         }
 
-        // DELETE -> DeleteUser
+        
+        // DELETE -> DeleteCliente
         [HttpDelete]
-        [Route("Delete")]
-        public ActionResult Delete(Cliente user)
+        [Route("Delete/{id}")]
+        public ActionResult Delete(int id)
         {
             try
             {
+                var user = _userManager.RetrieveById(id);
+                if (user == null)
+                {
+                    return NotFound("Cliente no encontrado.");
+                }
+
                 _userManager.Delete(user);
-                return Ok("CLiente eliminado correctamente.");
+                return Ok("Cliente eliminado correctamente.");
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Error al eliminar cliente: {ex.Message}");
             }
         }
+
+
     }
 }
 

@@ -14,15 +14,13 @@ function AdminViewController() {
         })
 
         $("#btnUpdate").click(function () {
-            let userDTO = {};
-            userDTO.id = $("#txtId").val();
-            userDTO.nombre = $("#txtNombre").val();
-            userDTO.cedula = $("#txtCedula").val();
-            // Agrega los demás campos
+            var vc = new AdminViewController();
+            vc.Update();
+        });
 
-            console.log(userDTO); // Solo para verificar que los datos están correctos antes de enviarlos
-
-            // Aquí iría tu lógica para enviar los datos al backend
+        $("#btnDelete").click(function () {
+            var vc = new AdminViewController();
+            vc.Delete();
         });
 
     }
@@ -68,14 +66,17 @@ function AdminViewController() {
                 $('#txtSegundoApellido').val(userDTO.segundoApellido);
                 $('#txtDireccion').val(userDTO.direccion);
                 $('#txtTelefono').val(userDTO.telefono);
-                $('#selectEstado').val(userDTO.estado);
+                $('#selectEstado').val(userDTO.estado.toLowerCase());
                 $('#selectRol').val(userDTO.rol);
                 $('#txtPassword').val(userDTO.contrasenna);
                 $('#txtEmail').val(userDTO.correo);
+                $('#txtFotoPerfil').val(userDTO.fotoPerfil);
 
                 // Formato de fecha
                 var onlyDate = userDTO.fechaNacimiento ? userDTO.fechaNacimiento.split("T")[0] : "";
-                $('#txtBirthDate').val(onlyDate);
+                $('#txtBirthDate').val(onlyDate); 
+
+                $('#txtId').val(userDTO.id); // <-- AGREGAR ESTA LÍNEA
             }
         });
     }
@@ -111,40 +112,85 @@ function AdminViewController() {
         });
     }
 
-    //Metodo UPDATE
-   
+    //Metodo Update
     this.Update = function () {
-        var userDTO = {};
-        userDTO.id = $("#txtId").val(); // Asegúrate de tener un campo hidden con el ID del usuario
+        var userId = $("#txtId").val();
 
-        userDTO.fechaExpiracionOTP = new Date().toISOString();
-        userDTO.created = new Date().toISOString();
+        if (!userId) {
+            Swal.fire("Error", "Debe seleccionar un usuario antes de actualizar", "warning");
+            return;
+        }
 
-        userDTO.fotoPerfil = "pp";
-        userDTO.cedula = $("#txtCedula").val();
-        userDTO.nombre = $("#txtNombre").val();
-        userDTO.primerApellido = $("#txtPrimerApellido").val();
-        userDTO.segundoApellido = $("#txtSegundoApellido").val();
-        userDTO.direccion = $("#txtDireccion").val();
-        userDTO.telefono = $("#txtTelefono").val();
-        userDTO.estado = $("#selectEstado").val();
-        userDTO.rol = $("#selectRol").val();
-        userDTO.contrasenna = $("#txtPassword").val();
-        userDTO.fechaNacimiento = $("#txtBirthDate").val();
-        userDTO.correo = $("#txtEmail").val();
+        var userDTO = {
+            id: userId,
+            cedula: $("#txtCedula").val(),
+            nombre: $("#txtNombre").val(),
+            primerApellido: $("#txtPrimerApellido").val(),
+            segundoApellido: $("#txtSegundoApellido").val(),
+            direccion: $("#txtDireccion").val(),
+            telefono: $("#txtTelefono").val(),
+            estado: $("#selectEstado").val(),
+            rol: $("#selectRol").val(),
+            contrasenna: $("#txtPassword").val(),
+            fechaNacimiento: $("#txtBirthDate").val(),
+            correo: $("#txtEmail").val(),
+            fotoPerfil: $("#txtFotoPerfil").val()
+        };
 
-        // Verifica que los datos sean correctos
-        console.log(userDTO);
-
-        // Invocar API con PUT
         var ca = new ControlActions();
-        var urlService = this.ApiEndPointName + "/Update/" + userDTO.id;  // Usa el ID en la URL
+        var urlService = this.ApiEndPointName + "/Update";
 
-        ca.PutToAPI(urlService, userDTO, function (response) {
-            console.log("Usuario actualizado");
-            $('#tblAdmins').DataTable().ajax.reload();
+        Swal.fire({
+            title: "¿Estás seguro?",
+            text: "Los datos del usuario serán actualizados.",
+            icon: "info",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Sí, actualizar",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                ca.PutToAPI(urlService, userDTO, function () {
+                    console.log("Usuario actualizado");
+                    $('#tblAdmins').DataTable().ajax.reload(); // Recargar la tabla
+                });
+            }
         });
     };
+
+    // Método para eliminar usuario
+    this.Delete = function () {
+        var userId = $("#txtId").val();
+
+        if (!userId) {
+            Swal.fire("Error", "Debe seleccionar un usuario antes de eliminar", "warning");
+            return;
+        }
+
+        var ca = new ControlActions();
+        var urlService = this.ApiEndPointName + "/Delete";
+
+        Swal.fire({
+            title: "¿Estás seguro?",
+            text: "No podrás revertir esta acción",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                ca.DeleteToAPI(urlService, userId, function () {
+                    console.log("Usuario eliminado");
+                    $('#tblAdmins').DataTable().ajax.reload(); // Recargar la tabla
+                });
+            } 
+        });
+    };
+
+
 
 
 }
