@@ -1,12 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using _00_DTO;
+using CoreApp;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
-    public class PagoController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class PagoController : ControllerBase
     {
-        public IActionResult Index()
+        private PagoManager manager = new PagoManager();
+
+        [HttpPost]
+        public IActionResult RegistrarPago([FromBody] Pago pago)
         {
-            return View();
+            try
+            {
+                manager.RegistrarPago(pago);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
-}
