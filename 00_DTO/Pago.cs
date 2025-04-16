@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DTO;
 
 namespace _00_DTO
 {
-    public class Pago
+    public class Pago : BaseDTO
     {
         public int Id { get; set; }
         public double Monto { get; set; }
