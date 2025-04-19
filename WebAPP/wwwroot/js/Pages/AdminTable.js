@@ -66,7 +66,7 @@ function AdminViewController() {
                 $('#txtSegundoApellido').val(userDTO.segundoApellido);
                 $('#txtDireccion').val(userDTO.direccion);
                 $('#txtTelefono').val(userDTO.telefono);
-                $('#selectEstado').val(userDTO.estado.toLowerCase());
+                $('#selectEstado').val(userDTO.estado);
                 $('#selectRol').val(userDTO.rol);
                 $('#txtPassword').val(userDTO.contrasenna);
                 $('#txtEmail').val(userDTO.correo);
@@ -107,6 +107,14 @@ function AdminViewController() {
 
         ca.PostToAPI(urlService, userDTO, function () {
             console.log("Usuario creado");
+
+            // Guardar en localStorage
+            localStorage.setItem("correoOTP", userDTO.correo);
+            localStorage.setItem("origenOTP", "registro");
+
+            // Redirigir a la página de verificación OTP
+            window.location.href = "/AutentificacionOTP";
+
             //Recargar la tabla despues de crar el registro
             $('#tblAdmins').DataTable().ajax.reload(); // CORRECCIÓN: Usar #tblAdmins
         });

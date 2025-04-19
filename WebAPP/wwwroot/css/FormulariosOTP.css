@@ -1,0 +1,80 @@
+﻿body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: black;
+    color: white;
+}
+
+.login-container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: black;
+    text-align: center;
+}
+
+.login-box {
+    background: black;
+    color: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0px 6px 12px rgba(255, 255, 255, 0.1);
+    width: 400px;
+}
+
+.profile-picture {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+    .profile-picture img {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        border: 2px solid white;
+    }
+
+.form-group {
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+}
+
+.forgot-password {
+    margin: 10px 0;
+}
+
+.link-purple {
+    color: #8F5AF5;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+    .link-purple:hover {
+        text-decoration: underline;
+    }
+
+.btn-green {
+    background: #00D395;
+    color: black;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+    .btn-green:hover {
+        background: #00FFB4;
+    }

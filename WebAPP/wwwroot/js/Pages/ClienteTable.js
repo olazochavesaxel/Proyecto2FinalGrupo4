@@ -114,6 +114,12 @@ function ClienteViewController() {
 
         ca.PostToAPI(urlService, userDTO, function () {
             console.log("Cliente creado");
+
+            localStorage.setItem("correoOTP", userDTO.correo);
+            localStorage.setItem("origenOTP", "registro");
+
+            // Redirigir a la página de verificación OTP
+            window.location.href = "/AutentificacionOTP";
             $('#tblClientes').DataTable().ajax.reload(); // asegúrate de usar la tabla correcta
         });
     }

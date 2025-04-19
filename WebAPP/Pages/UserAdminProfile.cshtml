@@ -51,6 +51,39 @@
     </div>
 </div>
 
+<<<<<<< Updated upstream
+=======
+<!-- Script para mostrar datos del usuario -->
+<script>
+        window.onload = function () {
+        const usuarioData = sessionStorage.getItem("usuario");
+
+        if (!usuarioData) {
+            alert("Sesión no encontrada. Por favor, inicia sesión nuevamente.");
+            window.location.href = "/login";
+            return;
+        }
+
+        let usuario;
+        try {
+            usuario = JSON.parse(usuarioData);
+        } catch (e) {
+            sessionStorage.clear();
+            alert("Sesión inválida. Por favor, inicia sesión nuevamente.");
+            window.location.href = "/login";
+            return;
+        }
+
+        document.getElementById("nombreUsuario").textContent = usuario.nombre;
+        document.getElementById("rolUsuario").textContent = usuario.rol;
+        document.getElementById("nombre").textContent = usuario.nombre;
+        document.getElementById("apellido1").textContent = usuario.primerApellido;
+        document.getElementById("apellido2").textContent = usuario.segundoApellido;
+        document.getElementById("correo").textContent = usuario.correo;
+    };
+
+</script>
+
 <style>
     body, html {
         background-color: black;

@@ -58,7 +58,7 @@ namespace CoreApp
             }
         }
 
-        public void Update(Cliente usuario)
+        public void Update(Cliente usuario, bool contrasenaYaHasheada)
         {
             try
             {
@@ -75,18 +75,18 @@ namespace CoreApp
                 if (!Validaciones.ValidarCedula(usuario.Cedula))
                     throw new ArgumentException("La cédula ingresada no es válida.");
 
-                if (!string.IsNullOrEmpty(usuario.Contrasenna) && !Validaciones.ValidarContrasenna(usuario.Contrasenna))
-                    throw new ArgumentException("La contraseña no cumple con los requisitos mínimos de seguridad.");
-
                 if (!string.IsNullOrEmpty(usuario.Contrasenna))
                 {
-                    usuario.Contrasenna = Validaciones.HashPassword(usuario.Contrasenna);
+                    if (!contrasenaYaHasheada && !Validaciones.ValidarContrasenna(usuario.Contrasenna))
+                        throw new ArgumentException("La contraseña no cumple con los requisitos mínimos de seguridad.");
+
+                    if (!contrasenaYaHasheada)
+                        usuario.Contrasenna = Validaciones.HashPassword(usuario.Contrasenna);
                 }
 
                 if (!balanceOver0(usuario.BalanceFinanciero))
                     throw new ArgumentException("El balance no puede ser menor a 0.");
 
-                // Asignar una fecha válida para OTP si no se setea correctamente
                 if (usuario.FechaExpiracionOTP < new DateTime(1753, 1, 1))
                 {
                     usuario.FechaExpiracionOTP = DateTime.Now.AddMinutes(5);
@@ -105,7 +105,6 @@ namespace CoreApp
                 ManageException(ex);
             }
         }
-
 
         public void Delete(Cliente usuario)
         {
@@ -133,16 +132,7 @@ namespace CoreApp
         }
 
         // Validaciones
-        private bool IsOver18(Cliente usuario)
-        {
-            var currentDate = DateTime.Now;
-            int age = currentDate.Year - usuario.FechaNacimiento.Year;
-            if (usuario.FechaNacimiento.Date > currentDate.AddYears(-age).Date)
-            {
-                age--;
-            }
-            return age >= 18;
-        }
+       
 
         // Validación de balance mayor a 0
         private bool balanceOver0(double balance)

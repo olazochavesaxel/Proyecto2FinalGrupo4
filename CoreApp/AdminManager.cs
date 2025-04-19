@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DataAccess.CRUDs;
 using DTO;
+using FinancialWebApp.Utils;
 
 namespace CoreApp
 {
@@ -43,6 +44,7 @@ namespace CoreApp
 
                 user.Contrasenna = Validaciones.HashPassword(user.Contrasenna);
                 usuarioCrud.Create(user);
+                //OtpManager.EnviarOTPcorreo(user.Correo);
             }
             catch (Exception ex)
             {
@@ -51,7 +53,8 @@ namespace CoreApp
         }
 
 
-        public void Update(Admin usuario)
+        public void Update(Admin usuario, bool contrasenaYaHasheada = false)
+
         {
             try
             {
@@ -68,13 +71,15 @@ namespace CoreApp
                 if (!Validaciones.ValidarCedula(usuario.Cedula))
                     throw new ArgumentException("La cédula ingresada no es válida.");
 
-                if (!string.IsNullOrEmpty(usuario.Contrasenna) && !Validaciones.ValidarContrasenna(usuario.Contrasenna))
-                    throw new ArgumentException("La contraseña no cumple con los requisitos mínimos de seguridad.");
-
                 if (!string.IsNullOrEmpty(usuario.Contrasenna))
                 {
-                    usuario.Contrasenna = Validaciones.HashPassword(usuario.Contrasenna);
+                    if (!contrasenaYaHasheada && !Validaciones.ValidarContrasenna(usuario.Contrasenna))
+                        throw new ArgumentException("La contraseña no cumple con los requisitos mínimos de seguridad.");
+
+                    if (!contrasenaYaHasheada)
+                        usuario.Contrasenna = Validaciones.HashPassword(usuario.Contrasenna);
                 }
+
 
                 Admin usuarioExistente = RetrieveByCorreo(usuario.Correo);
                 if (usuarioExistente != null && usuarioExistente.Id != usuario.Id && Validaciones.UsuarioRegistrado(usuarioExistente, usuario.Rol))
@@ -83,6 +88,7 @@ namespace CoreApp
                 }
 
                 usuarioCrud.Update(usuario);
+                //OtpManager.EnviarOTPcorreo(usuario.Correo);
             }
             catch (Exception ex)
             {

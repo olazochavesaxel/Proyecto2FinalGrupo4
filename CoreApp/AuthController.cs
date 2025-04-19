@@ -7,34 +7,32 @@ namespace CoreApp
     {
         public static Usuario ValidarUsuario(string correo, string contrasena)
         {
+            Console.WriteLine(Validaciones.HashPassword("TuContrasena123!"));
             var asesorManager = new AsesorManager();
             var clienteManager = new ClienteManager();
             var adminManager = new AdminManager();
 
             // Verificar si el usuario es un Administrador
             var admin = adminManager.RetrieveByCorreo(correo);
-            if (admin != null && admin.Contrasenna == contrasena && admin.Rol == "Admin")
+            if (Validaciones.UsuarioRegistrado(admin, "Admin") && Validaciones.ContrasennaCorrecta(admin.Contrasenna, contrasena))
             {
-                // Llamar a NotificationManager para enviar la notificación
-                NotificationManager.EnviarNotificacion(admin, "Acceso exitoso", "Bienvenido, Administrador.");
+                //NotificationManager.EnviarNotificacion(admin, "Acceso exitoso", "Bienvenido, Administrador.");
                 return admin;
             }
 
             // Verificar si el usuario es un Cliente
             var cliente = clienteManager.RetrieveByCorreo(correo);
-            if (cliente != null && cliente.Contrasenna == contrasena && cliente.Rol == "Cliente")
+            if (Validaciones.UsuarioRegistrado(cliente, "Cliente") && Validaciones.ContrasennaCorrecta(cliente.Contrasenna, contrasena))
             {
-                // Llamar a NotificationManager para enviar la notificación
-                NotificationManager.EnviarNotificacion(cliente, "Acceso exitoso", "Bienvenido, Cliente.");
+                //NotificationManager.EnviarNotificacion(cliente, "Acceso exitoso", "Bienvenido, Cliente.");
                 return cliente;
             }
 
             // Verificar si el usuario es un Asesor
             var asesor = asesorManager.RetrieveByCorreo(correo);
-            if (asesor != null && asesor.Contrasenna == contrasena && asesor.Rol == "Asesor")
+            if (Validaciones.UsuarioRegistrado(asesor, "Asesor") && Validaciones.ContrasennaCorrecta(asesor.Contrasenna, contrasena))
             {
-                // Llamar a NotificationManager para enviar la notificación
-                NotificationManager.EnviarNotificacion(asesor, "Acceso exitoso", "Bienvenido, Asesor.");
+                //NotificationManager.EnviarNotificacion(asesor, "Acceso exitoso", "Bienvenido, Asesor.");
                 return asesor;
             }
 

@@ -51,6 +51,7 @@ namespace DataAccess.CRUDs
             var sqlOperation = new SqlOperation() { ProcedureName = "UDP_USER_PR" };
 
             // Agregar parámetros al procedimiento almacenado
+            sqlOperation.AddStringParameter("P_CORREO", user.Correo);
             sqlOperation.AddIntParameter("P_ID", user.Id);
             sqlOperation.AddStringParameter("P_CEDULA", user.Cedula);
             sqlOperation.AddStringParameter("P_NOMBRE", user.Nombre);

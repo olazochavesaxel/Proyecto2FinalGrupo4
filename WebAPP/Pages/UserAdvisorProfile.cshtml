@@ -129,3 +129,35 @@
         width: 100%;
     }
 </style>
+<<<<<<< Updated upstream
+=======
+
+<script>
+       document.addEventListener("DOMContentLoaded", () => {
+        const usuarioData = sessionStorage.getItem("usuario");
+
+        if (!usuarioData) {
+            alert("Sesión no encontrada. Por favor, inicia sesión nuevamente.");
+            window.location.href = "/login";
+            return;
+        }
+
+        let usuario;
+        try {
+            usuario = JSON.parse(usuarioData);
+        } catch (e) {
+            sessionStorage.clear();
+            alert("Sesión inválida. Por favor, inicia sesión nuevamente.");
+            window.location.href = "/login";
+            return;
+        }
+
+        document.getElementById("nombre-usuario").textContent = usuario.nombre;
+        document.getElementById("rol-usuario").textContent = usuario.rol;
+        document.getElementById("nombre").textContent = usuario.nombre;
+        document.getElementById("primer-apellido").textContent = usuario.primerApellido;
+        document.getElementById("segundo-apellido").textContent = usuario.segundoApellido;
+        document.getElementById("correo").textContent = usuario.correo;
+    });
+
+</script>
