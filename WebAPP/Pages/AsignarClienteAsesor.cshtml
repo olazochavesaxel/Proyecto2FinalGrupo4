@@ -1,0 +1,170 @@
+﻿@page
+@model WebAPP.Pages.AsignarClienteAsesorModel
+@{
+    ViewData["Title"] = "Asignar Cliente a Asesor";
+}
+
+<div class="profile-page">
+    <div class="sidebar">
+        <ul>
+            <li><a href="/UserAdminProfile">Perfil</a></li>
+            <li><a href="#">Asignaciones</a></li>
+        </ul>
+    </div>
+
+    <div class="content">
+        <h1>Asignar Cliente a Asesor</h1>
+
+        <div class="form-box">
+            <div class="form-group">
+                <label for="selectCliente">Seleccionar Cliente:</label>
+                <select id="selectCliente" class="form-control"></select>
+            </div>
+
+            <div class="form-group">
+                <label for="selectAsesor">Seleccionar Asesor:</label>
+                <select id="selectAsesor" class="form-control"></select>
+            </div>
+
+            <button id="btnAsignar" class="btn-green">Asignar</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    body, html {
+        background-color: black;
+        color: white;
+    }
+
+    .profile-page {
+        display: flex;
+        flex-direction: row;
+        margin-top: 20px;
+    }
+
+    .sidebar {
+        background-color: #00D395;
+        width: 220px;
+        height: calc(100vh - 60px);
+        padding-top: 30px;
+    }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+            .sidebar ul li {
+                margin: 20px 0;
+                text-align: center;
+            }
+
+                .sidebar ul li a {
+                    text-decoration: none;
+                    color: black;
+                    font-weight: bold;
+                    font-size: 16px;
+                }
+
+    .content {
+        flex: 1;
+        padding: 30px;
+    }
+
+    .form-box {
+        background-color: #111;
+        padding: 30px;
+        border-radius: 15px;
+        max-width: 600px;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: none;
+    }
+
+    .btn-green {
+        background: #00D395;
+        color: black;
+        padding: 10px 20px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        await cargarClientes();
+        await cargarAsesores();
+    });
+
+    async function cargarClientes() {
+        try {
+            const res = await fetch("https://localhost:7057/api/Cliente/RetrieveAll"); // ✅ Corrección aquí
+            const clientes = await res.json();
+
+            const dropdown = document.getElementById("selectCliente");
+            clientes.forEach(c => {
+                const option = document.createElement("option");
+                option.value = c.id;
+                option.text = c.correo; // ✅ Mostrar correo
+                dropdown.appendChild(option);
+            });
+        } catch (err) {
+            console.error("Error al cargar clientes", err);
+        }
+    }
+
+    async function cargarAsesores() {
+        try {
+            const res = await fetch("https://localhost:7057/api/Asesor/RetrieveAll");
+            const asesores = await res.json();
+
+            const dropdown = document.getElementById("selectAsesor");
+            asesores.forEach(a => {
+                const option = document.createElement("option");
+                option.value = a.id;
+                option.text = a.correo; // ✅ Mostrar correo
+                dropdown.appendChild(option);
+            });
+        } catch (err) {
+            console.error("Error al cargar asesores", err);
+        }
+    }
+
+    document.getElementById("btnAsignar").addEventListener("click", async () => {
+        const idCliente = document.getElementById("selectCliente").value;
+        const idAsesor = document.getElementById("selectAsesor").value;
+
+        if (!idCliente || !idAsesor) {
+            alert("Por favor seleccione un cliente y un asesor.");
+            return;
+        }
+
+        try {
+            const res = await fetch("https://localhost:7057/api/Cliente/AsignarClienteAsesor", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ idCliente: parseInt(idCliente), idAsesor: parseInt(idAsesor) })
+            });
+
+            const msg = await res.text();
+            alert(msg);
+        } catch (err) {
+            alert("Error al asignar cliente.");
+            console.error(err);
+        }
+    });
+</script>
+
