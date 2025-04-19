@@ -9,10 +9,10 @@
     <div class="sidebar">
         <ul>
             <li><a href="#">General</a></li>
-            <li><a href="#">Users</a></li>
+            <li><a href="#">Usuarios</a></li>
             <li><a href="#">Comisión</a></li>
-            <li><a href="">Reports</a></li>
-            <li><a href="#">Revenue</a></li>
+            <li><a href="#">Reportes</a></li>
+            <li><a href="#">Ingresos</a></li>
         </ul>
     </div>
 
@@ -23,18 +23,18 @@
             <div class="profile-header">
                 <div class="profile-photo"></div>
                 <div>
-                    <h2>Usuario</h2>
-                    <p>Asesor</p>
+                    <h2 id="nombre-usuario">Usuario</h2>
+                    <p id="rol-usuario">Asesor</p>
                 </div>
             </div>
 
             <div class="row mt-4">
                 <div class="col-md-6">
                     <h4>Información Personal</h4>
-                    <p><strong>Nombre:</strong> Ricardo</p>
-                    <p><strong>Primer Apellido:</strong> Barahona</p>
-                    <p><strong>Segundo Apellido:</strong> López</p>
-                    <p><strong>Correo Electrónico:</strong> ricardo@email.com</p>
+                    <p><strong>Nombre:</strong> <span id="nombre"></span></p>
+                    <p><strong>Primer Apellido:</strong> <span id="primer-apellido"></span></p>
+                    <p><strong>Segundo Apellido:</strong> <span id="segundo-apellido"></span></p>
+                    <p><strong>Correo Electrónico:</strong> <span id="correo"></span></p>
                 </div>
 
                 <div class="col-md-6">
@@ -66,7 +66,7 @@
     .sidebar {
         background-color: #00D395;
         width: 220px;
-        height: calc(100vh - 60px); /* Resta espacio del navbar */
+        height: calc(100vh - 60px);
         padding-top: 30px;
         position: relative;
         top: 0;
@@ -129,8 +129,6 @@
         width: 100%;
     }
 </style>
-<<<<<<< Updated upstream
-=======
 
 <script>
        document.addEventListener("DOMContentLoaded", () => {
@@ -159,5 +157,6 @@
         document.getElementById("segundo-apellido").textContent = usuario.segundoApellido;
         document.getElementById("correo").textContent = usuario.correo;
     });
+
 
 </script>

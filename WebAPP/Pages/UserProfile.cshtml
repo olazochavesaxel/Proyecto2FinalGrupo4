@@ -5,42 +5,38 @@
 }
 
 <div class="profile-page">
-    <!-- Menú lateral -->
     <div class="sidebar">
         <ul>
             <li><a href="#">General</a></li>
-
             <li><a href="#">Comisiones</a></li>
             <li><a href="#">Reportes</a></li>
             <li><a href="#">Transferencias</a></li>
         </ul>
     </div>
 
-    <!-- Contenido principal -->
     <div class="content">
         <h1>Mi Perfil</h1>
         <div class="profile-box">
             <div class="profile-header">
                 <div class="profile-photo"></div>
                 <div>
-                    <h2>Usuario</h2>
-
+                    <h2 id="nombreUsuario">Usuario</h2>
                 </div>
             </div>
 
             <div class="row mt-4">
                 <div class="col-md-6">
                     <h4>Información Personal</h4>
-                    <p><strong>Nombre:</strong> Ricardo</p>
-                    <p><strong>Primer Apellido:</strong> Barahona</p>
-                    <p><strong>Segundo Apellido:</strong> López</p>
-                    <p><strong>Dirección:</strong> Ministerio del Ambiente y Energía (MINAE), De la Casa Matute Gómez, 100 E/este, 50 sur.</p>
-                    <p><strong>Correo Electrónico:</strong> ricardo@email.com</p>
-                    <p><strong>Fecha de Nacimiento:</strong> 08-08-1994</p>
+                    <p><strong>Nombre:</strong> <span id="nombre"></span></p>
+                    <p><strong>Primer Apellido:</strong> <span id="primerApellido"></span></p>
+                    <p><strong>Segundo Apellido:</strong> <span id="segundoApellido"></span></p>
+                    <p><strong>Dirección:</strong> <span id="direccion"></span></p>
+                    <p><strong>Correo Electrónico:</strong> <span id="correo"></span></p>
+                    <p><strong>Fecha de Nacimiento:</strong> <span id="fechaNacimiento"></span></p>
                 </div>
                 <div class="col-md-6">
                     <h4>Datos Financieros</h4>
-                    <p><strong>Capital disponible:</strong> 5000$</p>
+                    <p><strong>Capital disponible:</strong> <span id="capitalDisponible"></span></p>
                     <p><strong>Inversiones activas:</strong> <a href="#">(link)</a></p>
                 </div>
             </div>
@@ -61,16 +57,14 @@
     .profile-page {
         display: flex;
         flex-direction: row;
-        margin-top: 20px; /* para que no tape el navbar */
+        margin-top: 20px;
     }
 
     .sidebar {
         background-color: #00D395;
         width: 220px;
-        height: calc(100vh - 60px); /* Resta espacio del navbar */
+        height: calc(100vh - 60px);
         padding-top: 30px;
-        position: relative;
-        top: 0;
     }
 
         .sidebar ul {
@@ -130,9 +124,9 @@
     a {
         color: #8F5AF5;
     }
-</style></style>
-</style>
 
+</style>
+  
 <script>
         document.addEventListener("DOMContentLoaded", () => {
         const usuarioData = sessionStorage.getItem("usuario");
@@ -149,6 +143,7 @@
         } catch (e) {
             sessionStorage.clear();
             alert("Sesión inválida. Por favor, inicia sesión nuevamente.");
+
             window.location.href = "/login";
             return;
         }
@@ -161,6 +156,8 @@
         document.getElementById("correo").textContent = user.correo;
         document.getElementById("fechaNacimiento").textContent = user.fechaNacimiento.split("T")[0];
 
+
+        // Mostrar balance si el usuario es Cliente
         if (user.rol.toLowerCase() === "cliente" && user.balanceFinanciero !== undefined) {
             document.getElementById("capitalDisponible").textContent = `$${user.balanceFinanciero.toFixed(2)}`;
         } else {
@@ -169,5 +166,4 @@
     });
 
 </script>
-
 

@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,53 +12,46 @@ namespace CoreApp
     public class TransaccionClienteManager : BaseManager
     {
         private readonly TransaccionClienteCrudFactory transCrud;
-        private readonly UsuarioCrudFactory usuarioCrud;
-
-        // Configuración de comisiones
-        private const double MontoAltoLimite = 10000.0;        // Ejemplo: transacciones altas si superan $10,000
-        private const double PorcentajeComision = 0.05;        // 5% para montos altos
-        private const double TarifaFijaComision = 25.0;        // $25 para montos bajos
+        private readonly ClienteCrudFactory clienteCrud;
+        private readonly ComisionCrudFactory comisionCrud;
 
         public TransaccionClienteManager()
         {
             transCrud = new TransaccionClienteCrudFactory();
-            usuarioCrud = new UsuarioCrudFactory();
+            clienteCrud = new ClienteCrudFactory();
+            comisionCrud = new ComisionCrudFactory();
         }
 
         public void Create(TransaccionCliente trans)
         {
             try
             {
-                // Validar cliente
-                var cliente = usuarioCrud.RetrieveById<Usuario>(trans.cliente.Id);
-                if (cliente == null || cliente.Rol != "Cliente")
-                    throw new Exception("El cliente no existe o no tiene el rol adecuado.");
+                var cliente = clienteCrud.RetrieveById<Cliente>(trans.IdCliente);
+                if (cliente == null)
+                    throw new Exception("El cliente no existe.");
 
-                // Validar tipo de transacción
                 if (!EsTipoValido(trans.Tipo))
                     throw new Exception("Tipo de transacción inválido. Solo se permite: Compra, Venta, Retiro.");
 
-                // Validar monto
                 if (trans.Monto <= 0)
                     throw new Exception("El monto de la transacción debe ser mayor que 0.");
 
-                // Validar saldo si es Retiro
-                if (trans.Tipo == "Retiro")
-                {
-                    if (!TieneSaldoSuficiente(cliente.Id, trans.Monto))
-                        throw new Exception("Saldo insuficiente para retiro.");
-                }
+                if (trans.Tipo == "Retiro" && !TieneSaldoSuficiente(cliente, trans.Monto))
+                    throw new Exception("Saldo insuficiente para retiro.");
 
-                // Calcular comisión y aplicar (esto se puede extender con lógica de impuestos también)
-                double comision = CalcularComision(trans.Monto);
+                var comision = CalcularComision(trans.Monto);
+                var totalADescontar = trans.Monto + comision;
 
-                // Registrar fecha actual
+                if (cliente.BalanceFinanciero < totalADescontar)
+                    throw new Exception("Saldo insuficiente para cubrir la transacción y la comisión.");
+
+                cliente.BalanceFinanciero -= totalADescontar;
+                clienteCrud.Update(cliente);
+
                 trans.Created = DateTime.Now;
-
-                // Aplicar cambios (por ahora no se descuenta del balance porque no está implementado aún)
                 transCrud.Create(trans);
 
-                Console.WriteLine($"✅ Transacción registrada con éxito. Comisión aplicada: ${comision}");
+                Console.WriteLine($"✅ Transacción creada. Comisión aplicada: ${comision}, nuevo balance: ${cliente.BalanceFinanciero}");
             }
             catch (Exception ex)
             {
@@ -71,7 +63,6 @@ namespace CoreApp
         {
             try
             {
-                // Similar lógica de validación
                 if (!EsTipoValido(trans.Tipo))
                     throw new Exception("Tipo de transacción inválido.");
 
@@ -98,32 +89,36 @@ namespace CoreApp
             return transCrud.RetrieveById<TransaccionCliente>(id);
         }
 
-        // 🔍 Validación de tipo permitido
         private bool EsTipoValido(string tipo)
         {
             string[] tiposValidos = { "Compra", "Venta", "Retiro" };
             return tiposValidos.Contains(tipo);
         }
 
-        // 💸 Simulación de validación de saldo
-        private bool TieneSaldoSuficiente(int idCliente, double monto)
+        private bool TieneSaldoSuficiente(Cliente cliente, double monto)
         {
-            // En un futuro: obtener balance real del cliente desde la base de datos
-            double saldoSimulado = 5000.0; // Provisional
-            return monto <= saldoSimulado;
+            return cliente.BalanceFinanciero >= monto;
         }
 
-        // 💰 Cálculo de comisión según monto
         private double CalcularComision(double monto)
         {
-            if (monto >= MontoAltoLimite)
-                return monto * PorcentajeComision;
+            var comision = comisionCrud.RetrieveByTipo<Comision>("cliente");
+            if (comision == null)
+                throw new Exception("No se encontraron tarifas de comisión configuradas para clientes.");
+
+            double baseComision;
+            if (monto > 5000)
+                baseComision = comision.Tarifa1; // Tarifa alta
+            else if (monto > 1000)
+                baseComision = comision.Tarifa2; // Tarifa baja
             else
-                return TarifaFijaComision;
+                baseComision = 0;
+
+            double impuestos = comision.Tarifa3; // Impuestos fijos
+            return baseComision + impuestos;
         }
     }
 }
-
 
 
 

@@ -10,10 +10,10 @@
     <div class="sidebar">
         <ul>
             <li><a href="#">General</a></li>
-            <li><a href="/UserManagement">Users</a></li>
+            <li><a href="/UserManagement">Usuarios</a></li>
             <li><a href="#">Comisión</a></li>
-            <li><a href="#">Reports</a></li>
-            <li><a href="#">Revenue</a></li>
+            <li><a href="#">Reportes</a></li>
+            <li><a href="#">Ingresos</a></li>
         </ul>
     </div>
 
@@ -24,18 +24,18 @@
             <div class="profile-header">
                 <div class="profile-photo"></div>
                 <div>
-                    <h2>Usuario</h2>
-                    <p>admin</p>
+                    <h2 id="nombreUsuario">Usuario</h2>
+                    <p id="rolUsuario">Administrador</p>
                 </div>
             </div>
 
             <div class="row mt-4">
                 <div class="col-md-6">
                     <h4>Información Personal</h4>
-                    <p><strong>Nombre:</strong> Ricardo</p>
-                    <p><strong>Primer Apellido:</strong> Barahona</p>
-                    <p><strong>Segundo Apellido:</strong> López</p>
-                    <p><strong>Correo Electrónico:</strong> ricardo@email.com</p>
+                    <p><strong>Nombre:</strong> <span id="nombre"></span></p>
+                    <p><strong>Primer Apellido:</strong> <span id="apellido1"></span></p>
+                    <p><strong>Segundo Apellido:</strong> <span id="apellido2"></span></p>
+                    <p><strong>Correo Electrónico:</strong> <span id="correo"></span></p>
                 </div>
 
                 <div class="col-md-6">
@@ -51,14 +51,15 @@
     </div>
 </div>
 
-<<<<<<< Updated upstream
-=======
+
+
 <!-- Script para mostrar datos del usuario -->
 <script>
         window.onload = function () {
         const usuarioData = sessionStorage.getItem("usuario");
 
         if (!usuarioData) {
+<!-- Script para mostrar datos del usuario -->
             alert("Sesión no encontrada. Por favor, inicia sesión nuevamente.");
             window.location.href = "/login";
             return;
@@ -168,6 +169,7 @@
 </style>
 
 
+<!-- comentario de prueba -->
 
 
 
