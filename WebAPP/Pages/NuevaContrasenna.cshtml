@@ -1,0 +1,28 @@
+﻿@page
+@model WebAPP.Pages.NuevaContrasennaModel
+@{
+    ViewData["Title"] = "Nueva Contraseña";
+}
+
+<link rel="stylesheet" href="~/css/FormulariosOtp.css" />
+
+<div class="login-container">
+    <div class="login-box">
+        <h2>Crear nueva contraseña</h2>
+        <p>Ingrese su nueva contraseña:</p>
+        <div class="form-group">
+            <input type="password" id="nuevaContrasena" class="form-control" placeholder="Nueva contraseña" required />
+        </div>
+        <div class="form-group">
+            <input type="password" id="confirmarContrasena" class="form-control" placeholder="Confirmar contraseña" required />
+        </div>
+        <button class="btn-green" onclick="guardarNuevaContrasena()">Guardar</button>
+        <p id="mensajeResultado"></p>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/js/Pages/NuevaContrasenna.js"></script>
+}
+<link rel="stylesheet" href="~/css/FormulariosOTP.css" />

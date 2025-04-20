@@ -124,14 +124,26 @@
     a {
         color: #8F5AF5;
     }
+
 </style>
-
+  
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const user = JSON.parse(localStorage.getItem("usuario"));
+        document.addEventListener("DOMContentLoaded", () => {
+        const usuarioData = sessionStorage.getItem("usuario");
 
-        if (!user) {
-            alert("Usuario no autenticado.");
+        if (!usuarioData) {
+            alert("Sesión no encontrada. Por favor, inicia sesión nuevamente.");
+            window.location.href = "/login";
+            return;
+        }
+
+        let user;
+        try {
+            user = JSON.parse(usuarioData);
+        } catch (e) {
+            sessionStorage.clear();
+            alert("Sesión inválida. Por favor, inicia sesión nuevamente.");
+
             window.location.href = "/login";
             return;
         }
@@ -144,6 +156,7 @@
         document.getElementById("correo").textContent = user.correo;
         document.getElementById("fechaNacimiento").textContent = user.fechaNacimiento.split("T")[0];
 
+
         // Mostrar balance si el usuario es Cliente
         if (user.rol.toLowerCase() === "cliente" && user.balanceFinanciero !== undefined) {
             document.getElementById("capitalDisponible").textContent = `$${user.balanceFinanciero.toFixed(2)}`;
@@ -151,4 +164,6 @@
             document.getElementById("capitalDisponible").textContent = "No disponible";
         }
     });
+
 </script>
+

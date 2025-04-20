@@ -108,7 +108,7 @@ namespace WebAPI.Controllers
             try
             {
                 var mng = new ClienteManager();
-                mng.Update(user);  // Se llama al método Update de AsesorManager
+                mng.Update(user, false);  // Se llama al método Update de AsesorManager
                 return Ok(new { success = true });
             }
             catch (ArgumentException ex)

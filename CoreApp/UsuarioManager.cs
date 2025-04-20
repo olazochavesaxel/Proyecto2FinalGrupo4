@@ -135,5 +135,31 @@ namespace CoreApp
         {
             return Validaciones.IniciarSesion(correo, contrasenna, this);
         }
+
+        //Nueva linea//////////////////////////////////////////////////
+        public void ActualizarContrasenaPorCorreo(string correo, string nuevaContrasena)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(correo))
+                    throw new ArgumentException("El correo no puede estar vacío.");
+                if (string.IsNullOrEmpty(nuevaContrasena))
+                    throw new ArgumentException("La nueva contraseña no puede estar vacía.");
+                if (!Validaciones.ValidarContrasenna(nuevaContrasena))
+                    throw new ArgumentException("La nueva contraseña no cumple con los requisitos mínimos de seguridad.");
+
+                var usuario = RetrieveByCorreo(correo);
+                if (usuario == null)
+                    throw new ArgumentException("No se encontró un usuario con ese correo.");
+
+                usuario.Contrasenna = Validaciones.HashPassword(nuevaContrasena);
+                usuarioCrud.Update(usuario);
+            }
+            catch (Exception ex)
+            {
+                ManageException(ex);
+            }
+        }
+
     }
 }

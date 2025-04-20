@@ -20,7 +20,8 @@
                 <input type="password" id="password" class="form-control" placeholder="Contraseña">
             </div>
             <div class="forgot-password">
-                <a href="#" class="link-purple">¿Olvidaste la contraseña?</a> |
+                <a href="/RecuperarContrasenna" class="link-purple">¿Olvidaste la contraseña?</a>
+
                 <a href="/Register" class="link-purple">¿No tienes cuenta?</a>
             </div>
             <button type="submit" class="btn btn-green">Iniciar Sesión</button>
@@ -117,7 +118,11 @@
         }
 
         try {
+
             const response = await fetch("https://localhost:7057/api/auth/validar", {
+
+
+
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -131,7 +136,8 @@
                 const rol = usuario.rol.toLowerCase();
 
                 // Guardar el usuario en localStorage
-                localStorage.setItem("usuario", JSON.stringify(usuario));
+                sessionStorage.setItem("usuario", JSON.stringify(usuario));
+
 
                 // Redirigir según el rol
                 if (rol === "cliente") {
@@ -154,4 +160,7 @@
         }
     });
 </script>
+
+
+
 
