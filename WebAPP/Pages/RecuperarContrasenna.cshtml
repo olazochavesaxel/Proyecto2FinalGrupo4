@@ -1,0 +1,28 @@
+﻿@page
+@model WebAPP.Pages.RecuperarContrasennaModel
+@{
+    ViewData["Title"] = "Recuperar Contraseña";
+}
+
+<link rel="stylesheet" href="~/css/FormulariosOtp.css" />
+
+<div class="login-container">
+    <div class="login-box">
+        <h2>Recuperar contraseña</h2>
+        <p>Ingrese el correo con el que se ha registrado:</p>
+        <div class="form-group">
+            <input type="email" id="correoRecuperacion" class="form-control" placeholder="ejemplo@correo.com" required />
+        </div>
+        <button class="btn-green" onclick="enviarOtp()">Enviar código</button>
+        <div class="forgot-password">
+            <a class="link-purple" href="/Login">Cancelar</a>
+        </div>
+        <p id="mensajeRespuesta"></p>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/js/Pages/RecuperarContrasenna.js"></script>
+}
+<link rel="stylesheet" href="~/css/FormulariosOTP.css" />

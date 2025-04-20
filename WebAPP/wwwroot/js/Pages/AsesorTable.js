@@ -89,36 +89,43 @@ function AsesorViewController() {
     }
 
     this.Create = function () {
-    var userDTO = {};
-    userDTO.id = 0;
-    userDTO.fechaExpiracionOTP = new Date().toISOString();
-    userDTO.created = new Date().toISOString();
 
-    userDTO.fotoPerfil = "pp";
-    userDTO.cedula = $("#txtCedula").val();
-    userDTO.nombre = $("#txtNombre").val();
-    userDTO.primerApellido = $("#txtPrimerApellido").val();
-    userDTO.segundoApellido = $("#txtSegundoApellido").val();
-    userDTO.direccion = $("#txtDireccion").val();
-    userDTO.telefono = $("#txtTelefono").val();
-    userDTO.estado = $("#selectEstado").val();
-    userDTO.rol = "Asesor"; // fijo
-    userDTO.contrasenna = $("#txtPassword").val();
-    userDTO.fechaNacimiento = $("#txtBirthDate").val();
-    userDTO.correo = $("#txtEmail").val();
+        var userDTO = {};
+        userDTO.id = 0;
+        userDTO.fechaExpiracionOTP = new Date().toISOString();
+        userDTO.created = new Date().toISOString();
 
-    // Exclusivo de asesor (aplicando validación de campo vacío)
-    let ingreso = $("#txtIngresoComisiones").val();
-    userDTO.ingresoComisiones = ingreso.trim() === "" ? 0 : parseFloat(ingreso);
+        userDTO.fotoPerfil = "pp";
+        userDTO.cedula = $("#txtCedula").val();
+        userDTO.nombre = $("#txtNombre").val();
+        userDTO.primerApellido = $("#txtPrimerApellido").val();
+        userDTO.segundoApellido = $("#txtSegundoApellido").val();
+        userDTO.direccion = $("#txtDireccion").val();
+        userDTO.telefono = $("#txtTelefono").val();
+        userDTO.estado = $("#selectEstado").val();
+        userDTO.rol = "Asesor"; // fijo
+        userDTO.contrasenna = $("#txtPassword").val();
+        userDTO.fechaNacimiento = $("#txtBirthDate").val();
+        userDTO.correo = $("#txtEmail").val();
 
-    var ca = new ControlActions();
-    var urlService = this.ApiEndPointName + "/Create";
+        // Exclusivo de asesor
+        userDTO.ingresoComisiones = parseFloat($("#txtIngresoComisiones").val());
 
-    ca.PostToAPI(urlService, userDTO, function () {
-        console.log("Asesor creado");
-        $('#tblAsesores').DataTable().ajax.reload();
-    });
-}
+        var ca = new ControlActions();
+        var urlService = this.ApiEndPointName + "/Create";
+
+        ca.PostToAPI(urlService, userDTO, function () {
+            console.log("Asesor creado");
+
+            localStorage.setItem("correoOTP", userDTO.correo);
+            localStorage.setItem("origenOTP", "registro");
+
+            // Redirigir a la página de verificación OTP
+            window.location.href = "/AutentificacionOTP";
+            $('#tblAsesores').DataTable().ajax.reload();
+        });
+    }
+
 
     this.Update = function () {
         var userId = $("#txtId").val();

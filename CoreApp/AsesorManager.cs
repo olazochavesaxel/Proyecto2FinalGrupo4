@@ -57,7 +57,7 @@ namespace CoreApp
             }
         }
 
-        public void Update(Asesor usuario)
+        public void Update(Asesor usuario, bool contrasenaYaHasheada)
         {
             try
             {
@@ -74,12 +74,13 @@ namespace CoreApp
                 if (!Validaciones.ValidarCedula(usuario.Cedula))
                     throw new ArgumentException("La cédula ingresada no es válida.");
 
-                if (!string.IsNullOrEmpty(usuario.Contrasenna) && !Validaciones.ValidarContrasenna(usuario.Contrasenna))
-                    throw new ArgumentException("La contraseña no cumple con los requisitos mínimos de seguridad.");
-
                 if (!string.IsNullOrEmpty(usuario.Contrasenna))
                 {
-                    usuario.Contrasenna = Validaciones.HashPassword(usuario.Contrasenna);
+                    if (!contrasenaYaHasheada && !Validaciones.ValidarContrasenna(usuario.Contrasenna))
+                        throw new ArgumentException("La contraseña no cumple con los requisitos mínimos de seguridad.");
+
+                    if (!contrasenaYaHasheada)
+                        usuario.Contrasenna = Validaciones.HashPassword(usuario.Contrasenna);
                 }
 
                 if (!IngresoComisionesOver0(usuario.IngresoComisiones))
@@ -103,6 +104,8 @@ namespace CoreApp
                 ManageException(ex);
             }
         }
+
+
 
         public void Delete(Asesor usuario)
         {

@@ -4,8 +4,13 @@
     ViewData["Title"] = "Transacciones del Cliente";
 }
 
+<!-- ✅ jQuery, SweetAlert2 y DataTables -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
 <div class="profile-page">
-    <!-- Menú lateral -->
     <div class="sidebar">
         <ul>
             <li><a href="/UserProfile">Perfil</a></li>
@@ -13,13 +18,13 @@
         </ul>
     </div>
 
-    <!-- Contenido principal -->
     <div class="content">
         <h1>Registrar Transacción</h1>
         <div class="form-box">
             <div class="form-group">
                 <label for="monto">Monto:</label>
-                <input type="number" id="monto" class="form-control" placeholder="Ingrese el monto">
+                <input type="number" id="monto" class="form-control" placeholder="Ingrese el monto"
+                       step="0.01" min="0" pattern="^\d+(\.\d{1,2})?$" />
             </div>
 
             <div class="form-group">
@@ -44,7 +49,7 @@
         </div>
 
         <h2 class="mt-5">Mis Transacciones</h2>
-        <table class="table-trans">
+        <table id="tblTransacciones" class="display" style="width:100%">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -54,7 +59,6 @@
                     <th>Fecha</th>
                 </tr>
             </thead>
-            <tbody id="tablaTransacciones"></tbody>
         </table>
     </div>
 </div>
@@ -87,7 +91,6 @@
         .sidebar ul {
             list-style: none;
             padding: 0;
-            margin: 0;
         }
 
             .sidebar ul li {
@@ -138,18 +141,6 @@
         font-size: 16px;
         font-weight: bold;
     }
-
-    .table-trans {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-
-        .table-trans th, .table-trans td {
-            border: 1px solid white;
-            padding: 10px;
-            text-align: center;
-        }
 </style>
 
 <script>
@@ -160,12 +151,17 @@
         const user = JSON.parse(localStorage.getItem("usuario"));
 
         if (!user || user.rol.toLowerCase() !== "cliente") {
-            alert("Solo los clientes pueden registrar transacciones.");
+            Swal.fire("Error", "Solo los clientes pueden registrar transacciones.", "error");
             return;
         }
 
         if (!monto || !tipo || !estado) {
-            alert("Por favor complete todos los campos.");
+            Swal.fire("Campos incompletos", "Por favor complete todos los campos.", "warning");
+            return;
+        }
+
+        if (monto < 0 || !/^\d+(\.\d{1,2})?$/.test(monto)) {
+            Swal.fire("Monto inválido", "Por favor ingrese un monto válido con hasta 2 decimales.", "warning");
             return;
         }
 
@@ -177,44 +173,57 @@
         };
 
         try {
-            const res = await fetch("http://localhost:5197/api/transaccioncliente", {
+            const res = await fetch("https://localhost:7057/api/transaccioncliente", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(trans)
             });
 
             const txt = await res.text();
-            alert(txt);
-            cargarTransacciones();
+            if (res.ok) {
+                Swal.fire("Éxito", txt, "success");
+                cargarTransacciones();
+            } else {
+                Swal.fire("Error", txt, "error");
+            }
         } catch (err) {
-            alert("Error al registrar transacción.");
+            Swal.fire("Error", "Hubo un error al conectar con el servidor.", "error");
             console.error(err);
         }
     });
 
     async function cargarTransacciones() {
-        const tabla = document.getElementById("tablaTransacciones");
-        tabla.innerHTML = "";
-
         const user = JSON.parse(localStorage.getItem("usuario"));
         if (!user) return;
 
         try {
-            const res = await fetch("http://localhost:5197/api/transaccioncliente");
+            const res = await fetch("https://localhost:7057/api/transaccioncliente");
             const data = await res.json();
 
             const misTrans = data.filter(t => t.idCliente === user.id);
 
-            for (const t of misTrans) {
-                const fila = `<tr>
-                    <td>${t.id}</td>
-                    <td>${t.monto}</td>
-                    <td>${t.tipo}</td>
-                    <td>${t.estado}</td>
-                    <td>${new Date(t.created).toLocaleString()}</td>
-                </tr>`;
-                tabla.innerHTML += fila;
-            }
+            $('#tblTransacciones').DataTable({
+                data: misTrans,
+                destroy: true,
+                columns: [
+                    { data: "id" },
+                    {
+                        data: "monto",
+                        render: function (data) {
+                            return `$${parseFloat(data).toFixed(2)}`;
+                        }
+                    },
+                    { data: "tipo" },
+                    { data: "estado" },
+                    {
+                        data: "created",
+                        render: function (data) {
+                            return new Date(data).toLocaleString();
+                        }
+                    }
+                ]
+            });
+
         } catch (err) {
             console.error("Error cargando transacciones", err);
         }
@@ -222,3 +231,4 @@
 
     window.onload = cargarTransacciones;
 </script>
+
