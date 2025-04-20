@@ -74,7 +74,7 @@ function AdminViewController() {
 
                 // Formato de fecha
                 var onlyDate = userDTO.fechaNacimiento ? userDTO.fechaNacimiento.split("T")[0] : "";
-                $('#txtBirthDate').val(onlyDate); 
+                $('#txtBirthDate').val(onlyDate);
 
                 $('#txtId').val(userDTO.id); // <-- AGREGAR ESTA LÍNEA
             }
@@ -186,7 +186,7 @@ function AdminViewController() {
                     console.log("Usuario eliminado");
                     $('#tblAdmins').DataTable().ajax.reload(); // Recargar la tabla
                 });
-            } 
+            }
         });
     };
 

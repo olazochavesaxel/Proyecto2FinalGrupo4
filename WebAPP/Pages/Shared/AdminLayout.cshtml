@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+   
+    <link rel="stylesheet" href="~/WebApp.styles.css" asp-append-version="true" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="~/css/AdminDashboard.css" />
+    <script type="text/javascript" src="~/js/Pages/AdminDashboard.js" defer></script>
+    <link href="/css/TablaAdmin.css" rel="stylesheet" />
+
+    <link href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css" rel="stylesheet" />
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+    <script src="~/js/ControlActions.js"></script>
+    <script src="~/js/Pages/AdminTable.js"></script>
+    <script src="~/js/Pages/AsesorTable.js"></script>
+    <script src="~/js/Pages/ClienteTable.js"></script>
+    <script src="~/js/Pages/ComisionTable.js"></script>
+
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+   
+
+
+
+</head>
+<body>
+    <nav id="sidebar">
+        <ul>
+            <li>
+                <span class="logo">Fintech</span>
+                <button onclick="toggleSidebar()" id="toggle-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         height="24px"
+                         viewBox="0 -960 960 960"
+                         width="24px"
+                         fill="#e3e3e3">
+                        <path d="M383-480 200-664l56-56 240 240-240 240-56-56 183-184Zm264 0L464-664l56-56 240 240-240 240-56-56 183-184Z" />
+                    </svg>
+                </button>
+            </li>
+            <li class="active">
+                <a asp-page="/UserAdminProfile">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         height="24px"
+                         viewBox="0 -960 960 960"
+                         width="24px"
+                         fill="#e3e3e3">
+                        <path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z" />
+                    </svg>
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <button onclick="toggleSubMenu(this)" class="dropdown-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         height="24px"
+                         viewBox="0 -960 960 960"
+                         width="24px"
+                         fill="#e3e3e3">
+                        <path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Zm80-80h480v-32q0-11-5.5-20T700-306q-54-27-109-40.5T480-360q-56 0-111 13.5T260-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T560-640q0-33-23.5-56.5T480-720q-33 0-56.5 23.5T400-640q0 33 23.5 56.5T480-560Zm0-80Zm0 400Z" />
+                    </svg>
+                    <span>Usuarios</span>
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         height="24px"
+                         viewBox="0 -960 960 960"
+                         width="24px"
+                         fill="#e3e3e3">
+                        <path d="M480-360 280-560h400L480-360Z" />
+                    </svg>
+                </button>
+                <ul class="sub-menu">
+                    <div>
+                    <li><a asp-page="/TablaAdmin">Gerente</a></li>
+                    <li><a asp-page="/TablaAsesor">Asesor</a></li>
+                    <li><a asp-page="/TablaCliente">Cliente</a></li>
+                    </div>
+                </ul>
+            </li>
+
+            <li>
+                <a asp-page="/TablaComision">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         height="24px"
+                         viewBox="0 -960 960 960"
+                         width="24px"
+                         fill="#e3e3e3">
+                        <path d="M720-40v-120H600v-80h120v-120h80v120h120v80H800v120h-80ZM80-160v-240H40v-80l40-200h600l40 200v80h-40v120h-80v-120H440v240H80Zm80-80h200v-160H160v160Zm-38-240h516-516ZM80-720v-80h600v80H80Zm42 240h516l-24-120H146l-24 120Z" />
+                    </svg>
+                    <span>Comisiones</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         height="24px"
+                         viewBox="0 -960 960 960"
+                         width="24px"
+                         fill="#e3e3e3">
+                        <path d="M560-440q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM280-320q-33 0-56.5-23.5T200-400v-320q0-33 23.5-56.5T280-800h560q33 0 56.5 23.5T920-720v320q0 33-23.5 56.5T840-320H280Zm80-80h400q0-33 23.5-56.5T840-480v-160q-33 0-56.5-23.5T760-720H360q0 33-23.5 56.5T280-640v160q33 0 56.5 23.5T360-400Zm440 240H120q-33 0-56.5-23.5T40-240v-440h80v440h680v80ZM280-400v-320 320Z" />
+                    </svg>
+                    <span>Finanzas</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         height="24px"
+                         viewBox="0 -960 960 960"
+                         width="24px"
+                         fill="#e3e3e3">
+                        <path d="M320-600q17 0 28.5-11.5T360-640q0-17-11.5-28.5T320-680q-17 0-28.5 11.5T280-640q0 17 11.5 28.5T320-600Zm0 160q17 0 28.5-11.5T360-480q0-17-11.5-28.5T320-520q-17 0-28.5 11.5T280-480q0 17 11.5 28.5T320-440Zm0 160q17 0 28.5-11.5T360-320q0-17-11.5-28.5T320-360q-17 0-28.5 11.5T280-320q0 17 11.5 28.5T320-280ZM200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h440l200 200v440q0 33-23.5 56.5T760-120H200Zm0-80h560v-400H600v-160H200v560Zm0-560v160-160 560-560Z" />
+                    </svg>
+                    <span>Reportes</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <main id="main-content">
+        @RenderBody()
+    </main>
+
+    @RenderSection("Scripts", required: false)
+</body>

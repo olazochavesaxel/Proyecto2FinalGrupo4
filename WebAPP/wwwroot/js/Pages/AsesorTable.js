@@ -3,6 +3,9 @@ function AsesorViewController() {
     this.ViewName = "TablaAsesor";
     this.ApiEndPointName = "Asesor";
 
+
+
+
     this.InitView = function () {
         console.log("Asesor Init View");
         this.LoadTable();
@@ -43,7 +46,13 @@ function AsesorViewController() {
         columns[9] = { 'data': 'fechaNacimiento' };
         columns[10] = { 'data': 'correo' };
         columns[11] = { 'data': 'created' };
-        columns[12] = { 'data': 'ingresoComisiones' };
+        columns[12] = {
+            'data': 'ingresoComisiones',
+            'render': function (data) {
+                return `$${parseFloat(data).toFixed(2)}`;
+            }
+        }; 
+
 
         // 💡 AQUÍ definís bien la tabla y guardás la referencia
         var table = $('#tblAsesores').DataTable({
@@ -80,35 +89,36 @@ function AsesorViewController() {
     }
 
     this.Create = function () {
-        var userDTO = {};
-        userDTO.id = 0;
-        userDTO.fechaExpiracionOTP = new Date().toISOString();
-        userDTO.created = new Date().toISOString();
+    var userDTO = {};
+    userDTO.id = 0;
+    userDTO.fechaExpiracionOTP = new Date().toISOString();
+    userDTO.created = new Date().toISOString();
 
-        userDTO.fotoPerfil = "pp";
-        userDTO.cedula = $("#txtCedula").val();
-        userDTO.nombre = $("#txtNombre").val();
-        userDTO.primerApellido = $("#txtPrimerApellido").val();
-        userDTO.segundoApellido = $("#txtSegundoApellido").val();
-        userDTO.direccion = $("#txtDireccion").val();
-        userDTO.telefono = $("#txtTelefono").val();
-        userDTO.estado = $("#selectEstado").val();
-        userDTO.rol = "Asesor"; // fijo
-        userDTO.contrasenna = $("#txtPassword").val();
-        userDTO.fechaNacimiento = $("#txtBirthDate").val();
-        userDTO.correo = $("#txtEmail").val();
+    userDTO.fotoPerfil = "pp";
+    userDTO.cedula = $("#txtCedula").val();
+    userDTO.nombre = $("#txtNombre").val();
+    userDTO.primerApellido = $("#txtPrimerApellido").val();
+    userDTO.segundoApellido = $("#txtSegundoApellido").val();
+    userDTO.direccion = $("#txtDireccion").val();
+    userDTO.telefono = $("#txtTelefono").val();
+    userDTO.estado = $("#selectEstado").val();
+    userDTO.rol = "Asesor"; // fijo
+    userDTO.contrasenna = $("#txtPassword").val();
+    userDTO.fechaNacimiento = $("#txtBirthDate").val();
+    userDTO.correo = $("#txtEmail").val();
 
-        // Exclusivo de asesor
-        userDTO.ingresoComisiones = parseFloat($("#txtIngresoComisiones").val());
+    // Exclusivo de asesor (aplicando validación de campo vacío)
+    let ingreso = $("#txtIngresoComisiones").val();
+    userDTO.ingresoComisiones = ingreso.trim() === "" ? 0 : parseFloat(ingreso);
 
-        var ca = new ControlActions();
-        var urlService = this.ApiEndPointName + "/Create";
+    var ca = new ControlActions();
+    var urlService = this.ApiEndPointName + "/Create";
 
-        ca.PostToAPI(urlService, userDTO, function () {
-            console.log("Asesor creado");
-            $('#tblAsesores').DataTable().ajax.reload();
-        });
-    }
+    ca.PostToAPI(urlService, userDTO, function () {
+        console.log("Asesor creado");
+        $('#tblAsesores').DataTable().ajax.reload();
+    });
+}
 
     this.Update = function () {
         var userId = $("#txtId").val();
