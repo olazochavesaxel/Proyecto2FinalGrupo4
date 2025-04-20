@@ -106,6 +106,12 @@ function AsesorViewController() {
 
         ca.PostToAPI(urlService, userDTO, function () {
             console.log("Asesor creado");
+
+            localStorage.setItem("correoOTP", userDTO.correo);
+            localStorage.setItem("origenOTP", "registro");
+
+            // Redirigir a la página de verificación OTP
+            window.location.href = "/AutentificacionOTP";
             $('#tblAsesores').DataTable().ajax.reload();
         });
     }

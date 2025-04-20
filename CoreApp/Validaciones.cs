@@ -45,20 +45,18 @@ namespace CoreApp
         //**************************Validaciones de Autentificacion
         
 
-        public static bool ContrasennaCorrecta(string contrasennaGuardada, string contrasennaIngresada)
-        {
-            return contrasennaGuardada != null && contrasennaGuardada == HashPassword(contrasennaIngresada);
-        }
+        
 
         public static string HashPassword(string password)
         {
-            using (SHA256 sha256 = SHA256.Create())
-            {
-                byte[] bytes = Encoding.UTF8.GetBytes(password);
-                byte[] hash = sha256.ComputeHash(bytes);
-                return Convert.ToBase64String(hash);
-            }
+            return BCrypt.Net.BCrypt.HashPassword(password);
         }
+
+        public static bool ContrasennaCorrecta(string contrasennaGuardada, string contrasennaIngresada)
+        {
+            return BCrypt.Net.BCrypt.Verify(contrasennaIngresada, contrasennaGuardada);
+        }
+
 
         public static bool UsuarioRegistrado(Usuario usuarioExistente, string rol)
         {
@@ -73,56 +71,6 @@ namespace CoreApp
         }
 
 
-        //**************************Validaciones OTP
-        public static string GenerarOtp()
-        {
-            using (var rng = new RNGCryptoServiceProvider())
-            {
-                byte[] data = new byte[4];
-                rng.GetBytes(data);
-                int otp = (int)(BitConverter.ToUInt32(data, 0) % 1000000);
-                return otp.ToString("D6");
-            }
-        }
-
-        public static void EnviarOTPcorreo(string email)
-        {
-            string otp = GenerarOtp();
-            otpStorage[email] = (otp, DateTime.UtcNow.AddMinutes(1));
-
-            var smtpClient = new SmtpClient("smtp.tudominio.com")
-            {
-                Port = 587,
-                Credentials = new NetworkCredential("tuemail@dominio.com", "tucontraseña"),
-                EnableSsl = true,
-            };
-
-            var message = new MailMessage
-            {
-                From = new MailAddress("tuemail@dominio.com"),
-                Subject = "Código de recuperación",
-                Body = $"Tu código OTP es: {otp}",
-                IsBodyHtml = false,
-            };
-
-            message.To.Add(email);
-            smtpClient.Send(message);
-        }
-
-        public static bool ValidarOtp(string email, string otpIngresado)
-        {
-            if (!otpStorage.ContainsKey(email) || otpStorage[email].ExpiraEn < DateTime.UtcNow)
-                return false;
-            return otpStorage[email].Otp == otpIngresado;
-        }
-
-        public static void ActualizarContrasenna(string email, string nuevaContraseña)
-        {
-            if (!otpStorage.ContainsKey(email))
-                throw new Exception("No hay OTP registrado para este correo.");
-
-            Console.WriteLine($"Contraseña de {email} actualizada a: {nuevaContraseña}");
-            otpStorage.Remove(email);
-        }
+       
     }
 }

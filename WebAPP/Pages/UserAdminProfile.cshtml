@@ -51,13 +51,26 @@
     </div>
 </div>
 
+
+
 <!-- Script para mostrar datos del usuario -->
 <script>
-    window.onload = function () {
-        const usuario = JSON.parse(localStorage.getItem("usuario"));
+        window.onload = function () {
+        const usuarioData = sessionStorage.getItem("usuario");
 
-        if (!usuario) {
+        if (!usuarioData) {
+<!-- Script para mostrar datos del usuario -->
             alert("Sesión no encontrada. Por favor, inicia sesión nuevamente.");
+            window.location.href = "/login";
+            return;
+        }
+
+        let usuario;
+        try {
+            usuario = JSON.parse(usuarioData);
+        } catch (e) {
+            sessionStorage.clear();
+            alert("Sesión inválida. Por favor, inicia sesión nuevamente.");
             window.location.href = "/login";
             return;
         }
@@ -69,6 +82,7 @@
         document.getElementById("apellido2").textContent = usuario.segundoApellido;
         document.getElementById("correo").textContent = usuario.correo;
     };
+
 </script>
 
 <style>
