@@ -46,7 +46,12 @@ function ClienteViewController() {
         columns[9] = { 'data': 'fechaNacimiento' }; // Corrección del nombre
         columns[10] = { 'data': 'correo' };
         columns[11] = { 'data': 'created' };
-        columns[12] = { 'data': 'balanceFinanciero' };
+        columns[12] = {
+            'data': 'balanceFinanciero',
+            'render': function (data) {
+                return `$${parseFloat(data).toFixed(2)}`;
+            }
+        };
 
         var table = $('#tblClientes').DataTable({
             "ajax": {
@@ -92,7 +97,6 @@ function ClienteViewController() {
         userDTO.id = 0;
         userDTO.fechaExpiracionOTP = new Date().toISOString();
         userDTO.created = new Date().toISOString();
-
         userDTO.fotoPerfil = "pp";
         userDTO.cedula = $("#txtCedula").val();
         userDTO.nombre = $("#txtNombre").val();
@@ -101,13 +105,14 @@ function ClienteViewController() {
         userDTO.direccion = $("#txtDireccion").val();
         userDTO.telefono = $("#txtTelefono").val();
         userDTO.estado = $("#selectEstado").val();
-        userDTO.rol = "Cliente"; // fijo
+        userDTO.rol = "Cliente";
         userDTO.contrasenna = $("#txtPassword").val();
-        userDTO.fechaNacimiento = $("#txtBirthDate").val()
+        userDTO.fechaNacimiento = $("#txtBirthDate").val();
         userDTO.correo = $("#txtEmail").val();
 
-        // Balance exclusivo de cliente
-        userDTO.balanceFinanciero = parseFloat($("#txtBalanceFinanciero").val());
+        // Aquí está lo importante
+        let balance = $("#txtBalanceFinanciero").val();
+        userDTO.balanceFinanciero = balance.trim() === "" ? 0 : parseFloat(balance);
 
         var ca = new ControlActions();
         var urlService = this.ApiEndPointName + "/Create";
@@ -115,14 +120,17 @@ function ClienteViewController() {
         ca.PostToAPI(urlService, userDTO, function () {
             console.log("Cliente creado");
 
+
             localStorage.setItem("correoOTP", userDTO.correo);
             localStorage.setItem("origenOTP", "registro");
 
             // Redirigir a la página de verificación OTP
             window.location.href = "/AutentificacionOTP";
             $('#tblClientes').DataTable().ajax.reload(); // asegúrate de usar la tabla correcta
+
         });
     }
+
 
     this.Update = function () {
         var userId = $("#txtId").val();
