@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DTO;
 
-namespace _00_DTO
+namespace DTO
 {
     public class Pago : BaseDTO
     {
@@ -17,5 +17,4 @@ namespace _00_DTO
         public int TransaccionId { get; set; } // ID de PayPal
         public int ClienteId { get; set; }
     }
-
 }
