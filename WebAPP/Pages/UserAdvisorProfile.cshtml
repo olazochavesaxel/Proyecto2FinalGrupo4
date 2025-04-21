@@ -8,11 +8,12 @@
     <!-- Menú lateral -->
     <div class="sidebar">
         <ul>
-            <li><a >General</a></li>
+            <li><a href="#">General</a></li>
             <li><a href="#">Usuarios</a></li>
             <li><a href="#">Comisión</a></li>
-            <li><a asp-page="/TransaccionAsesor">Reportes</a></li>
-            <li><a href="">Ingresos</a></li>
+            <li><a href="#">Reportes</a></li>
+            <li><a href="#">Ingresos</a></li>
+            <li><a href="/TransaccionAsesor">Transferencias</a></li>
         </ul>
     </div>
 
@@ -131,7 +132,7 @@
 </style>
 
 <script>
-       document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", () => {
         const usuarioData = sessionStorage.getItem("usuario");
 
         if (!usuarioData) {
@@ -157,6 +158,5 @@
         document.getElementById("segundo-apellido").textContent = usuario.segundoApellido;
         document.getElementById("correo").textContent = usuario.correo;
     });
-
-
 </script>
+
