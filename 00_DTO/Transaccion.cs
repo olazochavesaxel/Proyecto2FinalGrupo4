@@ -8,9 +8,9 @@ namespace DTO
 {
     public class Transaccion :BaseDTO
     {
-        public Usuario usuario;
-        public double Monto { get; set; }
-        public string Tipo { get; set; }
-        public string Estado { get; set; }//Aprovado, Rechazado o Denegado
+        public string PayPalOrderId { get; set; }
+        public int UserId { get; set; }
+        public string TipoOperacion { get; set; }
+        public string Rol { get; set; }
     }
 }
