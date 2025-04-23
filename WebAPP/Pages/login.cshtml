@@ -21,6 +21,7 @@
             </div>
             <div class="forgot-password">
                 <a href="/RecuperarContrasenna" class="link-purple">¿Olvidaste la contraseña?</a>
+
                 <a href="/Register" class="link-purple">¿No tienes cuenta?</a>
             </div>
             <button type="submit" class="btn btn-green">Iniciar Sesión</button>
@@ -117,7 +118,8 @@
         }
 
         try {
-            const response = await fetch("https://localhost:7057/api/auth/validar", {
+
+            const response = await fetch("http://localhost:5197/api/auth/validar", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -127,22 +129,12 @@
 
             if (response.ok) {
                 const data = await response.json();
-                let usuario = data.usuario;
+                const usuario = data.usuario;
                 const rol = usuario.rol.toLowerCase();
 
-                // Si es cliente, obtener también su balance financiero
-                if (rol === "cliente") {
-                    const clienteRes = await fetch(`https://localhost:7057/api/Cliente/RetrieveByCorreo?correo=${usuario.correo}`);
-                    if (clienteRes.ok) {
-                        const clienteData = await clienteRes.json();
-                        usuario.balanceFinanciero = clienteData.balanceFinanciero;
-                    } else {
-                        usuario.balanceFinanciero = 0;
-                    }
-                }
+                // Guardar el usuario en localStorage
+                sessionStorage.setItem("usuario", JSON.stringify(usuario));
 
-                // Guardar usuario en localStorage
-                localStorage.setItem("usuario", JSON.stringify(usuario));
 
                 // Redirigir según el rol
                 if (rol === "cliente") {
@@ -165,7 +157,6 @@
         }
     });
 </script>
-
 
 
 
