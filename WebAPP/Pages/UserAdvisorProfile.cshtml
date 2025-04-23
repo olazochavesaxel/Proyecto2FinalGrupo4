@@ -2,22 +2,10 @@
 @model UserAdvisorProfileModel
 @{
     ViewData["Title"] = "Perfil del Asesor";
+    Layout = "~/Pages/Shared/AsesorLayout.cshtml";
 }
 
 <div class="profile-page">
-    <!-- Menú lateral -->
-    <div class="sidebar">
-        <ul>
-            <li><a href="#">General</a></li>
-            <li><a href="#">Usuarios</a></li>
-            <li><a href="#">Comisión</a></li>
-            <li><a href="#">Reportes</a></li>
-            <li><a href="#">Ingresos</a></li>
-            <li><a href="/TransaccionAsesor">Transferencias</a></li>
-        </ul>
-    </div>
-
-    <!-- Contenido principal -->
     <div class="content">
         <h1>Mi Perfil</h1>
         <div class="profile-box">
@@ -64,37 +52,11 @@
         margin-top: 20px;
     }
 
-    .sidebar {
-        background-color: #00D395;
-        width: 220px;
-        height: calc(100vh - 60px);
-        padding-top: 30px;
-        position: relative;
-        top: 0;
-    }
-
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-            .sidebar ul li {
-                margin: 20px 0;
-                text-align: center;
-            }
-
-                .sidebar ul li a {
-                    text-decoration: none;
-                    color: black;
-                    font-weight: bold;
-                    font-size: 16px;
-                }
-
     .content {
         flex: 1;
         padding: 40px;
         overflow-y: auto;
+        margin-left: 220px; /* Para que no se superponga con el sidebar del layout */
     }
 
     .profile-box {
@@ -159,4 +121,6 @@
         document.getElementById("correo").textContent = usuario.correo;
     });
 </script>
+
+
 

@@ -118,7 +118,6 @@
         }
 
         try {
-
             const response = await fetch("http://localhost:5197/api/auth/validar", {
                 method: "POST",
                 headers: {
@@ -129,12 +128,22 @@
 
             if (response.ok) {
                 const data = await response.json();
-                const usuario = data.usuario;
+                let usuario = data.usuario;
                 const rol = usuario.rol.toLowerCase();
 
-                // Guardar el usuario en localStorage
-                sessionStorage.setItem("usuario", JSON.stringify(usuario));
+                // Si es cliente, obtener también su balance financiero completo desde la API
+                if (rol === "cliente") {
+                    const clienteRes = await fetch(`http://localhost:5197/api/Cliente/RetrieveByCorreo?correo=${usuario.correo}`);
+                    if (clienteRes.ok) {
+                        const clienteData = await clienteRes.json();
+                        usuario.balanceFinanciero = clienteData.balanceFinanciero;
+                    } else {
+                        usuario.balanceFinanciero = 0;
+                    }
+                }
 
+                // Guardar usuario en sessionStorage
+                sessionStorage.setItem("usuario", JSON.stringify(usuario));
 
                 // Redirigir según el rol
                 if (rol === "cliente") {
@@ -157,6 +166,7 @@
         }
     });
 </script>
+
 
 
 
