@@ -98,16 +98,42 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", async () => {
-        await cargarClientesAsignados();
-    });
+        const usuarioData = sessionStorage.getItem("usuario");
 
-    async function cargarClientesAsignados() {
-        const asesor = JSON.parse(localStorage.getItem("usuario"));
-        if (!asesor || !asesor.id) {
-            alert("Asesor no autenticado.");
+        if (!usuarioData) {
+            Swal.fire({
+                icon: "warning",
+                title: "Tu sesión ha sido cerrada",
+                text: "Para ingresar nuevamente por favor inicia sesión.",
+                backdrop: `rgba(0, 0, 0, 0.95)`,
+                confirmButtonColor: "#8F5AF5"
+            }).then(() => {
+                window.location.href = "/Index";
+            });
             return;
         }
 
+        let asesor;
+        try {
+            asesor = JSON.parse(usuarioData);
+        } catch (e) {
+            sessionStorage.clear();
+            Swal.fire({
+                icon: "warning",
+                title: "Sesión inválida",
+                text: "Para ingresar nuevamente por favor inicia sesión.",
+                backdrop: `rgba(0, 0, 0, 0.95)`,
+                confirmButtonColor: "#8F5AF5"
+            }).then(() => {
+                window.location.href = "/Index";
+            });
+            return;
+        }
+
+        await cargarClientesAsignados(asesor);
+    });
+
+    async function cargarClientesAsignados(asesor) {
         try {
             const res = await fetch(`https://localhost:7057/api/Cliente/Asignados/${asesor.id}`);
             if (!res.ok) throw new Error("No se pudieron obtener los clientes asignados.");
@@ -125,7 +151,7 @@
 
         } catch (err) {
             console.error("Error al cargar clientes asignados:", err);
-            alert("Error al cargar los clientes asignados.");
+            Swal.fire("Error", "Error al cargar los clientes asignados.", "error");
         }
     }
 
@@ -133,13 +159,13 @@
         e.preventDefault();
 
         const idCliente = parseInt(document.getElementById("idCliente").value);
-        const idAsesor = JSON.parse(localStorage.getItem("usuario"))?.id;
+        const idAsesor = JSON.parse(sessionStorage.getItem("usuario"))?.id;
         const monto = parseFloat(document.getElementById("monto").value);
         const tipo = document.getElementById("tipo").value;
         const estado = document.getElementById("estado").value;
 
         if (!idCliente || !idAsesor || !monto || !tipo || !estado) {
-            alert("Todos los campos son obligatorios.");
+            Swal.fire("Campos incompletos", "Todos los campos son obligatorios.", "warning");
             return;
         }
 
@@ -161,14 +187,15 @@
             });
 
             if (response.ok) {
-                alert("✅ Transacción registrada correctamente.");
+                Swal.fire("Éxito", "Transacción registrada correctamente.", "success");
                 document.getElementById("transaccionForm").reset();
             } else {
                 const error = await response.text();
-                alert("❌ Error: " + error);
+                Swal.fire("Error", error, "error");
             }
         } catch (error) {
-            alert("❌ Error al conectar con la API: " + error);
+            Swal.fire("Error", "Error al conectar con la API.", "error");
+            console.error(error);
         }
     });
 </script>

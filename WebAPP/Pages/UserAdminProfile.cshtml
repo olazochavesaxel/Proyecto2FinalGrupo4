@@ -51,8 +51,20 @@
         const usuarioData = sessionStorage.getItem("usuario");
 
         if (!usuarioData) {
-            alert("Sesión no encontrada. Por favor, inicia sesión nuevamente.");
-            window.location.href = "/login";
+            // Fondo negro al cuerpo para cubrir el layout anterior
+            document.body.style.backgroundColor = "#000";
+
+            Swal.fire({
+                icon: "warning",
+                title: "Tu sesión ha sido cerrada",
+                text: "Para ingresar nuevamente por favor inicia sesión.",
+                backdrop: `
+                    rgba(0, 0, 0, 0.95)
+                `,
+                confirmButtonColor: "#8F5AF5"
+            }).then(() => {
+                window.location.href = "/Index";
+            });
             return;
         }
 
@@ -61,8 +73,20 @@
             usuario = JSON.parse(usuarioData);
         } catch (e) {
             sessionStorage.clear();
-            alert("Sesión inválida. Por favor, inicia sesión nuevamente.");
-            window.location.href = "/login";
+
+            document.body.style.backgroundColor = "#000";
+
+            Swal.fire({
+                icon: "warning",
+                title: "Sesión inválida",
+                text: "Para ingresar nuevamente por favor inicia sesión.",
+                backdrop: `
+                    rgba(0, 0, 0, 0.95)
+                `,
+                confirmButtonColor: "#8F5AF5"
+            }).then(() => {
+                window.location.href = "/Index";
+            });
             return;
         }
 
@@ -74,6 +98,7 @@
         document.getElementById("correo").textContent = usuario.correo;
     });
 </script>
+
 
 
 <style>

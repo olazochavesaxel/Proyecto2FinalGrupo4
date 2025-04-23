@@ -1,0 +1,179 @@
+﻿@page
+@model WebAPP.Pages.EditarPerfilModel
+@{
+    ViewData["Title"] = "Editar Perfil";
+    Layout = "~/Pages/Shared/ClienteLayout.cshtml";
+}
+
+<div class="profile-page">
+    <div class="content">
+        <h1 class="text-center">Editar Perfil</h1>
+        <form id="formEditarPerfil" class="form-box">
+            <input type="hidden" id="id" />
+
+            <div class="form-group">
+                <label>Nombre:</label>
+                <input type="text" id="nombre" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label>Primer Apellido:</label>
+                <input type="text" id="primerApellido" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label>Segundo Apellido:</label>
+                <input type="text" id="segundoApellido" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label>Dirección:</label>
+                <input type="text" id="direccion" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label>Teléfono:</label>
+                <input type="text" id="telefono" class="form-control" pattern="\\d+" required />
+            </div>
+            <div class="form-group">
+                <label>Cédula:</label>
+                <input type="text" id="cedula" class="form-control" pattern="\\d+" required />
+            </div>
+            <div class="form-group">
+                <label>Correo Electrónico:</label>
+                <input type="email" id="correo" class="form-control" required />
+                <small id="correoError" class="text-danger" style="display:none;">Correo inválido</small>
+            </div>
+            <div class="form-group">
+                <label>Fecha de Nacimiento:</label>
+                <input type="date" id="fechaNacimiento" class="form-control" required />
+            </div>
+
+            <button type="submit" class="btn-edit">Guardar Cambios</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    body, html {
+        background-color: black;
+        color: white;
+    }
+
+    .profile-page {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .content {
+        flex: 1;
+        padding: 30px;
+        max-width: 800px;
+    }
+
+    .form-box {
+        background-color: #111;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: none;
+    }
+
+        .form-control:invalid {
+            border: 2px solid #e74c3c;
+        }
+
+    .btn-edit {
+        background-color: #8F5AF5;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        width: 100%;
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    const usuario = JSON.parse(sessionStorage.getItem("usuario"));
+    if (!usuario) {
+        window.location.href = "/Index";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        // Prellenar los campos
+        document.getElementById("id").value = usuario.id;
+        document.getElementById("nombre").value = usuario.nombre;
+        document.getElementById("primerApellido").value = usuario.primerApellido;
+        document.getElementById("segundoApellido").value = usuario.segundoApellido;
+        document.getElementById("direccion").value = usuario.direccion;
+        document.getElementById("telefono").value = usuario.telefono;
+        document.getElementById("cedula").value = usuario.cedula;
+        document.getElementById("correo").value = usuario.correo;
+        document.getElementById("fechaNacimiento").value = usuario.fechaNacimiento?.split("T")[0];
+
+        document.getElementById("formEditarPerfil").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const correo = document.getElementById("correo");
+            const correoError = document.getElementById("correoError");
+
+            if (!correo.validity.valid) {
+                correo.classList.add("is-invalid");
+                correoError.style.display = "block";
+                return;
+            } else {
+                correo.classList.remove("is-invalid");
+                correoError.style.display = "none";
+            }
+
+            const cliente = {
+                id: parseInt(document.getElementById("id").value),
+                nombre: document.getElementById("nombre").value,
+                primerApellido: document.getElementById("primerApellido").value,
+                segundoApellido: document.getElementById("segundoApellido").value,
+                direccion: document.getElementById("direccion").value,
+                telefono: document.getElementById("telefono").value,
+                cedula: document.getElementById("cedula").value,
+                correo: correo.value,
+                fechaNacimiento: document.getElementById("fechaNacimiento").value,
+                rol: "Cliente"
+            };
+
+            try {
+                const res = await fetch("https://localhost:7057/api/Cliente/Update", {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(cliente)
+                });
+
+                if (res.ok) {
+                    sessionStorage.setItem("usuario", JSON.stringify(cliente));
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Datos actualizados correctamente',
+                        confirmButtonColor: '#8F5AF5'
+                    }).then(() => {
+                        window.location.href = "/UserProfile";
+                    });
+                } else {
+                    Swal.fire("Error", "No se pudieron actualizar los datos.", "error");
+                }
+            } catch (err) {
+                console.error(err);
+                Swal.fire("Error", "Error de red al actualizar los datos.", "error");
+            }
+        });
+    });
+</script>
