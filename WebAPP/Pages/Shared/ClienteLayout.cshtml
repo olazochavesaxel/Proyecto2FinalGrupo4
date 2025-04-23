@@ -40,7 +40,7 @@
                 <a asp-page="/Reportes"><span>Reportes</span></a>
             </li>
             <li>
-                <a href="#" id="btnLogout"><span>Cerrar Sesión</span></a>
+                <a asp-page="/Index" id="btnLogout"><span>Cerrar Sesión</span></a>
             </li>
         </ul>
     </nav>
@@ -52,6 +52,39 @@
     @RenderSection("Scripts", required: false)
 
     <script>
+        // Bloqueo de retroceso después del logout
+        window.addEventListener("pageshow", function (event) {
+            const usuario = sessionStorage.getItem("usuario");
+            if (!usuario && event.persisted) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Sesión cerrada',
+                    text: 'Tu sesión ha sido cerrada, para ingresar nuevamente por favor inicia sesión',
+                    confirmButtonText: 'Entendido'
+                }).then(() => {
+                    window.location.href = "/Index";
+                });
+            }
+        });
+
+        // Manejo directo del botón de retroceso en el navegador
+        window.onload = function () {
+            if (!sessionStorage.getItem("usuario")) {
+                history.pushState(null, "", location.href);
+                window.onpopstate = function () {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Sesión cerrada',
+                        text: 'Tu sesión ha sido cerrada, para ingresar nuevamente por favor inicia sesión',
+                        confirmButtonText: 'Entendido'
+                    }).then(() => {
+                        history.pushState(null, "", location.href); // Evita volver atrás
+                    });
+                };
+            }
+        };
+
+        // Cierre de sesión
         document.addEventListener("DOMContentLoaded", function () {
             const logoutBtn = document.getElementById("btnLogout");
             if (logoutBtn) {
@@ -63,5 +96,8 @@
             }
         });
     </script>
+
+
+
 </body>
 </html>

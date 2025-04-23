@@ -100,8 +100,15 @@
         const usuarioData = sessionStorage.getItem("usuario");
 
         if (!usuarioData) {
-            alert("Sesión no encontrada. Por favor, inicia sesión nuevamente.");
-            window.location.href = "/login";
+            Swal.fire({
+                icon: "warning",
+                title: "Tu sesión ha sido cerrada",
+                text: "Para ingresar nuevamente por favor inicia sesión.",
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 1)`
+            }).then(() => {
+                window.location.href = "/Index";
+            });
             return;
         }
 
@@ -110,8 +117,15 @@
             user = JSON.parse(usuarioData);
         } catch (e) {
             sessionStorage.clear();
-            alert("Sesión inválida. Por favor, inicia sesión nuevamente.");
-            window.location.href = "/login";
+            Swal.fire({
+                icon: "warning",
+                title: "Sesión inválida",
+                text: "Para ingresar nuevamente por favor inicia sesión.",
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 1)`
+            }).then(() => {
+                window.location.href = "/Index";
+            });
             return;
         }
 
@@ -123,7 +137,6 @@
         document.getElementById("correo").textContent = user.correo;
         document.getElementById("fechaNacimiento").textContent = user.fechaNacimiento?.split("T")[0];
 
-        // Mostrar balance financiero si está disponible, o 0.0 si no
         const balance = parseFloat(user.balanceFinanciero);
         const capitalDisponible = (!isNaN(balance) && balance >= 0) ? `$${balance.toFixed(2)}` : "$0.00";
         document.getElementById("capitalDisponible").textContent = capitalDisponible;
