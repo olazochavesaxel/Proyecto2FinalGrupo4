@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace WebAPP.Pages
 {
-    public class GestionPagoModel : PageModel
+    public class ConfirmacionModel : PageModel
     {
         public void OnGet()
         {
