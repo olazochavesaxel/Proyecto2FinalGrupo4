@@ -1,0 +1,110 @@
+﻿@page
+@model WebAPP.Pages.AccionesAsesorModel
+@{
+    ViewData["Title"] = "Listado de Acciones";
+    Layout = "~/Pages/Shared/AsesorLayout.cshtml";
+}
+
+<!-- Scripts necesarios -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<div class="content">
+    <h1>Acciones Disponibles</h1>
+    <table id="tablaAcciones" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Símbolo</th>
+                <th>Nombre</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<style>
+    body, html {
+        background-color: black;
+        color: white;
+        margin: 0;
+        padding: 0;
+    }
+
+    .content {
+        flex: 1;
+        margin-left: 220px; /* Para ajustarse al sidebar del layout */
+        padding: 40px;
+    }
+
+    .btn-accion {
+        background-color: #8F5AF5;
+        color: white;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 6px;
+        margin-right: 5px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+        .btn-accion:hover {
+            background-color: #A379F7;
+        }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        try {
+            const res = await fetch("https://localhost:7057/api/alpaca/activos/light");
+            const data = await res.json();
+
+            $('#tablaAcciones').DataTable({
+                data: data,
+                columns: [
+                    { data: 'simbolo' },
+                    { data: 'nombre' },
+                    {
+                        data: 'simbolo',
+                        render: function (symbol) {
+                            return `
+                                <button class="btn-accion" onclick="verPrecioActual('${symbol}')">Ver Precio</button>
+                                <button class="btn-accion" onclick="verHistorico('${symbol}')">Ver Histórico</button>
+                            `;
+                        }
+                    }
+                ]
+            });
+
+        } catch (err) {
+            console.error("Error cargando acciones:", err);
+            Swal.fire("Error", "No se pudo obtener el listado de acciones.", "error");
+        }
+    });
+
+    async function verPrecioActual(symbol) {
+        try {
+            const res = await fetch(`https://localhost:7057/api/alpaca/precio/${symbol}`);
+            if (!res.ok) throw new Error("No se pudo obtener el precio.");
+            const data = await res.json();
+
+            Swal.fire({
+                title: `💲 Precio actual de ${data.simbolo}`,
+                html: `Precio: <strong>$${data.precio.toFixed(2)}</strong><br>Fecha: ${new Date(data.timeStamp).toLocaleString()}`,
+                icon: "info"
+            });
+        } catch (err) {
+            console.error("Error al obtener precio actual:", err);
+            Swal.fire("Error", "No se pudo obtener el precio actual.", "error");
+        }
+    }
+
+    function verHistorico(symbol) {
+        Swal.fire({
+            title: `📈 Histórico de ${symbol}`,
+            text: "Esta funcionalidad estará disponible pronto.",
+            icon: "info"
+        });
+    }
+</script>

@@ -1,8 +1,8 @@
 ﻿@page
-@model ReportesModel
+@model WebAPP.Pages.ReportesAsesorModel
 @{
     ViewData["Title"] = "Reports";
-    Layout = "~/Pages/Shared/ClienteLayout.cshtml";
+    Layout = "~/Pages/Shared/AsesorLayout.cshtml";
 }
 
 <div class="content">
@@ -114,86 +114,50 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const usuarioData = sessionStorage.getItem("usuario");
-
-        if (!usuarioData) {
-            Swal.fire({
-                icon: "warning",
-                title: "Tu sesión ha sido cerrada",
-                text: "Para ingresar nuevamente por favor inicia sesión.",
-                confirmButtonColor: "#8F5AF5",
-                backdrop: `rgba(0, 0, 0, 0.95)` // ✅ Fondo oscuro detrás del popup
-            }).then(() => {
-                window.location.href = "/Index";
-            });
-            return;
-        }
-
-        let user;
-        try {
-            user = JSON.parse(usuarioData);
-        } catch (e) {
-            sessionStorage.clear();
-            Swal.fire({
-                icon: "warning",
-                title: "Sesión inválida",
-                text: "Para ingresar nuevamente por favor inicia sesión.",
-                confirmButtonColor: "#8F5AF5",
-                backdrop: `rgba(0, 0, 0, 0.95)`
-            }).then(() => {
-                window.location.href = "/Index";
-            });
-            return;
-        }
-
-        // --- GRÁFICO LINEAL ---
-        const ctxLine = document.getElementById('lineChart').getContext('2d');
-        new Chart(ctxLine, {
-            type: 'line',
-            data: {
-                labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
-                datasets: [{
-                    label: 'Value',
-                    data: [100, 700, 1000, 300, 900, 600, 500, 200, 800],
-                    borderColor: '#8F5AF5',
-                    fill: false,
-                    tension: 0.3
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
+    const ctxLine = document.getElementById('lineChart').getContext('2d');
+    new Chart(ctxLine, {
+        type: 'line',
+        data: {
+            labels: ['1','2','3','4','5','6','7','8','9'],
+            datasets: [{
+                label: 'Value',
+                data: [100, 700, 1000, 300, 900, 600, 500, 200, 800],
+                borderColor: '#8F5AF5',
+                fill: false,
+                tension: 0.3
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
                 }
             }
-        });
+        }
+    });
 
-        // --- GRÁFICO DE ÁREA ---
-        const ctxArea = document.getElementById('areaChart').getContext('2d');
-        new Chart(ctxArea, {
-            type: 'line',
-            data: {
-                labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
-                datasets: [{
-                    label: 'Balance',
-                    data: [100, 200, 150, 400, 700, 600, 500, 300, 200],
-                    backgroundColor: 'rgba(143, 90, 245, 0.2)',
-                    borderColor: '#8F5AF5',
-                    fill: true,
-                    tension: 0.4
-                }]
+    const ctxArea = document.getElementById('areaChart').getContext('2d');
+    new Chart(ctxArea, {
+        type: 'line',
+        data: {
+            labels: ['1','2','3','4','5','6','7','8','9'],
+            datasets: [{
+                label: 'Balance',
+                data: [100, 200, 150, 400, 700, 600, 500, 300, 200],
+                backgroundColor: 'rgba(143, 90, 245, 0.2)',
+                borderColor: '#8F5AF5',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            plugins: {
+                legend: { display: false }
             },
-            options: {
-                plugins: {
-                    legend: { display: false }
-                },
-                scales: {
-                    y: { beginAtZero: true },
-                    x: { display: false }
-                }
+            scales: {
+                y: { beginAtZero: true },
+                x: { display: false }
             }
-        });
+        }
     });
 </script>

@@ -14,7 +14,7 @@ namespace CoreApp
 
         public ClienteManager()
         {
-            usuarioCrud = new ClienteCrudFactory();  // Initialize UserCrudFactory
+            usuarioCrud = new ClienteCrudFactory();
         }
 
         public void Create(Cliente user)
@@ -44,7 +44,7 @@ namespace CoreApp
                     throw new ArgumentException("El usuario ya está registrado con este correo y rol.");
 
                 user.Contrasenna = Validaciones.HashPassword(user.Contrasenna);
-                //Seteadno otp por que en algun lugar del codigo no se esta seteando
+
                 if (user.FechaExpiracionOTP < new DateTime(1753, 1, 1))
                 {
                     user.FechaExpiracionOTP = DateTime.Now.AddMinutes(5);
@@ -56,6 +56,11 @@ namespace CoreApp
             {
                 ManageException(ex);
             }
+        }
+
+        public void Update(Cliente usuario)
+        {
+            Update(usuario, false);
         }
 
         public void Update(Cliente usuario, bool contrasenaYaHasheada)
@@ -131,18 +136,37 @@ namespace CoreApp
             return usuarioCrud.RetrieveByCorreo<Cliente>(correo);
         }
 
-        // Validaciones
-       
-
-        // Validación de balance mayor a 0
-        private bool balanceOver0(double balance)
+        public List<Cliente> RetrieveClientesAsignados(int idAsesor)
         {
-            if (balance < 0)
-            {
-                return false;
-            }
-            return true;
+            return usuarioCrud.RetrieveClientesAsignados<Cliente>(idAsesor);
         }
 
+        public void AsignarAsesor(int idCliente, int idAsesor)
+        {
+            try
+            {
+                usuarioCrud.AsignarAsesor(idCliente, idAsesor);
+            }
+            catch (Exception ex)
+            {
+                ManageException(ex);
+            }
+        }
+
+        private bool balanceOver0(double balance)
+        {
+            return balance >= 0;
+        }
+
+        private bool IsOver18(Cliente usuario)
+        {
+            var currentDate = DateTime.Now;
+            int age = currentDate.Year - usuario.FechaNacimiento.Year;
+            if (usuario.FechaNacimiento.Date > currentDate.AddYears(-age).Date)
+            {
+                age--;
+            }
+            return age >= 18;
+        }
     }
 }

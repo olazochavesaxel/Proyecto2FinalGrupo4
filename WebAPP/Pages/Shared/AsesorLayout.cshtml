@@ -15,10 +15,6 @@
     <link href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.min.css" rel="stylesheet" />
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
     <script src="~/js/ControlActions.js"></script>
-    <script src="~/js/Pages/AdminTable.js"></script>
-    <script src="~/js/Pages/AsesorTable.js"></script>
-    <script src="~/js/Pages/ClienteTable.js"></script>
-    <script src="~/js/Pages/ComisionTable.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -26,42 +22,25 @@
     <nav id="sidebar">
         <ul>
             <li>
-                <span class="logo">Fintech</span>
+                <span class="logo">Fintech Asesor</span>
                 <button onclick="toggleSidebar()" id="toggle-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         height="24px"
-                         viewBox="0 -960 960 960"
-                         width="24px"
-                         fill="#e3e3e3">
-                        <path d="M383-480 200-664l56-56 240 240-240 240-56-56 183-184Zm264 0L464-664l56-56 240 240-240 240-56-56 183-184Z" />
-                    </svg>
+                    <!-- SVG icon si lo deseas -->
                 </button>
             </li>
             <li class="active">
-                <a asp-page="/UserAdminProfile">
-                    <span>Home</span>
-                </a>
+                <a asp-page="/UserAdvisorProfile"><span>Perfil</span></a>
             </li>
             <li>
-                <button onclick="toggleSubMenu(this)" class="dropdown-btn">
-                    <span>Usuarios</span>
-                </button>
-                <ul class="sub-menu">
-                    <div>
-                    <li><a asp-page="/TablaAdmin">Gerente</a></li>
-                    <li><a asp-page="/TablaAsesor">Asesor</a></li>
-                    <li><a asp-page="/TablaCliente">Cliente</a></li>
-                    </div>
-                </ul>
+                <a asp-page="/TransaccionAsesor"><span>Transferencias</span></a>
             </li>
             <li>
-                <a asp-page="/TablaComision"><span>Comisiones</span></a>
+                <a asp-page="/Inversiones"><span>Inversiones</span></a>
             </li>
             <li>
-                <a href="#"><span>Finanzas</span></a>
+                <a asp-page="/ReportesAsesor"><span>Reportes</span></a>
             </li>
             <li>
-                <a href="#"><span>Reportes</span></a>
+                <a asp-page="/AccionesAsesor"><span>Acciones</span></a>
             </li>
             <li>
                 <a href="#" id="btnLogout"><span>Cerrar Sesión</span></a>
