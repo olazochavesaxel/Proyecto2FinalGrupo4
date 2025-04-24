@@ -49,5 +49,11 @@ namespace DataAccess.DAOs
             };
             Parameters.Add(parameter);
         }
+
+        public void AddNullParameter(string parameterName)
+        {
+            Parameters.Add(new SqlParameter(parameterName, DBNull.Value));
+        }
+
     }
 }

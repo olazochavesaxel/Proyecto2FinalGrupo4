@@ -17,12 +17,27 @@ namespace DataAccess.CRUDs
         {
             var trans = dto as TransaccionCliente;
 
-            var sqlOperation = new SqlOperation() { ProcedureName = "CRE_TRANSACCION_CLIENTE" };
+            var sqlOperation = new SqlOperation()
+            {
+                ProcedureName = "CREAR_TRANSACCION_CLIENTE"
+            };
 
-            sqlOperation.AddDoubleParameter("P_MONTO", trans.Monto);
-            sqlOperation.AddIntParameter("P_IDCLIENTE", trans.IdCliente);
-            sqlOperation.AddStringParameter("P_TIPO", trans.Tipo);
-            sqlOperation.AddStringParameter("P_ESTADO", trans.Estado);
+            sqlOperation.AddDoubleParameter("Monto", trans.Monto);
+            sqlOperation.AddDateTimeParameter("FechaCreacion", DateTime.Now);
+            sqlOperation.AddStringParameter("Tipo", trans.Tipo);
+            sqlOperation.AddStringParameter("Estado", "Activo");
+            sqlOperation.AddIntParameter("IdCliente", trans.IdCliente);
+            sqlOperation.AddIntParameter("idComision", trans.IdComision);
+            sqlOperation.AddDoubleParameter("tarifaBaseAplicada", trans.TarifaBaseAplicada);
+            sqlOperation.AddDoubleParameter("impuestoAplicado", trans.ImpuestoAplicado);
+            sqlOperation.AddDoubleParameter("montoComision", trans.MontoComision);
+            sqlOperation.AddStringParameter("reglaUsada", trans.ReglaUsada);
+            sqlOperation.AddIntParameter("idAsesorEjecutor", trans.IdAsesorEjecutor);
+
+            if (trans.Id_Paypal.HasValue)
+                sqlOperation.AddIntParameter("IdPaypalTransaccion", trans.Id_Paypal.Value);
+            else
+                sqlOperation.AddNullParameter("IdPaypalTransaccion");
 
             _sqlDAO.ExecuteProcedure(sqlOperation);
         }
@@ -31,47 +46,47 @@ namespace DataAccess.CRUDs
         {
             var trans = dto as TransaccionCliente;
 
-            var sqlOperation = new SqlOperation() { ProcedureName = "UDP_TRANSACCION_CLIENTE" };
+            var sqlOperation = new SqlOperation()
+            {
+                ProcedureName = "UDP_TRANSACCION_CLIENTE"
+            };
 
-            sqlOperation.AddIntParameter("P_ID", trans.Id);
-            sqlOperation.AddDoubleParameter("P_MONTO", trans.Monto);
-            sqlOperation.AddIntParameter("P_IDCLIENTE", trans.IdCliente);
-            sqlOperation.AddStringParameter("P_TIPO", trans.Tipo);
-            sqlOperation.AddStringParameter("P_ESTADO", trans.Estado);
+            sqlOperation.AddIntParameter("Id", trans.Id);
+            sqlOperation.AddDoubleParameter("Monto", trans.Monto);
+            sqlOperation.AddDateTimeParameter("FechaCreacion", DateTime.Now);
+            sqlOperation.AddStringParameter("Tipo", trans.Tipo);
+            sqlOperation.AddStringParameter("Estado", "Activo");
+            sqlOperation.AddIntParameter("IdCliente", trans.IdCliente);
+            sqlOperation.AddIntParameter("idComision", trans.IdComision);
+            sqlOperation.AddDoubleParameter("tarifaBaseAplicada", trans.TarifaBaseAplicada);
+            sqlOperation.AddDoubleParameter("impuestoAplicado", trans.ImpuestoAplicado);
+            sqlOperation.AddDoubleParameter("montoComision", trans.MontoComision);
+            sqlOperation.AddStringParameter("reglaUsada", trans.ReglaUsada);
+            sqlOperation.AddIntParameter("idAsesorEjecutor", trans.IdAsesorEjecutor);
+
+            if (trans.Id_Paypal.HasValue)
+                sqlOperation.AddIntParameter("IdPaypalTransaccion", trans.Id_Paypal.Value);
+            else
+                sqlOperation.AddNullParameter("IdPaypalTransaccion");
 
             _sqlDAO.ExecuteProcedure(sqlOperation);
         }
 
         public override void Delete(BaseDTO dto)
         {
-            var trans = dto as TransaccionCliente;
-
-            var sqlOperation = new SqlOperation() { ProcedureName = "DELETE_TRANSACCION_CLIENTES" };
-
-            // 🔧 Este valor es el ID de la transacción, no del cliente
-            sqlOperation.AddIntParameter("P_ID", trans.Id);
-
-            _sqlDAO.ExecuteProcedure(sqlOperation);
-        }
-
-        public override T Retrieve<T>()
-        {
-            throw new NotImplementedException();
+            throw new NotImplementedException("Delete method not implemented for TransaccionCliente.");
         }
 
         public override List<T> RetrieveAll<T>()
         {
             var lstTrans = new List<T>();
-            var sqlOperation = new SqlOperation() { ProcedureName = "SELECT_TRANSACCIONES_CLIENTE" };
+            var sqlOperation = new SqlOperation() { ProcedureName = "RETRIEVE_ALL_TRANSACTIONS_CLIENTE" };
             var lstResults = _sqlDAO.ExecuteQueryProcedure(sqlOperation);
 
-            if (lstResults.Count > 0)
+            foreach (var row in lstResults)
             {
-                foreach (var row in lstResults)
-                {
-                    var trans = BuildTransaccionCliente(row);
-                    lstTrans.Add((T)Convert.ChangeType(trans, typeof(T)));
-                }
+                var trans = BuildTransaccionCliente(row);
+                lstTrans.Add((T)Convert.ChangeType(trans, typeof(T)));
             }
 
             return lstTrans;
@@ -79,8 +94,24 @@ namespace DataAccess.CRUDs
 
         public override T RetrieveById<T>(int id)
         {
-            var sqlOperation = new SqlOperation() { ProcedureName = "RETRIEVE_TRANSACCIONES_CLIENTE_BY_ID" };
-            sqlOperation.AddIntParameter("P_ID", id);
+            var sqlOperation = new SqlOperation() { ProcedureName = "RETRIEVE_TRANSACCION_CLIENTE_BY_ID" };
+            sqlOperation.AddIntParameter("Id", id);
+            var lstResults = _sqlDAO.ExecuteQueryProcedure(sqlOperation);
+
+            if (lstResults.Count > 0)
+            {
+                var row = lstResults[0];
+                var trans = BuildTransaccionCliente(row);
+                return (T)Convert.ChangeType(trans, typeof(T));
+            }
+
+            return default(T);
+        }
+
+        public T RetrieveByTipo<T>(string tipo)
+        {
+            var sqlOperation = new SqlOperation() { ProcedureName = "RETRIEVE_TRANSACCIONES_CLIENTE_BY_TIPO" };
+            sqlOperation.AddStringParameter("Tipo", tipo);
             var lstResults = _sqlDAO.ExecuteQueryProcedure(sqlOperation);
 
             if (lstResults.Count > 0)
@@ -95,21 +126,26 @@ namespace DataAccess.CRUDs
 
         private TransaccionCliente BuildTransaccionCliente(Dictionary<string, object> row)
         {
-            var trans = new TransaccionCliente()
+            return new TransaccionCliente
             {
-                Id = Convert.ToInt32(row["Id"]),
+                Id = row.ContainsKey("Id") ? (int)row["Id"] : 0,
                 Monto = Convert.ToDouble(row["Monto"]),
-                Created = Convert.ToDateTime(row["FechaCreacion"]),
-                Tipo = row["Tipo"].ToString(),
-                Estado = row["Estado"].ToString(),
-
-                // ✅ Asegurarse de obtener IdCliente directamente
-                IdCliente = Convert.ToInt32(row["IdCliente"])
+                Tipo = row["Tipo"]?.ToString(),
+                IdCliente = (int)row["IdCliente"],
+                IdComision = (int)row["IdComision"],
+                TarifaBaseAplicada = Convert.ToDouble(row["tarifaBaseAplicada"]),
+                ImpuestoAplicado = Convert.ToDouble(row["impuestoAplicado"]),
+                MontoComision = Convert.ToDouble(row["montoComision"]),
+                ReglaUsada = row["reglaUsada"]?.ToString(),
+                IdAsesorEjecutor = (int)row["idAsesorEjecutor"],
+                Id_Paypal = row.ContainsKey("IdPaypalTransaccion") && row["IdPaypalTransaccion"] != DBNull.Value ? (int)row["IdPaypalTransaccion"] : 0
             };
+        }
 
-            return trans;
+        public override T Retrieve<T>()
+        {
+            throw new NotImplementedException();
         }
     }
 }
-
 
