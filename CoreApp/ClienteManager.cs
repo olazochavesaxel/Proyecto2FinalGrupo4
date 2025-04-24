@@ -51,6 +51,22 @@ namespace CoreApp
                 }
 
                 usuarioCrud.Create(user);
+
+                // Obtener ID del nuevo cliente
+                int idClienteCreado = RetrieveByCorreo(user.Correo).Id;
+
+                // Obtener lista de asesores y asignar uno al azar
+                var asesorCrud = new AsesorCrudFactory();
+                var asesores = asesorCrud.RetrieveAll<Asesor>();
+
+                if (asesores != null && asesores.Count > 0)
+                {
+                    var random = new Random();
+                    int index = random.Next(asesores.Count);
+                    int idAsesor = asesores[index].Id;
+
+                    usuarioCrud.AsignarAsesor(idClienteCreado, idAsesor);
+                }
             }
             catch (Exception ex)
             {
