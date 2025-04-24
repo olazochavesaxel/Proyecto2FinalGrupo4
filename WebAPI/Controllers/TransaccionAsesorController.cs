@@ -2,7 +2,9 @@
 using _00_DTO;
 using CoreApp;
 
-using TransaccionAsesor = DTOs.TransaccionAsesorDTO;
+using TransaccionAsesor = DTOs.TransaccionAsesor;
+using DTO;
+using Microsoft.AspNetCore.Identity;
 
 
 
@@ -10,57 +12,192 @@ using TransaccionAsesor = DTOs.TransaccionAsesorDTO;
 
 namespace WebAPI.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
     public class TransaccionAsesorController : ControllerBase
     {
-        private readonly TransaccionAsesorManager manager = new();
+        private readonly TransaccionAsesorManager _transaccionAsesorManager;
 
-        [HttpGet]
-        public IActionResult GetAll() => Ok(manager.RetrieveAll());
-
-        [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public TransaccionAsesorController()
         {
-            var item = manager.RetrieveById(id);
-            return item == null ? NotFound() : Ok(item);
+            _transaccionAsesorManager = new TransaccionAsesorManager(); // It's recommended to use dependency injection instead of instantiating here.
         }
 
+        // POST -> Create
         [HttpPost]
-        public IActionResult Create([FromBody] TransaccionAsesor trans)
+        [Route("Create")]
+        public ActionResult Create([FromBody] TransaccionAsesor transaccionAsesor)
         {
             try
             {
-                manager.Create(trans);
-                return Ok(" Transacción registrada correctamente");
+                _transaccionAsesorManager.Create(transaccionAsesor);
+                return Ok(new { success = true });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { errors = new { general = new[] { ex.Message } } });
             }
             catch (Exception ex)
             {
-                return BadRequest("❌ " + ex.Message);
+                return StatusCode(500, new { errors = new { general = new[] { "Internal server error." } } });
             }
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] TransaccionAsesor trans)
+        // GET -> RetrieveAll
+        [HttpGet]
+        [Route("RetrieveAll")]
+        public ActionResult RetrieveAll()
         {
-            trans.Id = id;
-            manager.Update(trans);
-            return Ok(" Transacción actualizada");
+            try
+            {
+                var listResults = _transaccionAsesorManager.RetrieveAll();
+                return Ok(listResults);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error retrieving transactions: {ex.Message}");
+            }
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        [HttpGet]
+        [Route("RetrieveById/{id}")]
+        public ActionResult RetrieveById(int id)
         {
-            var trans = manager.RetrieveById(id);
-            if (trans == null) return NotFound();
-            manager.Delete(trans);
-            return Ok(" Transacción eliminada");
+            try
+            {
+                var result = _transaccionAsesorManager.RetrieveById(id);
+                if (result == null)
+                {
+                    return NotFound(new { mensaje = $"No se encontró la transacción con ID {id}." });
+                }
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    errores = new { general = new[] { $"Error interno del servidor: {ex.Message}" } }
+                });
+            }
         }
+
+
+        [HttpGet]
+        [Route("RetrieveByAsesor/{id}")]
+        public ActionResult RetrieveByIdAsesor(int id)
+        {
+            try
+            {
+                var asesores = new List<int> { id };
+                var transacciones = _transaccionAsesorManager.RetrieveByIdAsesor(asesores);
+
+                if (transacciones == null || transacciones.Count == 0)
+                {
+                    return NotFound(new { mensaje = $"No se encontraron transacciones para el asesor con ID {id}." });
+                }
+
+                return Ok(transacciones);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    errores = new { general = new[] { $"Error al recuperar transacciones: {ex.Message}" } }
+                });
+            }
+        }
+
+
+        [HttpGet]
+        [Route("RetrieveByTipo/{tipo}")]
+        public ActionResult RetrieveByTipo(string tipo)
+        {
+            try
+            {
+                // Crear una lista con el único tipo recibido
+                var tipos = new List<string> { tipo };
+                var transacciones = _transaccionAsesorManager.RetrieveByTipo(tipos);
+
+                if (transacciones == null || transacciones.Count == 0)
+                {
+                    return NotFound($"No transactions found with type {tipo}");
+                }
+
+                return Ok(transacciones);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error retrieving transactions by type: {ex.Message}");
+            }
+        }
+
+
+
+        // GET -> Retrieve By Comision
+        [HttpGet]
+        [Route("RetrieveByPayPal/{idPaypal}")]
+        public ActionResult RetrieveByPaypall(int idPaypal)
+        {
+            try
+            {
+                var transaccionAsesor = _transaccionAsesorManager.RetrieveByPaypal(idPaypal);
+
+                if (transaccionAsesor == null)
+                {
+                    return NotFound($"No transaction found with paypal ID ");
+                }
+
+                return Ok(transaccionAsesor);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error retrieving transaction by commission: {ex.Message}");
+            }
+        }
+
+        [HttpGet]
+        [Route("RetrieveByMyClientes/{idCliente}")]
+        public ActionResult RetrieveByMyClientes(int idCliente)
+        {
+            try
+            {
+                var transaccionesAsesor = _transaccionAsesorManager.RetrieveByMyClientes(idCliente);
+
+                if (transaccionesAsesor == null || transaccionesAsesor.Count == 0)
+                {
+                    return NotFound($"No transactions found for client with ID {idCliente}");
+                }
+
+                return Ok(transaccionesAsesor);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error retrieving transactions by client: {ex.Message}");
+            }
+        }
+
+
+
+        // PUT -> Update
+        [HttpPut]
+        [Route("Update")]
+        public ActionResult Update([FromBody] TransaccionAsesor transaccionAsesor)
+        {
+            try
+            {
+                _transaccionAsesorManager.Update(transaccionAsesor);
+                return Ok(transaccionAsesor);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al actualizar la transacción: {ex.Message}");
+            }
+        }
+
+
     }
 }
-
-
-
 
 
 
