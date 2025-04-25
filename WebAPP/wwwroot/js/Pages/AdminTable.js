@@ -112,9 +112,6 @@ function AdminViewController() {
             localStorage.setItem("correoOTP", userDTO.correo);
             localStorage.setItem("origenOTP", "registro");
 
-            // Redirigir a la página de verificación OTP
-            window.location.href = "/AutentificacionOTP";
-
             //Recargar la tabla despues de crar el registro
             $('#tblAdmins').DataTable().ajax.reload(); // CORRECCIÓN: Usar #tblAdmins
         });

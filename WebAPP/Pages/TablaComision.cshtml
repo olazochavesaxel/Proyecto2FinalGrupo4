@@ -36,80 +36,46 @@
             <form action="#" method="post" class="form-register">
                 <fieldset>
                     <legend>Formulario de Comisión</legend>
-
                     <input type="hidden" id="txtComisionId" />
 
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="selectTipo" class="form-label mt-4">Tipo de Comisión</label>
-                                <input type="text"
-                                       class="form-control"
-                                       id="comision-tipo"
-                                       name="comision-tipo"
-                                       placeholder="Ej: Venta, Servicio..." />
+                                <input type="text" class="form-control" id="comision-tipo" name="comision-tipo" placeholder="Ej: Venta, Servicio..." />
                             </div>
-
                             <div class="form-group">
                                 <label for="txtNombreComision" class="form-label mt-4">Nombre</label>
-                                <input type="text"
-                                       class="form-control"
-                                       id="comision-nombre"
-                                       name="comision-nombre"
-                                       placeholder="Nombre de la comisión" />
+                                <input type="text" class="form-control" id="comision-nombre" name="comision-nombre" placeholder="Nombre de la comisión" />
                             </div>
-
                             <div class="form-group">
                                 <label for="txtPorcentaje" class="form-label mt-4">Porcentaje (%)</label>
-                                <input type="number"
-                                       step="0.01"
-                                       class="form-control"
-                                       id="comision-porcentaje"
-                                       name="comision-porcentaje"
-                                       placeholder="Ej. 10.5" />
+                                <input type="number" step="0.01" class="form-control" id="comision-porcentaje" name="comision-porcentaje" placeholder="Ej. 10.5" />
                             </div>
-
                             <div class="form-group">
                                 <label for="comision-max" class="form-label mt-4">Tarifa Máxima</label>
-                                <input type="number"
-                                       class="form-control"
-                                       id="comision-max"
-                                       name="comision-max"
-                                       placeholder="Monto máximo" />
+                                <input type="number" class="form-control" id="comision-max" name="comision-max" placeholder="Monto máximo" />
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="comision-min" class="form-label mt-4">Tarifa Mínima</label>
-                                <input type="number"
-                                       class="form-control"
-                                       id="comision-min"
-                                       name="comision-min"
-                                       placeholder="Monto mínimo" />
+                                <input type="number" class="form-control" id="comision-min" name="comision-min" placeholder="Monto mínimo" />
                             </div>
-
                             <div class="form-group">
                                 <label for="comision-impuesto" class="form-label mt-4">Impuesto (%)</label>
-                                <input type="number"
-                                       class="form-control"
-                                       id="comision-impuesto"
-                                       name="comision-impuesto"
-                                       placeholder="Ej. 13" />
+                                <input type="number" class="form-control" id="comision-impuesto" name="comision-impuesto" placeholder="Ej. 13" />
                             </div>
-
                             <div class="form-group">
                                 <label for="txtAdminId" class="form-label mt-4">ID del Administrador</label>
-                                <input type="number"
-                                       class="form-control"
-                                       id="txtAdminId"
-                                       placeholder="ID del admin responsable" />
+                                <input type="number" class="form-control" id="txtAdminId" placeholder="ID del admin responsable" />
                             </div>
                         </div>
                     </div>
 
                     <div class="mt-4">
-                           <div id="mensaje-error"></div>
+                        <div id="mensaje-error"></div>
                         <button type="submit" id="btnCreate" class="btn btn-success">Registrar</button>
                         <button type="button" id="btnUpdate" class="btn btn-primary">Actualizar</button>
                         <button type="button" id="btnDelete" class="btn btn-danger">Eliminar</button>
@@ -210,53 +176,76 @@
         min-height: 18px;
         text-align: center;
     }
-
 </style>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-      const form = document.querySelector(".form-register");
-      const mensajeError = document.getElementById("mensaje-error");
+        const form = document.querySelector(".form-register");
+        const mensajeError = document.getElementById("mensaje-error");
 
-      const campos = [
-        { id: "comision-tipo", label: "Tipo de Comisión" },
-        { id: "comision-nombre", label: "Nombre" },
-        { id: "comision-porcentaje", label: "Porcentaje (%)" },
-        { id: "comision-max", label: "Tarifa Máxima" },
-        { id: "comision-min", label: "Tarifa Mínima" },
-        { id: "comision-impuesto", label: "Impuesto (%)" },
-      ];
+        const campos = [
+            { id: "comision-tipo", label: "Tipo de Comisión" },
+            { id: "comision-nombre", label: "Nombre" },
+            { id: "comision-porcentaje", label: "Porcentaje (%)" },
+            { id: "comision-max", label: "Tarifa Máxima" },
+            { id: "comision-min", label: "Tarifa Mínima" },
+            { id: "comision-impuesto", label: "Impuesto (%)" },
+        ];
 
-      form.addEventListener("submit", function (event) {
-        let errores = [];
-        mensajeError.innerText = ""; // Limpiar mensajes anteriores
-
-        campos.forEach(({ id, label }) => {
-          const input = document.getElementById(id);
-          const valor = input.value.trim();
-
-          input.classList.remove("error");
-
-          if (!valor) {
-            errores.push(`El campo "${label}" es requerido.`);
-            input.classList.add("error");
-          }
+        form.addEventListener("submit", function (event) {
+            let errores = [];
+            mensajeError.innerText = "";
+            campos.forEach(({ id, label }) => {
+                const input = document.getElementById(id);
+                const valor = input.value.trim();
+                input.classList.remove("error");
+                if (!valor) {
+                    errores.push(`El campo "${label}" es requerido.`);
+                    input.classList.add("error");
+                }
+            });
+            if (errores.length > 0) {
+                event.preventDefault();
+                mensajeError.innerText = errores.join("\n");
+            }
         });
 
-        if (errores.length > 0) {
-          event.preventDefault();
-          mensajeError.innerText = errores.join("\n");
+        campos.forEach(({ id }) => {
+            const input = document.getElementById(id);
+            input.addEventListener("input", () => {
+                if (input.value.trim() !== "") {
+                    input.classList.remove("error");
+                }
+            });
+        });
+
+        // Lógica del pop-out de sesión cerrada
+        const usuarioData = sessionStorage.getItem("usuario");
+        if (!usuarioData) {
+            Swal.fire({
+                icon: "warning",
+                title: "Tu sesión ha sido cerrada",
+                text: "Para ingresar nuevamente por favor inicia sesión.",
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 0.95)`
+            }).then(() => {
+                window.location.href = "/Index";
+            });
+        } else {
+            try {
+                JSON.parse(usuarioData);
+            } catch (e) {
+                sessionStorage.clear();
+                Swal.fire({
+                    icon: "warning",
+                    title: "Sesión inválida",
+                    text: "Para ingresar nuevamente por favor inicia sesión.",
+                    confirmButtonColor: "#8F5AF5",
+                    backdrop: `rgba(0, 0, 0, 0.95)`
+                }).then(() => {
+                    window.location.href = "/Index";
+                });
+            }
         }
-      });
-
-      // Quitar clase de error al escribir
-      campos.forEach(({ id }) => {
-        const input = document.getElementById(id);
-        input.addEventListener("input", () => {
-          if (input.value.trim() !== "") {
-            input.classList.remove("error");
-          }
-        });
-      });
     });
 </script>

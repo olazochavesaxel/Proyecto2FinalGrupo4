@@ -43,6 +43,9 @@
                 <a asp-page="/AccionesAsesor"><span>Acciones</span></a>
             </li>
             <li>
+                <a asp-page="/ClientesAsignados"><span>Clientes</span></a>
+            </li>
+            <li>
                 <a href="#" id="btnLogout"><span>Cerrar Sesión</span></a>
             </li>
         </ul>
@@ -63,6 +66,24 @@
                     sessionStorage.removeItem("usuario");
                     window.location.href = "/Index";
                 });
+            }
+
+            // Prevención del retroceso después del logout con mensaje
+            const usuario = sessionStorage.getItem("usuario");
+            if (!usuario) {
+                window.history.pushState(null, null, location.href);
+                window.onpopstate = function () {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Tu sesión ha sido cerrada",
+                        text: "Para ingresar nuevamente por favor inicia sesión.",
+                        background: "#000",
+                        color: "#fff",
+                        confirmButtonColor: "#8F5AF5"
+                    }).then(() => {
+                        window.location.href = "/Index";
+                    });
+                };
             }
         });
     </script>

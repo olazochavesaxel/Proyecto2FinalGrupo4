@@ -1,4 +1,3 @@
-﻿
 using System;
 using System.Collections.Generic;
 using System;
@@ -20,4 +19,4 @@ namespace _00_DTO
         public int IdAsesorEjecutor { get; set; }
         public int? Id_Paypal { get; set; }
     }
-    }
+}

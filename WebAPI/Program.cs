@@ -1,11 +1,12 @@
 using _00_DTO;
 using CoreApp;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Configuration;
 using WebAPI.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuración de settings desde appsettings.json
+// ConfiguraciÃ³n de settings desde appsettings.json
 builder.Services.Configure<PayPalSettings>(builder.Configuration.GetSection("PayPal"));
 builder.Services.Configure<AlpacaSettings>(builder.Configuration.GetSection("Alpaca"));
 
@@ -44,3 +45,11 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(builder.Environment.WebRootPath, "uploads")),
+    RequestPath = "/uploads"
+});
+

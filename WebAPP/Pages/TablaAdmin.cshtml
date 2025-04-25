@@ -124,6 +124,42 @@
 
 <!-- Script para inicializar Google Maps -->
 <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const usuarioData = sessionStorage.getItem("usuario");
+
+        if (!usuarioData) {
+            Swal.fire({
+                icon: "warning",
+                title: "Tu sesión ha sido cerrada",
+                text: "Para ingresar nuevamente por favor inicia sesión.",
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 0.95)` // Fondo oscuro detrás del popup
+            }).then(() => {
+                window.location.href = "/Index";
+            });
+            return;
+        }
+
+        let user;
+        try {
+            user = JSON.parse(usuarioData);
+        } catch (e) {
+            sessionStorage.clear();
+            Swal.fire({
+                icon: "warning",
+                title: "Sesión inválida",
+                text: "Para ingresar nuevamente por favor inicia sesión.",
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 0.95)`
+            }).then(() => {
+                window.location.href = "/Index";
+            });
+            return;
+        }
+
+        initMap(); // Solo ejecutar el mapa si la sesión es válida
+    });
+
     function initMap() {
         console.log("Google Maps Loaded");
 
@@ -140,7 +176,6 @@
         map.addListener("click", function (event) {
             const clickedLocation = event.latLng;
 
-            // Si ya existe un marcador, lo movemos
             if (marker) {
                 marker.setPosition(clickedLocation);
             } else {
@@ -150,17 +185,16 @@
                 });
             }
 
-            // Obtener dirección usando Geocoder
             geocoder.geocode({ location: clickedLocation }, function (results, status) {
                 if (status === "OK") {
                     if (results[0]) {
                         const direccion = results[0].formatted_address;
                         document.getElementById("txtDireccion").value = direccion;
                     } else {
-                        alert("No se encontraron resultados.");
+                        Swal.fire("Sin resultados", "No se encontraron resultados.", "info");
                     }
                 } else {
-                    alert("Geocoder falló por: " + status);
+                    Swal.fire("Error", "Geocoder falló por: " + status, "error");
                 }
             });
         });

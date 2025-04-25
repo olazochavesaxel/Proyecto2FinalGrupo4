@@ -1,8 +1,8 @@
 ﻿@page
-@model WebAPP.Pages.ReportesAsesorModel
+@model WebAPP.Pages.ReportesAdminModel
 @{
-    ViewData["Title"] = "Reports";
-    Layout = "~/Pages/Shared/AsesorLayout.cshtml";
+    ViewData["Title"] = "Reportes";
+    Layout = "~/Pages/Shared/AdminLayout.cshtml";
 }
 
 <div class="content">
@@ -122,25 +122,25 @@
                 icon: "warning",
                 title: "Tu sesión ha sido cerrada",
                 text: "Para ingresar nuevamente por favor inicia sesión.",
-                backdrop: `rgba(0, 0, 0, 0.95)`,
-                confirmButtonColor: "#8F5AF5"
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 0.95)` // ✅ Fondo oscuro detrás del popup
             }).then(() => {
                 window.location.href = "/Index";
             });
             return;
         }
 
-        let usuario;
+        let user;
         try {
-            usuario = JSON.parse(usuarioData);
+            user = JSON.parse(usuarioData);
         } catch (e) {
             sessionStorage.clear();
             Swal.fire({
                 icon: "warning",
                 title: "Sesión inválida",
                 text: "Para ingresar nuevamente por favor inicia sesión.",
-                backdrop: `rgba(0, 0, 0, 0.95)`,
-                confirmButtonColor: "#8F5AF5"
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 0.95)`
             }).then(() => {
                 window.location.href = "/Index";
             });

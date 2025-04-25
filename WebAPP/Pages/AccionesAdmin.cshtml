@@ -1,8 +1,8 @@
 ﻿@page
-@model WebAPP.Pages.AccionesAsesorModel
+@model WebAPP.Pages.AccionesAdminModel
 @{
     ViewData["Title"] = "Listado de Acciones";
-    Layout = "~/Pages/Shared/AsesorLayout.cshtml";
+    Layout = "~/Pages/Shared/AdminLayout.cshtml";
 }
 
 <!-- Scripts necesarios -->
@@ -56,6 +56,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", async () => {
+        // Verificación de sesión
         const usuarioData = sessionStorage.getItem("usuario");
 
         if (!usuarioData) {
@@ -63,8 +64,8 @@
                 icon: "warning",
                 title: "Tu sesión ha sido cerrada",
                 text: "Para ingresar nuevamente por favor inicia sesión.",
-                backdrop: `rgba(0, 0, 0, 0.95)`,
-                confirmButtonColor: "#8F5AF5"
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 0.95)` // Fondo oscuro detrás del popup
             }).then(() => {
                 window.location.href = "/Index";
             });
@@ -80,14 +81,15 @@
                 icon: "warning",
                 title: "Sesión inválida",
                 text: "Para ingresar nuevamente por favor inicia sesión.",
-                backdrop: `rgba(0, 0, 0, 0.95)`,
-                confirmButtonColor: "#8F5AF5"
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 0.95)`
             }).then(() => {
                 window.location.href = "/Index";
             });
             return;
         }
 
+        // Lógica para cargar acciones
         try {
             const res = await fetch("https://localhost:7057/api/alpaca/activos/light");
             const data = await res.json();
@@ -140,3 +142,4 @@
         });
     }
 </script>
+
