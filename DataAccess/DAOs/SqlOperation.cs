@@ -55,5 +55,9 @@ namespace DataAccess.DAOs
             Parameters.Add(new SqlParameter(parameterName, DBNull.Value));
         }
 
+        internal void AddDateTimeParameter(string v, DateTime? created)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

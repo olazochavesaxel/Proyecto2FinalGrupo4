@@ -197,7 +197,7 @@ namespace WebAPI.Controllers
             var rutaPublica = $"/uploads/perfiles/{nombreArchivo}";
 
             return Ok(new { url = rutaPublica });
-
         }
     }
+
 }
