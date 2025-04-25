@@ -77,25 +77,12 @@ namespace DataAccess.CRUDs
             throw new NotImplementedException("Delete method not implemented for TransaccionCliente.");
         }
 
-        public override List<T> RetrieveAll<T>()
-        {
-            var lstTrans = new List<T>();
-            var sqlOperation = new SqlOperation() { ProcedureName = "RETRIEVE_ALL_TRANSACTIONS_CLIENTE" };
-            var lstResults = _sqlDAO.ExecuteQueryProcedure(sqlOperation);
-
-            foreach (var row in lstResults)
-            {
-                var trans = BuildTransaccionCliente(row);
-                lstTrans.Add((T)Convert.ChangeType(trans, typeof(T)));
-            }
-
-            return lstTrans;
-        }
+   
 
         public override T RetrieveById<T>(int id)
         {
             var sqlOperation = new SqlOperation() { ProcedureName = "RETRIEVE_TRANSACCION_CLIENTE_BY_ID" };
-            sqlOperation.AddIntParameter("Id", id);
+            sqlOperation.AddIntParameter("P_Id", id);
             var lstResults = _sqlDAO.ExecuteQueryProcedure(sqlOperation);
 
             if (lstResults.Count > 0)
@@ -108,37 +95,109 @@ namespace DataAccess.CRUDs
             return default(T);
         }
 
-        public T RetrieveByTipo<T>(string tipo)
+        public override List<T> RetrieveAll<T>()
         {
-            var sqlOperation = new SqlOperation() { ProcedureName = "RETRIEVE_TRANSACCIONES_CLIENTE_BY_TIPO" };
-            sqlOperation.AddStringParameter("Tipo", tipo);
+            var sqlOperation = new SqlOperation()
+            {
+                ProcedureName = "RETRIEVE_TRANSACTION_CLIENTE_ALL_TRANSACTIONS"
+            };
+
+
             var lstResults = _sqlDAO.ExecuteQueryProcedure(sqlOperation);
 
-            if (lstResults.Count > 0)
+            if (lstResults == null || lstResults.Count == 0)
             {
-                var row = lstResults[0];
-                var trans = BuildTransaccionCliente(row);
-                return (T)Convert.ChangeType(trans, typeof(T));
+
+                return new List<T>();
             }
 
-            return default(T);
+            var transacciones = new List<T>();
+
+            foreach (var row in lstResults)
+            {
+                var trans = BuildTransaccionCliente(row);
+                transacciones.Add((T)Convert.ChangeType(trans, typeof(T)));
+            }
+
+            return transacciones;
         }
+
+        public List<T> RetrieveByTipo<T>(string tipo)
+        {
+            var sqlOperation = new SqlOperation()
+            {
+                ProcedureName = "RETRIEVE_TRANSACTION_CLIENTE_BY_TIPO"
+            };
+
+            sqlOperation.AddStringParameter("Tipo", tipo);
+
+            var lstResults = _sqlDAO.ExecuteQueryProcedure(sqlOperation);
+
+            if (lstResults == null || lstResults.Count == 0)
+            {
+                // Return an empty list if no results are found
+                return new List<T>();
+            }
+
+            var transacciones = new List<T>();
+
+            foreach (var row in lstResults)
+            {
+                var trans = BuildTransaccionCliente(row);
+                transacciones.Add((T)Convert.ChangeType(trans, typeof(T)));
+            }
+
+            return transacciones;
+        }
+
+
+        public List<T> RetrieveByIdCliente<T>(int idCliente)
+        {
+            var sqlOperation = new SqlOperation()
+            {
+                ProcedureName = "RETRIEVE_ALL_TRANSACTIONS_CLIENTE"
+            };
+
+            sqlOperation.AddIntParameter("IdCliente", idCliente);
+
+            var lstResults = _sqlDAO.ExecuteQueryProcedure(sqlOperation);
+
+            if (lstResults == null || lstResults.Count == 0)
+            {
+                // Return an empty list if no results are found
+                return new List<T>();
+            }
+
+            var transacciones = new List<T>();
+
+            foreach (var row in lstResults)
+            {
+                var trans = BuildTransaccionCliente(row);
+                transacciones.Add((T)Convert.ChangeType(trans, typeof(T)));
+            }
+
+            return transacciones;
+        }
+
+
+
 
         private TransaccionCliente BuildTransaccionCliente(Dictionary<string, object> row)
         {
             return new TransaccionCliente
             {
-                Id = row.ContainsKey("Id") ? (int)row["Id"] : 0,
-                Monto = Convert.ToDouble(row["Monto"]),
-                Tipo = row["Tipo"]?.ToString(),
-                IdCliente = (int)row["IdCliente"],
-                IdComision = (int)row["IdComision"],
-                TarifaBaseAplicada = Convert.ToDouble(row["tarifaBaseAplicada"]),
-                ImpuestoAplicado = Convert.ToDouble(row["impuestoAplicado"]),
-                MontoComision = Convert.ToDouble(row["montoComision"]),
-                ReglaUsada = row["reglaUsada"]?.ToString(),
-                IdAsesorEjecutor = (int)row["idAsesorEjecutor"],
-                Id_Paypal = row.ContainsKey("IdPaypalTransaccion") && row["IdPaypalTransaccion"] != DBNull.Value ? (int)row["IdPaypalTransaccion"] : 0
+                Id = (int)row["Id"],
+                Monto = row["Monto"] != DBNull.Value ? (double)row["Monto"] : 0.0,
+                Created = row["FechaCreacion"] != DBNull.Value ? (DateTime)row["FechaCreacion"] : DateTime.MinValue,
+                Tipo = row["Tipo"] != DBNull.Value ? (string)row["Tipo"] : null,
+                IdCliente = row["IdCliente"] != DBNull.Value ? (int)row["IdCliente"] : 0,
+                IdComision = row.ContainsKey("IdComision") && row["IdComision"] != DBNull.Value ? (int)row["IdComision"] : 0,
+                TarifaBaseAplicada = (double)row["tarifaBaseAplicada"],
+                ImpuestoAplicado = row["impuestoAplicado"] != DBNull.Value ? (double)row["impuestoAplicado"] : 0.0,
+                MontoComision = row["montoComision"] != DBNull.Value ? (double)row["montoComision"] : 0.0,
+                ReglaUsada = row["reglaUsada"] != DBNull.Value ? (string)row["reglaUsada"] : null,
+                IdAsesorEjecutor = row["idAsesorEjecutor"] != DBNull.Value ? (int)row["idAsesorEjecutor"] : 0,
+                Id_Paypal = row["IdPaypalTransaccion"] != DBNull.Value ? (int?)row["IdPaypalTransaccion"] : null
             };
         }
 
@@ -148,4 +207,5 @@ namespace DataAccess.CRUDs
         }
     }
 }
+
 

@@ -82,23 +82,46 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var transaccionCliente = _transaccionClienteManager.RetrieveByTipo(tipo);
+                var transaccionesCliente = _transaccionClienteManager.RetrieveByTipo(tipo);
 
-                if (transaccionCliente == null)
+                if (transaccionesCliente == null || transaccionesCliente.Count == 0)
                 {
-                    return NotFound($"No se encontró la transacción con tipo {tipo}");
+                    return NotFound($"No se encontraron transacciones con tipo '{tipo}'.");
                 }
 
-                return Ok(transaccionCliente);
+                return Ok(transaccionesCliente);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error al recuperar transacción por tipo: {ex.Message}");
+                return StatusCode(500, $"Error al recuperar transacciones por tipo: {ex.Message}");
             }
         }
 
-       
-       
+
+        [HttpGet]
+        [Route("RetrieveByCliente/{id}")]
+        public ActionResult RetrieveByIdCliente(int id)
+        {
+            try
+            {
+                var clientes = new List<int> { id };
+                var transacciones = _transaccionClienteManager.RetrieveByIdCliente(clientes);
+
+                if (transacciones == null || transacciones.Count == 0)
+                {
+                    return NotFound(new { mensaje = $"No se encontraron transacciones para el cliente con ID {id}." });
+                }
+
+                return Ok(transacciones);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    errores = new { general = new[] { $"Error al recuperar transacciones: {ex.Message}" } }
+                });
+            }
+        }
 
         // PUT -> Actualizar
         [HttpPut]

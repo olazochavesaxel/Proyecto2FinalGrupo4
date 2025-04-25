@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using _00_DTO;
 using DataAccess.CRUDs;
 using DTO;
+using DTOs;
 
 namespace CoreApp
 {
@@ -37,16 +38,25 @@ namespace CoreApp
         {
             return transaccionClienteCrud.RetrieveAll<TransaccionCliente>();
         }
+        
 
         public TransaccionCliente RetrieveById(int id)
         {
             return transaccionClienteCrud.RetrieveById<TransaccionCliente>(id);
         }
 
-        public TransaccionCliente RetrieveByTipo(string tipo)
+        public List<TransaccionCliente> RetrieveByTipo(string tipo)
         {
             return transaccionClienteCrud.RetrieveByTipo<TransaccionCliente>(tipo);
         }
+
+        public List<TransaccionCliente> RetrieveByIdCliente(List<int> idCliente)
+        {
+            var transacciones = transaccionClienteCrud.RetrieveByIdCliente<TransaccionCliente>(idCliente[0]);
+            return transacciones;
+        }
+
+
     }
 
 

@@ -10,6 +10,7 @@ namespace _00_DTO
     {
         public double Monto { get; set; }
         public string Tipo { get; set; }
+        public string Estado { get; set; }  
         public int IdCliente { get; set; }
         public int IdComision { get; set; }
         public double TarifaBaseAplicada { get; set; }
