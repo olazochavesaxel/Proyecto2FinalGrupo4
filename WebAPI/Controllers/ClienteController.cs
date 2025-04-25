@@ -171,8 +171,8 @@ namespace WebAPI.Controllers
                 return StatusCode(500, $"❌ Error al asignar asesor: {ex.Message}");
             }
         }
-        
-         /*Nuevo Subir imagen*/
+
+        /*Nuevo Subir imagen*/
         [HttpPost("UploadFotoPerfil")]
         public async Task<IActionResult> UploadFotoPerfil(IFormFile archivo)
         {
@@ -197,5 +197,7 @@ namespace WebAPI.Controllers
             var rutaPublica = $"/uploads/perfiles/{nombreArchivo}";
 
             return Ok(new { url = rutaPublica });
+        }
     }
+
 }
