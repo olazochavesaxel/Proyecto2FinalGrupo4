@@ -1,5 +1,6 @@
 using _00_DTO;
 using CoreApp;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,3 +33,10 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(builder.Environment.WebRootPath, "uploads")),
+    RequestPath = "/uploads"
+});

@@ -12,7 +12,7 @@ namespace CoreApp
         {
             
             Console.WriteLine("Se creó una excepción: " + exception.ToString());
-            throw exception;
+            
         }
     }
 }

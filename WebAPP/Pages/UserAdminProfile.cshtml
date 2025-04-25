@@ -22,7 +22,10 @@
         <h1>Mi Perfil</h1>
         <div class="profile-box">
             <div class="profile-header">
-                <div class="profile-photo"></div>
+                <div class="profile-photo">
+                    <img id="imagenPerfil" src="" alt="Foto de perfil" class="rounded-circle" width="150">
+
+                </div>
                 <div>
                     <h2 id="nombreUsuario">Usuario</h2>
                     <p id="rolUsuario">Administrador</p>
@@ -55,11 +58,10 @@
 
 <!-- Script para mostrar datos del usuario -->
 <script>
-        window.onload = function () {
+            window.onload = function () {
         const usuarioData = sessionStorage.getItem("usuario");
 
         if (!usuarioData) {
-<!-- Script para mostrar datos del usuario -->
             alert("Sesión no encontrada. Por favor, inicia sesión nuevamente.");
             window.location.href = "/login";
             return;
@@ -81,7 +83,10 @@
         document.getElementById("apellido1").textContent = usuario.primerApellido;
         document.getElementById("apellido2").textContent = usuario.segundoApellido;
         document.getElementById("correo").textContent = usuario.correo;
-    };
+
+        // 👇 Mostrar la imagen
+    document.getElementById("imagenPerfil").src = "http://localhost:5131" + (user.fotoPerfil || "/uploads/perfiles/default.png");
+        };
 
 </script>
 

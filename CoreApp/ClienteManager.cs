@@ -92,11 +92,14 @@ namespace CoreApp
                     usuario.FechaExpiracionOTP = DateTime.Now.AddMinutes(5);
                 }
 
-                Cliente usuarioExistente = RetrieveByCorreo(usuario.Correo);
+                Cliente usuarioExistente = RetrieveById(usuario.Id);
                 if (usuarioExistente != null && usuarioExistente.Id != usuario.Id && Validaciones.UsuarioRegistrado(usuarioExistente, usuario.Rol))
                 {
                     throw new ArgumentException("El usuario ya está registrado con este correo y rol.");
                 }
+
+                // Proteger el rol
+                usuario.Rol = usuarioExistente?.Rol ?? "Cliente";
 
                 usuarioCrud.Update(usuario);
             }
@@ -105,6 +108,7 @@ namespace CoreApp
                 ManageException(ex);
             }
         }
+
 
         public void Delete(Cliente usuario)
         {

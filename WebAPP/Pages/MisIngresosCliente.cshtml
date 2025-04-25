@@ -1,0 +1,38 @@
+﻿@page
+@model WebAPP.Pages.MisIngresosClienteModel
+@{
+    ViewData["Title"] = "Detalles del Cliente";
+}
+<link rel="stylesheet" href="~/css/MisIngresosCliente.css" />
+<div class="cliente-container">
+    <div class="cliente-box">
+        <div class="profile-picture">
+            <img id="imagenPerfil" src="/img/default-user.png" alt="Foto de perfil" />
+        </div>
+        <div class="info-group">
+            <span class="info-label">Nombre:</span>
+            <span class="info-value" id="clienteNombre"></span>
+        </div>
+        <div class="info-group">
+            <span class="info-label">Correo:</span>
+            <span class="info-value" id="clienteCorreo"></span>
+        </div>
+        <div class="info-group">
+            <span class="info-label">Balance Financiero:</span>
+            <span class="info-value" id="clienteBalance"></span>
+        </div>
+        <button class="btn-paypal" id="btnPayPal">Pagar con PayPal</button>
+    </div>
+</div>
+
+
+<script src="~/js/Pages/MisIngresosCliente.js"></script>
+
+
+@* Hacer un retrieve by id de cliente que muestre  el balance financiero
+
+Dentro de esta pagina debo mostrar mis transferencias retrieve transacciones cliente by id
+
+datos el nombre del usuario, correo y balance financiero, boton que redirija a pago paypal
+
+*@

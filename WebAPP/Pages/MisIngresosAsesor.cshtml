@@ -1,0 +1,26 @@
+﻿@page
+@model WebAPP.Pages.MisIngresosAsesorModel
+@{
+}
+<link rel="stylesheet" href="~/css/MisIngresosAsesor.css" />
+<div class="asesor-container">
+    <div class="asesor-box">
+        <div class="profile-picture">
+            <img id="imagenPerfil" src="/img/default-user.png" alt="Foto de perfil" />
+        </div>
+        <div class="info-group">
+            <span class="info-label">Nombre:</span>
+            <span class="info-value" id="asesorNombre"></span>
+        </div>
+        <div class="info-group">
+            <span class="info-label">Correo:</span>
+            <span class="info-value" id="asesorCorreo"></span>
+        </div>
+        <div class="info-group">
+            <span class="info-label">Ingreso por comisiones:</span>
+            <span class="info-value" id="IngresoComisiones"></span>
+        </div>
+        <button class="btn-paypal" id="btnPayPal">Pagar con PayPal</button>
+    </div>
+</div>
+<script src="~/js/Pages/MisIngresosAsesor.js"></script>
