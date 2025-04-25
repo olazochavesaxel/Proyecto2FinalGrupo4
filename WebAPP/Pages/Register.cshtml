@@ -6,68 +6,81 @@
 
 <div class="register-container d-flex flex-column justify-content-center align-items-center">
     <h2 class="text-center">Registro</h2>
-    <form class="register-form">
+    <form id="registerForm" class="register-form" enctype="multipart/form-data">
         <div class="mb-3">
-            <label for="name" class="form-label">Nombre Completo</label>
-            <input type="text" class="form-control" id="name" placeholder="Nombre">
+            <label for="rol" class="form-label">Rol</label>
+            <select class="form-control" id="rol">
+                <option value="">Seleccione un rol</option>
+                <option value="Cliente">Cliente</option>
+                <option value="Asesor">Asesor</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="cedula" class="form-label">Cédula</label>
+            <input type="text" class="form-control" id="cedula">
+        </div>
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="nombre">
+        </div>
+        <div class="mb-3">
+            <label for="primerApellido" class="form-label">Primer Apellido</label>
+            <input type="text" class="form-control" id="primerApellido">
+        </div>
+        <div class="mb-3">
+            <label for="segundoApellido" class="form-label">Segundo Apellido</label>
+            <input type="text" class="form-control" id="segundoApellido">
+        </div>
+        <div class="mb-3">
+            <label for="direccion" class="form-label">Dirección</label>
+            <input type="text" class="form-control" id="direccion">
+        </div>
+        <div class="mb-3">
+            <label for="fotoPerfil" class="form-label">Foto de Perfil</label>
+            <input type="file" class="form-control" id="fotoPerfil" accept="image/png, image/jpeg">
+        </div>
+        <div class="mb-3">
+            <label for="telefono" class="form-label">Teléfono</label>
+            <input type="text" class="form-control" id="telefono">
+        </div>
+        <div class="mb-3">
+            <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+            <input type="date" class="form-control" id="fechaNacimiento">
         </div>
         <div class="mb-3">
             <label for="email" class="form-label">Correo Electrónico</label>
-            <input type="email" class="form-control" id="email" placeholder="Correo electrónico">
+            <input type="email" class="form-control" id="email">
         </div>
         <div class="mb-3">
             <label for="password" class="form-label">Contraseña</label>
-            <input type="password" class="form-control" id="password" placeholder="••••••••">
+            <input type="password" class="form-control" id="password">
         </div>
         <div class="mb-3">
             <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
-            <input type="password" class="form-control" id="confirmPassword" placeholder="••••••••">
+            <input type="password" class="form-control" id="confirmPassword">
         </div>
+
+        <!-- Atributos únicos por rol -->
+        <div id="clienteFields" style="display: none;">
+            <div class="mb-3">
+                <label for="balanceFinanciero" class="form-label">Balance Financiero</label>
+                <input type="number" class="form-control" id="balanceFinanciero" step="0.01">
+            </div>
+        </div>
+
+        <div id="asesorFields" style="display: none;">
+            <div class="mb-3">
+                <label for="ingresoComisiones" class="form-label">Ingreso por Comisiones</label>
+                <input type="number" class="form-control" id="ingresoComisiones" step="0.01">
+            </div>
+        </div>
+
         <button type="submit" class="btn btn-success w-100">Registrarse</button>
     </form>
 </div>
 
-<!-- **Estilos CSS** -->
-<style>
-    .register-container {
-        background: black;
-        color: white;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-    }
-
-    .register-form {
-        width: 300px;
-        padding: 20px;
-        background: #121212;
-        border-radius: 10px;
-        box-shadow: 0px 4px 10px rgba(255, 255, 255, 0.1);
-    }
-
-        .register-form label {
-            color: white;
-        }
-
-        .register-form .form-control {
-            background: white;
-            color: black;
-            border-radius: 5px;
-        }
-
-    .btn-success {
-        background: #00D395;
-        color: black;
-        border-radius: 20px;
-    }
-</style>
-
-
-
-
-
-
-
-
+<!-- Enlace al JS separado -->
+<script src="~/js/Pages/Register.js"></script>
+<!-- Enlace al CSS -->
+<link rel="stylesheet" href="/css/Register.css">

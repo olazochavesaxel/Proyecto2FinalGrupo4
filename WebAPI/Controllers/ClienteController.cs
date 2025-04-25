@@ -171,7 +171,31 @@ namespace WebAPI.Controllers
                 return StatusCode(500, $"❌ Error al asignar asesor: {ex.Message}");
             }
         }
+        
+         /*Nuevo Subir imagen*/
+        [HttpPost("UploadFotoPerfil")]
+        public async Task<IActionResult> UploadFotoPerfil(IFormFile archivo)
+        {
+            Console.WriteLine("¡Recibido archivo en el backend!");
+
+            if (archivo == null || archivo.Length == 0)
+                return BadRequest("Archivo inválido");
+
+            var rutaCarpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "perfiles");
+
+            if (!Directory.Exists(rutaCarpeta))
+                Directory.CreateDirectory(rutaCarpeta);
+
+            var nombreArchivo = Guid.NewGuid().ToString() + Path.GetExtension(archivo.FileName);
+            var rutaCompleta = Path.Combine(rutaCarpeta, nombreArchivo);
+
+            using (var stream = new FileStream(rutaCompleta, FileMode.Create))
+            {
+                await archivo.CopyToAsync(stream);
+            }
+
+            var rutaPublica = $"/uploads/perfiles/{nombreArchivo}";
+
+            return Ok(new { url = rutaPublica });
     }
 }
-
-
