@@ -3,9 +3,10 @@
 @{
 
     ViewData["Title"] = "Tabla Asesor";
+    Layout = "~/Pages/Shared/AdminLayout.cshtml";
 }
 
-<script src="~/js/Pages/AsesorTable.js"></script>
+
 
 
 
@@ -131,5 +132,38 @@
 
 </div>
 
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const usuarioData = sessionStorage.getItem("usuario");
+
+        if (!usuarioData) {
+            Swal.fire({
+                icon: "warning",
+                title: "Tu sesión ha sido cerrada",
+                text: "Para ingresar nuevamente por favor inicia sesión.",
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 0.95)` // Fondo oscuro real
+            }).then(() => {
+                window.location.href = "/Index";
+            });
+            return;
+        }
+
+        try {
+            JSON.parse(usuarioData);
+        } catch (e) {
+            sessionStorage.clear();
+            Swal.fire({
+                icon: "warning",
+                title: "Sesión inválida",
+                text: "Para ingresar nuevamente por favor inicia sesión.",
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 0.95)`
+            }).then(() => {
+                window.location.href = "/Index";
+            });
+        }
+    });
+</script>
 
 

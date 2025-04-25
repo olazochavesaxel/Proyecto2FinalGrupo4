@@ -1,0 +1,59 @@
+﻿@* @{
+    ViewData["Title"] = "Resultado de Pago";
+    var exito = Request.Query["exito"] == "true";
+    var mensaje = Request.Query["mensaje"];
+}
+
+<div class="result-container">
+    @if (exito)
+    {
+        <h1>✅ ¡Pago Exitoso!</h1>
+        <p>@mensaje</p>
+    }
+    else
+    {
+        <h1>❌ Pago Fallido</h1>
+        <p>@mensaje</p>
+    }
+
+    <a href="/Pago/GestionPago">Volver a realizar pago</a>
+</div>
+
+<style>
+    .result-container {
+        max-width: 500px;
+        margin: 100px auto;
+        padding: 40px;
+        background-color: #fff;
+        border-radius: 25px;
+        box-shadow: 0 4px 25px rgba(0,0,0,0.15);
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 32px;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    p {
+        font-size: 18px;
+        margin-bottom: 30px;
+    }
+
+    a {
+        display: inline-block;
+        padding: 12px 25px;
+        background-color: #8F5AF5;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 20px;
+        font-size: 16px;
+        transition: 0.3s ease;
+    }
+
+        a:hover {
+            background-color: #7345C7;
+        }
+</style>
+ *@

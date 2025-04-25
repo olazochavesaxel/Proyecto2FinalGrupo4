@@ -7,11 +7,24 @@
 <div class="privacy-container d-flex flex-column justify-content-center align-items-center text-center">
     <h1 class="privacy-title">Privacidad, Términos y Condiciones</h1>
     <p class="privacy-text">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus euismod felis sed purus gravida, vel suscipit odio gravida.
-        Integer dapibus libero nec lorem gravida, vel posuere ex malesuada. Donec aliquam, felis at facilisis elementum,
-        odio lorem fermentum libero, vel pharetra metus purus ut neque.
+        En <strong>FinancialWebApp</strong>, nos comprometemos con la protección de tus datos personales y la seguridad de tu información financiera. Esta plataforma ha sido desarrollada para ofrecer una experiencia segura a clientes, asesores y administradores que gestionan inversiones, transacciones, balances y relaciones financieras.
+
+        Al registrarte o utilizar nuestros servicios, aceptas que recopilamos y procesamos información como nombre, cédula, correo, dirección, balance financiero, historial de transacciones y fecha de nacimiento, con el fin de proveer un servicio eficiente, personalizado y seguro.
+
+        No compartimos tu información con terceros sin tu consentimiento, salvo en los casos permitidos por ley o para cumplir con obligaciones contractuales y regulatorias. Toda la información se almacena en servidores seguros y se encuentra protegida mediante cifrado y controles de acceso.
     </p>
-    <a href="#" class="btn-read-more">Leer más</a>
+
+    <div id="texto-adicional" class="privacy-text" style="display: none;">
+        <p>
+            Nos reservamos el derecho de auditar la actividad en la plataforma con el propósito de detectar fraudes, accesos no autorizados u otras prácticas que violen nuestros términos. El acceso y uso de este sistema está destinado únicamente a los usuarios autorizados. Cualquier intento de uso indebido será reportado y podría conllevar sanciones legales.
+
+            El usuario es responsable de mantener la confidencialidad de su contraseña. Si sospechas de cualquier acceso no autorizado, debes notificarlo inmediatamente. FinancialWebApp no se hace responsable por pérdidas ocasionadas por el mal uso de tus credenciales.
+
+            Puedes ejercer tus derechos de acceso, rectificación o eliminación de tus datos en cualquier momento mediante solicitud formal. Nos comprometemos a cumplir con la legislación nacional sobre protección de datos y a mantener la privacidad de tus registros.
+        </p>
+    </div>
+
+    <a href="#" id="btnLeerMas" class="btn-read-more">Leer más</a>
 </div>
 
 <style>
@@ -54,3 +67,18 @@
             background: #00FFB4;
         }
 </style>
+
+<script>
+    document.getElementById("btnLeerMas").addEventListener("click", function (e) {
+        e.preventDefault();
+        const extraText = document.getElementById("texto-adicional");
+
+        if (extraText.style.display === "none") {
+            extraText.style.display = "block";
+            this.textContent = "Leer menos";
+        } else {
+            extraText.style.display = "none";
+            this.textContent = "Leer más";
+        }
+    });
+</script>

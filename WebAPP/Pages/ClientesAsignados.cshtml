@@ -1,0 +1,85 @@
+﻿@page
+@model WebAPP.Pages.ClientesAsignadosModel
+@{
+    ViewData["Title"] = "Clientes Asignados";
+    Layout = "~/Pages/Shared/AsesorLayout.cshtml";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4">Clientes Asignados</h2>
+    <div class="form-group">
+        <input type="text" id="filtroCorreo" class="form-control" placeholder="Buscar por correo...">
+    </div>
+    <table id="tablaClientes" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Correo</th>
+                <th>Nombre</th>
+                <th>Primer Apellido</th>
+                <th>Segundo Apellido</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const usuarioData = sessionStorage.getItem("usuario");
+
+            if (!usuarioData) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Tu sesión ha sido cerrada",
+                    text: "Para ingresar nuevamente por favor inicia sesión.",
+                    backdrop: `rgba(0, 0, 0, 0.95)` ,
+                    confirmButtonColor: "#8F5AF5"
+                }).then(() => {
+                    window.location.href = "/Index";
+                });
+                return;
+            }
+
+            let usuario;
+            try {
+                usuario = JSON.parse(usuarioData);
+            } catch (e) {
+                sessionStorage.clear();
+                Swal.fire({
+                    icon: "warning",
+                    title: "Sesión inválida",
+                    text: "Para ingresar nuevamente por favor inicia sesión.",
+                    backdrop: `rgba(0, 0, 0, 0.95)` ,
+                    confirmButtonColor: "#8F5AF5"
+                }).then(() => {
+                    window.location.href = "/Index";
+                });
+                return;
+            }
+
+            try {
+                const res = await fetch(`https://localhost:7057/api/Cliente/Asignados/${usuario.id}`);
+                const data = await res.json();
+
+                const tabla = $('#tablaClientes').DataTable({
+                    data: data,
+                    columns: [
+                        { data: 'correo' },
+                        { data: 'nombre' },
+                        { data: 'primerApellido' },
+                        { data: 'segundoApellido' }
+                    ]
+                });
+
+                document.getElementById("filtroCorreo").addEventListener("input", function () {
+                    tabla.search(this.value).draw();
+                });
+            } catch (err) {
+                console.error("Error al cargar los clientes asignados:", err);
+                Swal.fire("Error", "No se pudieron cargar los clientes asignados.", "error");
+            }
+        });
+    </script>
+}

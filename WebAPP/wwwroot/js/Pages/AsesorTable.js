@@ -3,6 +3,9 @@ function AsesorViewController() {
     this.ViewName = "TablaAsesor";
     this.ApiEndPointName = "Asesor";
 
+
+
+
     this.InitView = function () {
         console.log("Asesor Init View");
         this.LoadTable();
@@ -43,7 +46,13 @@ function AsesorViewController() {
         columns[9] = { 'data': 'fechaNacimiento' };
         columns[10] = { 'data': 'correo' };
         columns[11] = { 'data': 'created' };
-        columns[12] = { 'data': 'ingresoComisiones' };
+        columns[12] = {
+            'data': 'ingresoComisiones',
+            'render': function (data) {
+                return `$${parseFloat(data).toFixed(2)}`;
+            }
+        }; 
+
 
         // 💡 AQUÍ definís bien la tabla y guardás la referencia
         var table = $('#tblAsesores').DataTable({
@@ -80,6 +89,7 @@ function AsesorViewController() {
     }
 
     this.Create = function () {
+
         var userDTO = {};
         userDTO.id = 0;
         userDTO.fechaExpiracionOTP = new Date().toISOString();
@@ -113,6 +123,7 @@ function AsesorViewController() {
             $('#tblAsesores').DataTable().ajax.reload();
         });
     }
+
 
     this.Update = function () {
         var userId = $("#txtId").val();

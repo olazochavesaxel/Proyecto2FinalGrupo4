@@ -1,0 +1,36 @@
+﻿@page
+@model WebAPP.Pages.ConfirmacionModel
+@{
+}
+<h2>Confirmando pago...</h2>
+<div id="resultado"></div>
+
+<script>
+    window.onload = async () => {
+        const orderId = localStorage.getItem("paypal_order_id");
+        if (!orderId) {
+            document.getElementById("resultado").innerText = "No se encontró la orden en el almacenamiento local.";
+            return;
+        }
+
+        try {
+            const response = await fetch('https://localhost:7057/api/Paypal/Confirmacion', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ orderId: orderId })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                document.getElementById("resultado").innerText = `Pago confirmado por $${data.amount}. Orden: ${data.orderId}`;
+                localStorage.removeItem("paypal_order_id");
+            } else {
+                document.getElementById("resultado").innerText = "Error confirmando pago: " + data.error;
+            }
+        } catch (error) {
+            document.getElementById("resultado").innerText = "Error: " + error.message;
+        }
+    };
+
+

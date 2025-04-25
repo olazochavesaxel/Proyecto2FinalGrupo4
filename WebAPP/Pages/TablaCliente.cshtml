@@ -3,15 +3,16 @@
 @model WebAPP.Pages.TablaClienteModel
 @{
     ViewData["Title"] = "Tabla Cliente";
+    Layout = "~/Pages/Shared/AdminLayout.cshtml";
 }
 
-<script src="~/js/Pages/ClienteTable.js"></script>
+
 
 
 
 <div class="bs-docs-section">
     <div class="row">
-        <legend>Lista de CLientes</legend>
+        <legend>Lista de Clientes</legend>
 
         <div class="col-lg-12">
             <table id="tblClientes" class="display" style="width:100%">
@@ -126,7 +127,41 @@
     </div>
 
 
-
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const usuarioData = sessionStorage.getItem("usuario");
+
+        if (!usuarioData) {
+            Swal.fire({
+                icon: "warning",
+                title: "Tu sesión ha sido cerrada",
+                text: "Para ingresar nuevamente por favor inicia sesión.",
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 0.95)`
+            }).then(() => {
+                window.location.href = "/Index";
+            });
+            return;
+        }
+
+        try {
+            JSON.parse(usuarioData);
+        } catch (e) {
+            sessionStorage.clear();
+            Swal.fire({
+                icon: "warning",
+                title: "Sesión inválida",
+                text: "Para ingresar nuevamente por favor inicia sesión.",
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 0.95)`
+            }).then(() => {
+                window.location.href = "/Index";
+            });
+        }
+    });
+</script>
+
 
 

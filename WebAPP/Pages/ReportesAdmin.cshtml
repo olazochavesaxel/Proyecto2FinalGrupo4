@@ -1,0 +1,199 @@
+﻿@page
+@model WebAPP.Pages.ReportesAdminModel
+@{
+    ViewData["Title"] = "Reportes";
+    Layout = "~/Pages/Shared/AdminLayout.cshtml";
+}
+
+<div class="content">
+    <h1>Reports</h1>
+
+    <!-- Chart Section -->
+    <div class="chart-section">
+        <canvas id="lineChart"></canvas>
+        <div class="stock-info">
+            <h4>NVIDIA</h4>
+            <p>$11.54</p>
+            <p class="icon">⬆ $1.76</p>
+        </div>
+    </div>
+
+    <!-- Transactions Section -->
+    <div class="transactions-section">
+        <div class="table-container">
+            <h5>Users transaction on NVIDIA</h5>
+            <table>
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Company</th>
+                        <th>Category</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                        <th>Advisor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>client1</td><td>NVIDIA</td><td>Tech</td><td>$10,000</td><td>03-05-2025</td><td>advisor1</td></tr>
+                    <tr><td>client2</td><td>NVIDIA</td><td>Tech</td><td>$5,100</td><td>04-06-2025</td><td>advisor1</td></tr>
+                    <tr><td>client3</td><td>NVIDIA</td><td>Tech</td><td>$3,200</td><td>06-07-2025</td><td>advisor2</td></tr>
+                    <tr><td>client4</td><td>NVIDIA</td><td>Tech</td><td>$1,800</td><td>07-07-2025</td><td>advisor2</td></tr>
+                    <tr><td>client5</td><td>NVIDIA</td><td>Tech</td><td>$2,300</td><td>01-01-2025</td><td>advisor2</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="balance-summary">
+            <h5>Total balanced invested in NVIDIA</h5>
+            <h2>2.3M</h2>
+            <canvas id="areaChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<style>
+    body, html {
+        background-color: black;
+        color: white;
+        margin: 0;
+        padding: 0;
+    }
+
+    .content {
+        padding: 30px;
+        margin-left: 220px;
+    }
+
+    .chart-section {
+        background: #111;
+        padding: 20px;
+        border-radius: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .stock-info {
+        margin-left: 30px;
+        text-align: right;
+    }
+
+        .stock-info .icon {
+            color: #8F5AF5;
+        }
+
+    .transactions-section {
+        display: flex;
+        margin-top: 30px;
+        gap: 20px;
+    }
+
+    .table-container, .balance-summary {
+        background: #111;
+        padding: 20px;
+        border-radius: 15px;
+        flex: 1;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        color: white;
+    }
+
+    th, td {
+        border-bottom: 1px solid #333;
+        padding: 10px;
+        text-align: left;
+    }
+
+    canvas {
+        width: 100% !important;
+        height: 150px !important;
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const usuarioData = sessionStorage.getItem("usuario");
+
+        if (!usuarioData) {
+            Swal.fire({
+                icon: "warning",
+                title: "Tu sesión ha sido cerrada",
+                text: "Para ingresar nuevamente por favor inicia sesión.",
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 0.95)` // ✅ Fondo oscuro detrás del popup
+            }).then(() => {
+                window.location.href = "/Index";
+            });
+            return;
+        }
+
+        let user;
+        try {
+            user = JSON.parse(usuarioData);
+        } catch (e) {
+            sessionStorage.clear();
+            Swal.fire({
+                icon: "warning",
+                title: "Sesión inválida",
+                text: "Para ingresar nuevamente por favor inicia sesión.",
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 0.95)`
+            }).then(() => {
+                window.location.href = "/Index";
+            });
+            return;
+        }
+
+        // --- GRÁFICO LINEAL ---
+        const ctxLine = document.getElementById('lineChart').getContext('2d');
+        new Chart(ctxLine, {
+            type: 'line',
+            data: {
+                labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+                datasets: [{
+                    label: 'Value',
+                    data: [100, 700, 1000, 300, 900, 600, 500, 200, 800],
+                    borderColor: '#8F5AF5',
+                    fill: false,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // --- GRÁFICO DE ÁREA ---
+        const ctxArea = document.getElementById('areaChart').getContext('2d');
+        new Chart(ctxArea, {
+            type: 'line',
+            data: {
+                labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+                datasets: [{
+                    label: 'Balance',
+                    data: [100, 200, 150, 400, 700, 600, 500, 300, 200],
+                    backgroundColor: 'rgba(143, 90, 245, 0.2)',
+                    borderColor: '#8F5AF5',
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true },
+                    x: { display: false }
+                }
+            }
+        });
+    });
+</script>

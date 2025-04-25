@@ -9,13 +9,16 @@ namespace _00_DTO
 {
     public class Pago : BaseDTO
     {
-        public int Id { get; set; }
-        public double Monto { get; set; }
-        public string Estado { get; set; } // Aprobado, Pendiente, Cancelado
-        public string Metodo { get; set; } // "PayPal"
-        public DateTime Fecha { get; set; }
-        public int TransaccionId { get; set; } // ID de PayPal
-        public int ClienteId { get; set; }
-    }
 
+        public string PaypalOrderId { get; set; }
+        public string PaymentCaptureId { get; set; }
+        public string PayerEmail { get; set; }
+        public string PayerId { get; set; }
+        public double Amount { get; set; }
+        public string Currency { get; set; }
+        public string Status { get; set; }
+        public DateTime UpdateTime { get; set; }
+
+
+    }
 }

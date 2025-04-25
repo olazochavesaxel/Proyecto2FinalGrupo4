@@ -2,9 +2,9 @@
 @model WebAPP.Pages.TablaAdminModel
 @{
     ViewData["Title"] = "Tabla Administrador";
-}
+    Layout = "~/Pages/Shared/AdminLayout.cshtml";
 
-<script src="~/js/Pages/AdminTable.js"></script>
+}
 
 
 
@@ -15,23 +15,24 @@
             <table id="tblAdmins" class="display" style="width:100%">
                 <thead>
                     <tr>
-						<th>Id</th>
-						<th>Cédula</th>
-						<th>Nombre</th>
-						<th>Primer Apellido</th>
-						<th>Segundo Apellido</th>
-						<th>Dirección</th>
-						<th>Telefono</th>
-						<th>Estado</th>
-						<th>Rol</th>
-						<th>Fecha de Nacimiento</th>
-						<th>Correo Electrónico</th>
-						<th>Fecha  Creación</th>
-					</tr>
+                        <th>Id</th>
+                        <th>Cédula</th>
+                        <th>Nombre</th>
+                        <th>Primer Apellido</th>
+                        <th>Segundo Apellido</th>
+                        <th>Dirección</th>
+                        <th>Telefono</th>
+                        <th>Estado</th>
+                        <th>Rol</th>
+                        <th>Fecha de Nacimiento</th>
+                        <th>Correo Electrónico</th>
+                        <th>Fecha  Creación</th>
+                    </tr>
                 </thead>
             </table>
         </div>
     </div>
+
     <div class="row">
         <div class="col-lg-6">
             <div class="bs-component">
@@ -39,6 +40,7 @@
                     <fieldset>
                         <legend>Formulario de Registro</legend>
                         <input type="hidden" id="txtId">
+
                         <div class="form-group">
                             <label for="txtCedula" class="form-label mt-4">Cédula</label>
                             <input id="txtCedula" type="number" class="form-control" placeholder="Ingrese su cédula">
@@ -63,6 +65,9 @@
                             <label for="txtDireccion" class="form-label mt-4">Dirección</label>
                             <input type="text" class="form-control" id="txtDireccion" placeholder="Ingrese su dirección">
                         </div>
+
+                        <!-- Mapa para seleccionar dirección -->
+                        <div id="map" style="height: 400px; width: 100%; margin-top: 20px;"></div>
 
                         <div class="form-group">
                             <label for="txtTelefono" class="form-label mt-4">Número de Teléfono</label>
@@ -95,12 +100,13 @@
                         <div class="form-group">
                             <label for="txtFotoPerfil" class="form-label mt-4">Foto de Perfil</label>
                             <input id="txtFotoPerfil" type="text" class="form-control" placeholder="Ingrese la URL de la imagen o el nombre del archivo">
-                            <small class="form-text text-muted">Por ahora, ingrese una URL o un nombre de archivo.</small>
+                            <small class="form-text text-muted">Por ahora, ingrese una URL o un nombre de archivo. </small>
                         </div>
 
                         <input type="hidden" id="selectRol" value="Administrador">
                     </fieldset>
                 </form>
+
                 <br />
                 <button id="btnCreate" class="source-button btn btn-primary btn-xs" type="button">
                     <i class="bi bi-save"> Guardar</i>
@@ -114,17 +120,88 @@
             </div>
         </div>
     </div>
-
-
-    
 </div>
 
+<!-- Script para inicializar Google Maps -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const usuarioData = sessionStorage.getItem("usuario");
 
+        if (!usuarioData) {
+            Swal.fire({
+                icon: "warning",
+                title: "Tu sesión ha sido cerrada",
+                text: "Para ingresar nuevamente por favor inicia sesión.",
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 0.95)` // Fondo oscuro detrás del popup
+            }).then(() => {
+                window.location.href = "/Index";
+            });
+            return;
+        }
 
+        let user;
+        try {
+            user = JSON.parse(usuarioData);
+        } catch (e) {
+            sessionStorage.clear();
+            Swal.fire({
+                icon: "warning",
+                title: "Sesión inválida",
+                text: "Para ingresar nuevamente por favor inicia sesión.",
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 0.95)`
+            }).then(() => {
+                window.location.href = "/Index";
+            });
+            return;
+        }
 
-     
+        initMap(); // Solo ejecutar el mapa si la sesión es válida
+    });
 
+    function initMap() {
+        console.log("Google Maps Loaded");
 
+        const defaultLocation = { lat: 9.7489, lng: -83.7534 }; // Costa Rica
 
+        const map = new google.maps.Map(document.getElementById("map"), {
+            center: defaultLocation,
+            zoom: 8,
+        });
 
+        const geocoder = new google.maps.Geocoder();
+        let marker = null;
 
+        map.addListener("click", function (event) {
+            const clickedLocation = event.latLng;
+
+            if (marker) {
+                marker.setPosition(clickedLocation);
+            } else {
+                marker = new google.maps.Marker({
+                    position: clickedLocation,
+                    map: map,
+                });
+            }
+
+            geocoder.geocode({ location: clickedLocation }, function (results, status) {
+                if (status === "OK") {
+                    if (results[0]) {
+                        const direccion = results[0].formatted_address;
+                        document.getElementById("txtDireccion").value = direccion;
+                    } else {
+                        Swal.fire("Sin resultados", "No se encontraron resultados.", "info");
+                    }
+                } else {
+                    Swal.fire("Error", "Geocoder falló por: " + status, "error");
+                }
+            });
+        });
+    }
+</script>
+
+<!-- Cargar API de Google Maps con tu API KEY -->
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC7fsyA7-m71NW5F-HlQBgzm6VIiKbbQw4&callback=initMap&libraries=places">
+</script>
