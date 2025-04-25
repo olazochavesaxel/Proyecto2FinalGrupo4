@@ -73,7 +73,7 @@ function ComisionViewController() {
             $('#txtPorcentaje').val(comisionDTO.porcentaje);
             $('#txtTarifa1').val(comisionDTO.tarifa1);
             $('#txtTarifa2').val(comisionDTO.tarifa2);
-            $('#txtTarifa3').val(comisionDTO.tarifa3;
+            $('#txtTarifa3').val(comisionDTO.tarifa3);
             $('#txtIdAdmin').val(comisionDTO.idAdmin);
          
             
@@ -81,7 +81,7 @@ function ComisionViewController() {
     });
 }
 
-}
+
 
 // $ referencia a jQuery
 $(document).ready(function () {
