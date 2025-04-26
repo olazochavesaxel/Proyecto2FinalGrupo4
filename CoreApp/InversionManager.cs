@@ -21,5 +21,11 @@ namespace CoreApp
         {
             return _inversionCrud.RetrieveAll<Inversion>();
         }
+
+        // 🔥 Nuevo método: Retrieve inversiones por cliente
+        public List<Inversion> RetrieveByIdCliente(int idCliente)
+        {
+            return _inversionCrud.RetrieveByIdCliente(idCliente);
+        }
     }
 }

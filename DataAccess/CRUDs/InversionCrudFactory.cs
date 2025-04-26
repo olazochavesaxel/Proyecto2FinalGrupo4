@@ -68,7 +68,7 @@ namespace DataAccess.CRUDs
             return new Inversion
             {
                 Id = (int)row["id"],
-                IntCliente = (int)row["intCliente"],
+                IntCliente = row.ContainsKey("intCliente") ? (int)row["intCliente"] : 0,
                 IntAccion = (int)row["intAccion"],
                 Cantidad = Convert.ToDouble(row["cantidad"]),
                 Tipo = (string)row["tipo"],
@@ -77,6 +77,30 @@ namespace DataAccess.CRUDs
                 PrecioAccion = row["PrecioAccion"] != DBNull.Value ? (double?)Convert.ToDouble(row["PrecioAccion"]) : null
             };
         }
+
+        // 🔥 Nuevo método para RetrieveByIdCliente
+        public List<Inversion> RetrieveByIdCliente(int idCliente)
+        {
+            var sqlOperation = new SqlOperation()
+            {
+                ProcedureName = "RETRIEVE_INVERSION_BY_ID_CLIENTE"
+            };
+            sqlOperation.AddIntParameter("intCliente", idCliente);
+
+            var lstResults = _sqlDAO.ExecuteQueryProcedure(sqlOperation);
+
+            var inversiones = new List<Inversion>();
+
+            if (lstResults != null && lstResults.Count > 0)
+            {
+                foreach (var row in lstResults)
+                {
+                    var inversion = BuildInversion(row);
+                    inversiones.Add(inversion);
+                }
+            }
+
+            return inversiones;
+        }
     }
 }
-

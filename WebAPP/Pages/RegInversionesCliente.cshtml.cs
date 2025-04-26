@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace WebAPP.Pages
 {
-    public class TablaComisionModel : PageModel
+    public class RegInversionesClienteModel : PageModel
     {
         public void OnGet()
         {

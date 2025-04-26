@@ -31,5 +31,27 @@ namespace WebAPI.Controllers
                 return StatusCode(500, $"Error al recuperar inversiones: {ex.Message}");
             }
         }
+
+        // 🔥 Nuevo -> Retrieve inversiones por ID de cliente
+        [HttpGet]
+        [Route("RetrieveByCliente/{idCliente}")]
+        public ActionResult RetrieveByIdCliente(int idCliente)
+        {
+            try
+            {
+                var inversionesCliente = _inversionManager.RetrieveByIdCliente(idCliente);
+
+                if (inversionesCliente == null || inversionesCliente.Count == 0)
+                {
+                    return NotFound(new { mensaje = $"No se encontraron inversiones para el cliente con ID {idCliente}." });
+                }
+
+                return Ok(inversionesCliente);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al recuperar inversiones del cliente: {ex.Message}");
+            }
+        }
     }
 }
