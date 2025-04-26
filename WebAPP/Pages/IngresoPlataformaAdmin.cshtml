@@ -1,0 +1,119 @@
+﻿@page
+@model WebAPP.Pages.IngresoPlataformaAdminModel
+@{
+}
+
+<div class="content">
+    <h1>Ingresos por Plataforma</h1>
+    <table id="tablaIngresos" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Fecha de Ingreso</th>
+                <th>Monto</th>
+                <th>Descripción</th>
+                <th>ID Cliente</th>
+                <th>ID Asesor</th>
+                <th>ID Comisión</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<style>
+    body, html {
+        background-color: black;
+        color: white;
+        margin: 0;
+        padding: 0;
+    }
+
+    .content {
+        flex: 1;
+        margin-left: 220px;
+        padding: 40px;
+    }
+
+    .btn-accion {
+        background-color: #8F5AF5;
+        color: white;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 6px;
+        margin-right: 5px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+        .btn-accion:hover {
+            background-color: #A379F7;
+        }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const usuarioData = sessionStorage.getItem("usuario");
+        if (!usuarioData) {
+            Swal.fire({
+                icon: "warning",
+                title: "Tu sesión ha sido cerrada",
+                text: "Para ingresar nuevamente por favor inicia sesión.",
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 0.95)`
+            }).then(() => {
+                window.location.href = "/Index";
+            });
+            return;
+        }
+
+        try {
+            const res = await fetch("https://localhost:7057/api/IngresoPlataforma/RetrieveAll");
+            const data = await res.json();
+            console.log(data); // Para depuración: podés quitarlo después
+
+            if ($.fn.DataTable.isDataTable('#tablaIngresos')) {
+                $('#tablaIngresos').DataTable().clear().destroy();
+            }
+
+            $('#tablaIngresos').DataTable({
+                data: data,
+                columns: [
+                    { data: 'id' },
+                    {
+                        data: 'created',
+                        render: function (fecha) {
+                            if (!fecha) return "N/A";
+                            const fechaISO = fecha.replace(' ', 'T');
+                            const fechaObj = new Date(fechaISO);
+                            if (isNaN(fechaObj)) return "Fecha inválida";
+
+                            return new Intl.DateTimeFormat('es-CR', {
+                                year: 'numeric',
+                                month: '2-digit',
+                                day: '2-digit',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                second: '2-digit',
+                                hour12: false
+                            }).format(fechaObj);
+                        }
+                    },
+                    {
+                        data: 'montoIngreso',
+                        render: function (monto) {
+                            return `$${parseFloat(monto).toFixed(2)}`;
+                        }
+                    },
+                    { data: 'descripcion' },
+                    { data: 'idCliente' },
+                    { data: 'idAsesor' },
+                    { data: 'idComision' }
+                ]
+            });
+
+        } catch (err) {
+            console.error("Error al cargar ingresos:", err);
+            Swal.fire("Error", "No se pudo obtener el listado de ingresos.", "error");
+        }
+    });
+</script>

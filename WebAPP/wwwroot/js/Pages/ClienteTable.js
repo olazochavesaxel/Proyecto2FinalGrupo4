@@ -124,8 +124,6 @@ function ClienteViewController() {
             localStorage.setItem("correoOTP", userDTO.correo);
             localStorage.setItem("origenOTP", "registro");
 
-            // Redirigir a la página de verificación OTP
-            window.location.href = "/AutentificacionOTP";
             $('#tblClientes').DataTable().ajax.reload(); // asegúrate de usar la tabla correcta
 
         });
@@ -212,10 +210,13 @@ function ClienteViewController() {
 }
 
 // $ referencia a jQuery
-$(document).ready(function() {
-    var vc = new ClienteViewController(); // Corrección del controlador
-    vc.InitView();
+$(document).ready(function () {
+    if ($("#tblClientes").length) {
+        var vc = new ClienteViewController();
+        vc.InitView();
+    }
 });
+
 
 
 

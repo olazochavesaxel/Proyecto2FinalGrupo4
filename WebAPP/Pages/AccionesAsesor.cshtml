@@ -1,0 +1,195 @@
+﻿@page
+@model WebAPP.Pages.AccionesAsesorModel
+@{
+    ViewData["Title"] = "Listado de Acciones";
+    Layout = "~/Pages/Shared/AsesorLayout.cshtml";
+}
+
+<!-- Scripts necesarios -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<div class="content">
+    <h1>Acciones Disponibles</h1>
+    <table id="tablaAcciones" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Símbolo</th>
+                <th>Nombre</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+<style>
+    body, html {
+        background-color: black;
+        color: white;
+        margin: 0;
+        padding: 0;
+    }
+
+    .content {
+        flex: 1;
+        margin-left: 220px;
+        padding: 40px;
+    }
+
+    .btn-accion {
+        background-color: #8F5AF5;
+        color: white;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 6px;
+        margin-right: 5px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+        .btn-accion:hover {
+            background-color: #A379F7;
+        }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const usuarioData = sessionStorage.getItem("usuario");
+
+        if (!usuarioData) {
+            Swal.fire({
+                icon: "warning",
+                title: "Tu sesión ha sido cerrada",
+                text: "Para ingresar nuevamente por favor inicia sesión.",
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 0.95)`
+            }).then(() => {
+                window.location.href = "/Index";
+            });
+            return;
+        }
+
+        let user;
+        try {
+            user = JSON.parse(usuarioData);
+        } catch (e) {
+            sessionStorage.clear();
+            Swal.fire({
+                icon: "warning",
+                title: "Sesión inválida",
+                text: "Para ingresar nuevamente por favor inicia sesión.",
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 0.95)`
+            }).then(() => {
+                window.location.href = "/Index";
+            });
+            return;
+        }
+
+        try {
+            const res = await fetch("https://localhost:7057/api/alpaca/activos/light");
+            const data = await res.json();
+
+            $('#tablaAcciones').DataTable({
+                data: data,
+                columns: [
+                    { data: 'simbolo' },
+                    { data: 'nombre' },
+                    {
+                        data: 'simbolo',
+                        render: function (symbol) {
+                            return `
+                                <button class="btn-accion" onclick="verPrecioActual('${symbol}')">Ver Precio</button>
+                                <button class="btn-accion" onclick="verHistorico('${symbol}')">Ver Histórico</button>
+                            `;
+                        }
+                    }
+                ]
+            });
+
+        } catch (err) {
+            console.error("Error cargando acciones:", err);
+            Swal.fire("Error", "No se pudo obtener el listado de acciones.", "error");
+        }
+    });
+
+    async function verPrecioActual(symbol) {
+        try {
+            const res = await fetch(`https://localhost:7057/api/alpaca/precio/${encodeURIComponent(symbol)}`);
+            if (!res.ok) throw new Error("No se pudo obtener el precio.");
+            const data = await res.json();
+
+            Swal.fire({
+                title: `💲 Precio actual de ${data.simbolo}`,
+                html: `Precio: <strong>$${data.precio.toFixed(2)}</strong><br>Fecha: ${new Date(data.timeStamp).toLocaleString()}`,
+                icon: "info"
+            });
+        } catch (err) {
+            console.error("Error al obtener precio actual:", err);
+            Swal.fire("Error", "No se pudo obtener el precio actual.", "error");
+        }
+    }
+
+    async function verHistorico(symbol) {
+        const to = new Date();
+        const from = new Date();
+        from.setDate(to.getDate() - 7);
+
+        try {
+            const url = `https://localhost:7057/api/alpaca/Historico?symbol=${encodeURIComponent(symbol)}&from=${from.toISOString()}&to=${to.toISOString()}`;
+            const response = await fetch(url);
+            if (!response.ok) throw new Error("No se pudo obtener el historial.");
+
+            const data = await response.json();
+            if (data.length === 0) {
+                Swal.fire("Sin datos", "No se encontró historial para este símbolo.", "info");
+                return;
+            }
+
+            let tablaHTML = `
+                <table style="width:100%;text-align:left;">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Apertura</th>
+                            <th>Cierre</th>
+                            <th>Máximo</th>
+                            <th>Mínimo</th>
+                            <th>Volumen</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            data.forEach(bar => {
+                tablaHTML += `
+                    <tr>
+                        <td>${new Date(bar.fecha).toLocaleDateString()}</td>
+                        <td>$${bar.apertura.toFixed(2)}</td>
+                        <td>$${bar.cierre.toFixed(2)}</td>
+                        <td>$${bar.maximo.toFixed(2)}</td>
+                        <td>$${bar.minimo.toFixed(2)}</td>
+                        <td>${bar.volumen}</td>
+                    </tr>
+                `;
+            });
+
+            tablaHTML += "</tbody></table>";
+
+            Swal.fire({
+                title: `📊 Historial de ${symbol}`,
+                html: tablaHTML,
+                width: "90%",
+                customClass: {
+                    popup: 'text-start'
+                }
+            });
+
+        } catch (err) {
+            console.error("Error al obtener historial:", err);
+            Swal.fire("Error", "No se pudo obtener el historial.", "error");
+        }
+    }
+</script>

@@ -120,8 +120,6 @@ function AsesorViewController() {
             localStorage.setItem("correoOTP", userDTO.correo);
             localStorage.setItem("origenOTP", "registro");
 
-            // Redirigir a la página de verificación OTP
-            window.location.href = "/AutentificacionOTP";
             $('#tblAsesores').DataTable().ajax.reload();
         });
     }
@@ -212,8 +210,10 @@ function AsesorViewController() {
 
 // $ referencia a jQuery
 $(document).ready(function () {
-    var vc = new AsesorViewController(); // Corrección del controlador
-    vc.InitView();
+    if ($("#tblAsesores").length) {
+        var vc = new AsesorViewController();
+        vc.InitView();
+    }
 });
 
 

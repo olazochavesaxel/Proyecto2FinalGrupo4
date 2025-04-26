@@ -2,6 +2,7 @@
 @model WebAPP.Pages.TransaccionClienteModel
 @{
     ViewData["Title"] = "Transacciones del Cliente";
+    Layout = "~/Pages/Shared/ClienteLayout.cshtml";
 }
 
 <!-- ✅ jQuery, SweetAlert2 y DataTables -->
@@ -10,57 +11,48 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
-<div class="profile-page">
-    <div class="sidebar">
-        <ul>
-            <li><a href="/UserProfile">Perfil</a></li>
-            <li><a href="#">Mis Transacciones</a></li>
-        </ul>
-    </div>
-
-    <div class="content">
-        <h1>Registrar Transacción</h1>
-        <div class="form-box">
-            <div class="form-group">
-                <label for="monto">Monto:</label>
-                <input type="number" id="monto" class="form-control" placeholder="Ingrese el monto"
-                       step="0.01" min="0" pattern="^\d+(\.\d{1,2})?$" />
-            </div>
-
-            <div class="form-group">
-                <label for="tipo">Tipo de transacción:</label>
-                <select id="tipo" class="form-control">
-                    <option value="">Seleccione...</option>
-                    <option value="Compra">Compra</option>
-                    <option value="Venta">Venta</option>
-                    <option value="Retiro">Retiro</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="estado">Estado:</label>
-                <select id="estado" class="form-control">
-                    <option value="Procesada">Procesada</option>
-                    <option value="Pendiente">Pendiente</option>
-                </select>
-            </div>
-
-            <button id="btnRegistrar" class="btn-green">Registrar</button>
+<div class="content">
+    <h1>Registrar Transacción</h1>
+    <div class="form-box">
+        <div class="form-group">
+            <label for="monto">Monto:</label>
+            <input type="number" id="monto" class="form-control" placeholder="Ingrese el monto"
+                   step="0.01" min="0" pattern="^\d+(\.\d{1,2})?$" />
         </div>
 
-        <h2 class="mt-5">Mis Transacciones</h2>
-        <table id="tblTransacciones" class="display" style="width:100%">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Monto</th>
-                    <th>Tipo</th>
-                    <th>Estado</th>
-                    <th>Fecha</th>
-                </tr>
-            </thead>
-        </table>
+        <div class="form-group">
+            <label for="tipo">Tipo de transacción:</label>
+            <select id="tipo" class="form-control">
+                <option value="">Seleccione...</option>
+                <option value="Compra">Compra</option>
+                <option value="Venta">Venta</option>
+                <option value="Retiro">Retiro</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="estado">Estado:</label>
+            <select id="estado" class="form-control">
+                <option value="Procesada">Procesada</option>
+                <option value="Pendiente">Pendiente</option>
+            </select>
+        </div>
+
+        <button id="btnRegistrar" class="btn-green">Registrar</button>
     </div>
+
+    <h2 class="mt-5">Mis Transacciones</h2>
+    <table id="tblTransacciones" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Monto</th>
+                <th>Tipo</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+    </table>
 </div>
 
 <style>
@@ -70,40 +62,6 @@
         margin: 0;
         padding: 0;
     }
-
-    .profile-page {
-        display: flex;
-        flex-direction: row;
-        margin-top: 60px;
-    }
-
-    .sidebar {
-        background-color: #00D395;
-        width: 220px;
-        height: calc(100vh - 60px);
-        position: fixed;
-        top: 60px;
-        left: 0;
-        padding-top: 30px;
-        z-index: 1000;
-    }
-
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-
-            .sidebar ul li {
-                margin: 20px 0;
-                text-align: center;
-            }
-
-                .sidebar ul li a {
-                    text-decoration: none;
-                    color: black;
-                    font-weight: bold;
-                    font-size: 16px;
-                }
 
     .content {
         flex: 1;
@@ -144,91 +102,128 @@
 </style>
 
 <script>
-    document.getElementById("btnRegistrar").addEventListener("click", async () => {
-        const monto = parseFloat(document.getElementById("monto").value);
-        const tipo = document.getElementById("tipo").value;
-        const estado = document.getElementById("estado").value;
-        const user = JSON.parse(localStorage.getItem("usuario"));
+    document.addEventListener("DOMContentLoaded", () => {
+        const usuarioData = sessionStorage.getItem("usuario");
 
-        if (!user || user.rol.toLowerCase() !== "cliente") {
-            Swal.fire("Error", "Solo los clientes pueden registrar transacciones.", "error");
-            return;
-        }
-
-        if (!monto || !tipo || !estado) {
-            Swal.fire("Campos incompletos", "Por favor complete todos los campos.", "warning");
-            return;
-        }
-
-        if (monto < 0 || !/^\d+(\.\d{1,2})?$/.test(monto)) {
-            Swal.fire("Monto inválido", "Por favor ingrese un monto válido con hasta 2 decimales.", "warning");
-            return;
-        }
-
-        const trans = {
-            monto,
-            tipo,
-            estado,
-            idCliente: user.id
-        };
-
-        try {
-            const res = await fetch("https://localhost:7057/api/transaccioncliente", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(trans)
+        if (!usuarioData) {
+            Swal.fire({
+                icon: "warning",
+                title: "Tu sesión ha sido cerrada",
+                text: "Para ingresar nuevamente por favor inicia sesión.",
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 0.95)` // ✅ Fondo oscuro detrás del popup
+            }).then(() => {
+                window.location.href = "/Index";
             });
+            return;
+        }
 
-            const txt = await res.text();
-            if (res.ok) {
-                Swal.fire("Éxito", txt, "success");
-                cargarTransacciones();
-            } else {
-                Swal.fire("Error", txt, "error");
+        let user;
+        try {
+            user = JSON.parse(usuarioData);
+        } catch (e) {
+            sessionStorage.clear();
+            Swal.fire({
+                icon: "warning",
+                title: "Sesión inválida",
+                text: "Para ingresar nuevamente por favor inicia sesión.",
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 0.95)`
+            }).then(() => {
+                window.location.href = "/Index";
+            });
+            return;
+        }
+
+        cargarTransacciones();
+
+        document.getElementById("btnRegistrar").addEventListener("click", async () => {
+            const monto = parseFloat(document.getElementById("monto").value);
+            const tipo = document.getElementById("tipo").value;
+            const estado = document.getElementById("estado").value;
+
+            if (user.rol.toLowerCase() !== "cliente") {
+                Swal.fire("Error", "Solo los clientes pueden registrar transacciones.", "error");
+                return;
             }
-        } catch (err) {
-            Swal.fire("Error", "Hubo un error al conectar con el servidor.", "error");
-            console.error(err);
+
+            if (!monto || !tipo || !estado) {
+                Swal.fire("Campos incompletos", "Por favor complete todos los campos.", "warning");
+                return;
+            }
+
+            if (monto < 0 || !/^\d+(\.\d{1,2})?$/.test(monto)) {
+                Swal.fire("Monto inválido", "Por favor ingrese un monto válido con hasta 2 decimales.", "warning");
+                return;
+            }
+
+                const trans = {
+      id: 0,
+      created: "2025-04-24T22:34:10.239Z",
+      monto: 0,
+      tipo: "string",
+      idCliente: 0,
+      idComision: 0,
+      tarifaBaseAplicada: 0,
+      impuestoAplicado: 0,
+      montoComision: 0,
+      reglaUsada: "string",
+      idAsesorEjecutor: 0,
+      id_Paypal: 0
+    };
+
+            try {
+                const res = await fetch("https://localhost:7057/api/TransaccionCliente/Create", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(trans)
+                });
+
+                const txt = await res.text();
+                if (res.ok) {
+                    Swal.fire("Éxito", txt, "success");
+                    cargarTransacciones();
+                } else {
+                    Swal.fire("Error", txt, "error");
+                }
+            } catch (err) {
+                Swal.fire("Error", "Hubo un error al conectar con el servidor.", "error");
+                console.error(err);
+            }
+        });
+
+        async function cargarTransacciones() {
+            try {
+                const res = await fetch("https://localhost:7057/api/transaccioncliente");
+                const data = await res.json();
+
+                const misTrans = data.filter(t => t.idCliente === user.id);
+
+                $('#tblTransacciones').DataTable({
+                    data: misTrans,
+                    destroy: true,
+                    columns: [
+                        { data: "id" },
+                        {
+                            data: "monto",
+                            render: function (data) {
+                                return `$${parseFloat(data).toFixed(2)}`;
+                            }
+                        },
+                        { data: "tipo" },
+                        { data: "estado" },
+                        {
+                            data: "created",
+                            render: function (data) {
+                                return new Date(data).toLocaleString();
+                            }
+                        }
+                    ]
+                });
+
+            } catch (err) {
+                console.error("Error cargando transacciones", err);
+            }
         }
     });
-
-    async function cargarTransacciones() {
-        const user = JSON.parse(localStorage.getItem("usuario"));
-        if (!user) return;
-
-        try {
-            const res = await fetch("https://localhost:7057/api/transaccioncliente");
-            const data = await res.json();
-
-            const misTrans = data.filter(t => t.idCliente === user.id);
-
-            $('#tblTransacciones').DataTable({
-                data: misTrans,
-                destroy: true,
-                columns: [
-                    { data: "id" },
-                    {
-                        data: "monto",
-                        render: function (data) {
-                            return `$${parseFloat(data).toFixed(2)}`;
-                        }
-                    },
-                    { data: "tipo" },
-                    { data: "estado" },
-                    {
-                        data: "created",
-                        render: function (data) {
-                            return new Date(data).toLocaleString();
-                        }
-                    }
-                ]
-            });
-
-        } catch (err) {
-            console.error("Error cargando transacciones", err);
-        }
-    }
-
-    window.onload = cargarTransacciones;
 </script>
-

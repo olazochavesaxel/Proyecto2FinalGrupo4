@@ -6,9 +6,6 @@
 
 <div class="login-container">
     <div class="login-box">
-        <div class="profile-picture">
-            <img src="~/img/ph.png" alt="Foto de perfil">
-        </div>
         <h2>¡Bienvenido de nuevo!</h2>
         <form>
             <div class="form-group">
@@ -18,10 +15,10 @@
             <div class="form-group">
                 <label for="password">Contraseña</label>
                 <input type="password" id="password" class="form-control" placeholder="Contraseña">
+                <small id="errorMessage" class="error-text"></small>
             </div>
             <div class="forgot-password">
                 <a href="/RecuperarContrasenna" class="link-purple">¿Olvidaste la contraseña?</a>
-
                 <a href="/Register" class="link-purple">¿No tienes cuenta?</a>
             </div>
             <button type="submit" class="btn btn-green">Iniciar Sesión</button>
@@ -49,19 +46,6 @@
         width: 400px;
     }
 
-    .profile-picture {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 20px;
-    }
-
-        .profile-picture img {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            border: 2px solid white;
-        }
-
     .form-group {
         text-align: left;
         margin-bottom: 15px;
@@ -72,6 +56,22 @@
         padding: 10px;
         border-radius: 8px;
         border: none;
+        background-color: white;
+        color: black;
+        transition: border 0.3s;
+    }
+
+        .form-control.error {
+            border: 2px solid rgba(255, 0, 0, 0.5);
+            background-color: white;
+        }
+
+    .error-text {
+        color: #ff6b6b;
+        font-size: 13px;
+        display: block;
+        margin-top: 5px;
+        height: 16px;
     }
 
     .forgot-password {
@@ -82,6 +82,7 @@
         color: #8F5AF5;
         text-decoration: none;
         font-weight: bold;
+        margin: 0 5px;
     }
 
         .link-purple:hover {
@@ -105,24 +106,29 @@
         }
 </style>
 
+
 <script>
     document.querySelector(".btn-green").addEventListener("click", async function (e) {
         e.preventDefault();
 
-        const correo = document.getElementById("email").value;
-        const contrasena = document.getElementById("password").value;
+        const correoInput = document.getElementById("email");
+        const contrasenaInput = document.getElementById("password");
+        const errorMessage = document.getElementById("errorMessage");
+
+        const correo = correoInput.value;
+        const contrasena = contrasenaInput.value;
+
+        errorMessage.textContent = "";
+        correoInput.classList.remove("error");
+        contrasenaInput.classList.remove("error");
 
         if (!correo || !contrasena) {
-            alert("Por favor, completa ambos campos.");
+            errorMessage.textContent = "Por favor, completa ambos campos.";
             return;
         }
 
         try {
-
-            const response = await fetch("https://localhost:7057/api/auth/validar", {
-
-
-
+            const response = await fetch("http://localhost:5197/api/auth/validar", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -132,14 +138,35 @@
 
             if (response.ok) {
                 const data = await response.json();
-                const usuario = data.usuario;
+                let usuario = data.usuario;
                 const rol = usuario.rol.toLowerCase();
 
-                // Guardar el usuario en localStorage
+                // 🔥 Validación especial para asesores 🔥
+                if (rol === "asesor") {
+                    const asesorResponse = await fetch(`http://localhost:5197/api/Asesor/RetrieveByCorreo?correo=${usuario.correo}`);
+                    if (asesorResponse.ok) {
+                        const asesorData = await asesorResponse.json();
+                        if (asesorData.estado.toLowerCase() !== "activo") {
+                            await Swal.fire({
+                                icon: "error",
+                                title: "Usuario inactivo",
+                                text: "No es posible ingresar, este usuario está desactivado.",
+                                confirmButtonColor: "#8F5AF5",
+                                backdrop: `rgba(0, 0, 0, 0.95)`
+                            });
+                            return; // No seguir con el login
+                        }
+                    }
+                }
+
+                // 🔥 En caso de que sea cliente, completar balance
+                if (rol === "cliente") {
+                    const clienteRes = await fetch(`http://localhost:5197/api/Cliente/RetrieveByCorreo?correo=${usuario.correo}`);
+                    usuario.balanceFinanciero = clienteRes.ok ? (await clienteRes.json()).balanceFinanciero : 0;
+                }
+
                 sessionStorage.setItem("usuario", JSON.stringify(usuario));
 
-
-                // Redirigir según el rol
                 if (rol === "cliente") {
                     window.location.href = "/UserProfile";
                 } else if (rol === "asesor") {
@@ -147,20 +174,19 @@
                 } else if (rol === "admin") {
                     window.location.href = "/UserAdminProfile";
                 } else {
-                    alert("Rol desconocido. Contacte al administrador.");
+                    Swal.fire("Error", "Rol desconocido. Contacte al administrador.", "error");
                 }
             } else {
-                const errorText = await response.text();
-                console.log("Respuesta del servidor:", response.status, errorText);
-                alert("Error al iniciar sesión: " + errorText);
+                errorMessage.textContent = "Usuario o contraseña incorrecta";
+                correoInput.classList.add("error");
+                contrasenaInput.classList.add("error");
+                correoInput.value = "";
+                contrasenaInput.value = "";
             }
         } catch (error) {
+            errorMessage.textContent = "Error al procesar la solicitud.";
             console.error("Error de red:", error);
-            alert("Ocurrió un error al procesar el login.");
         }
     });
 </script>
-
-
-
 

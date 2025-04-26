@@ -11,42 +11,52 @@ namespace CoreApp
 {
     public class PagoManager
     {
-        private readonly PagoCrudFactory crud;
+        private readonly PagoCrudFactory pagoCrud;
+
+
+
 
         public PagoManager()
         {
-            crud = new PagoCrudFactory();
+            pagoCrud = new PagoCrudFactory();
         }
 
-        // Registrar un nuevo pago
-        public void RegistrarPago(Pago pago)
+        public void Create(Pago pago)
         {
-            crud.Create(pago);
+
+            pagoCrud.Create(pago);
+
         }
 
-        // Actualizar un pago existente
-        public void ActualizarPago(Pago pago)
+        public void Update(Pago pago)
         {
-            crud.Update(pago);
+
+            pagoCrud.Create(pago);
+
         }
 
-        // Eliminar un pago
-        public void EliminarPago(int id)
+        public void Delete(Pago pago)
         {
-            var pago = new Pago { Id = id };
-            crud.Delete(pago);
+            pagoCrud.Create(pago);
         }
 
-        // Obtener todos los pagos
-        public List<Pago> ObtenerTodos()
+        public List<Pago> RetrieveAll()
         {
-            return crud.RetrieveAll<Pago>();
+            return pagoCrud.RetrieveAll<Pago>();
         }
 
-        // Obtener pago por ID
-        public Pago ObtenerPorId(int id)
+        public Pago RetrieveById(int id)
         {
-            return crud.RetrieveById<Pago>(id);
+            return pagoCrud.RetrieveById<Pago>(id);
+        }
+
+        public Pago RetrieveByTransaccionCliente(int idTransaccionCliente)
+        {
+            return pagoCrud.RetrieveById<Pago>(idTransaccionCliente);
+        }
+        public Pago RetrieveByTransaccionAsesor(int idTransaccionAsesor)
+        {
+            return pagoCrud.RetrieveById<Pago>(idTransaccionAsesor);
         }
     }
 }

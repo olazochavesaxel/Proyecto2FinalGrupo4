@@ -11,24 +11,17 @@ using Microsoft.IdentityModel.Tokens;
 namespace CoreApp
 {
     public class AlpacaManager : BaseManager
-
-
     {
         private readonly IAlpacaTradingClient _client;
-
         private readonly IAlpacaDataClient _dataClient;
-
         private readonly IAlpacaCryptoDataClient _cryptoDataClient;
 
         public AlpacaManager(IOptions<AlpacaSettings> config)
         {
-
             var secret = new SecretKey(config.Value.KeyId, config.Value.SecretKey);
-
             _client = Alpaca.Markets.Environments.Paper.GetAlpacaTradingClient(secret);
             _dataClient = Alpaca.Markets.Environments.Paper.GetAlpacaDataClient(secret);
             _cryptoDataClient = Alpaca.Markets.Environments.Paper.GetAlpacaCryptoDataClient(secret);
-
         }
 
         public async Task<IAsset> GetAssetAsync(string symbol)
@@ -42,7 +35,6 @@ namespace CoreApp
             {
                 AssetStatus = AssetStatus.Active,
                 AssetClass = AssetClass.UsEquity
-
             });
 
             return result;
@@ -69,9 +61,6 @@ namespace CoreApp
                 var trade = await _dataClient.GetLatestTradeAsync(new LatestMarketDataRequest(symbol));
                 return new LatestPriceData(trade.Price, trade.TimestampUtc);
             }
-
-            
-            
         }
 
         private static DateTime GetSafeNowUTC()
@@ -81,29 +70,28 @@ namespace CoreApp
 
         public async Task<IReadOnlyList<IBar>> GetHistoricoAsync(string symbol, DateTime from, DateTime to)
         {
-            var safeTo = to > GetSafeNowUTC() ? GetSafeNowUTC(): to;
+            var safeTo = to > GetSafeNowUTC() ? GetSafeNowUTC() : to;
 
             if (symbol.Contains("/"))
             {
-                var request = new HistoricalCryptoBarsRequest(symbol, from, to, BarTimeFrame.Day);
+                var request = new HistoricalCryptoBarsRequest(symbol, from, safeTo, BarTimeFrame.Day);
                 var cryptoBars = await _cryptoDataClient.ListHistoricalBarsAsync(request);
+
+                if (cryptoBars.Items == null || cryptoBars.Items.Count == 0)
+                    throw new Exception($"No se encontraron datos históricos para el símbolo cripto: {symbol}");
+
                 return cryptoBars.Items;
-
             }
-
             else
             {
-                var request = new HistoricalBarsRequest(symbol, from, to, BarTimeFrame.Day);
+                var request = new HistoricalBarsRequest(symbol, from, safeTo, BarTimeFrame.Day);
                 var stockBars = await _dataClient.ListHistoricalBarsAsync(request);
+
+                if (stockBars.Items == null || stockBars.Items.Count == 0)
+                    throw new Exception($"No se encontraron datos históricos para la acción: {symbol}");
+
                 return stockBars.Items;
-
             }
-
         }
-
-
-        
     }
-
-
 }

@@ -19,19 +19,11 @@ namespace CoreApp
 
             var hashedPassword = Validaciones.HashPassword(nuevaContrasena);
 
-            var adminManager = new AdminManager();
-            var admin = adminManager.RetrieveByCorreo(correo);
-            if (admin != null)
-            {
-                admin.Contrasenna = hashedPassword;
-                adminManager.Update(admin, true); // true = ya viene hasheada
-                return;
-            }
-
             var clienteManager = new ClienteManager();
             var cliente = clienteManager.RetrieveByCorreo(correo);
             if (cliente != null)
             {
+                // Solo actualizar la contraseña, sin tocar el rol
                 cliente.Contrasenna = hashedPassword;
                 clienteManager.Update(cliente, true);
                 return;
@@ -41,13 +33,28 @@ namespace CoreApp
             var asesor = asesorManager.RetrieveByCorreo(correo);
             if (asesor != null)
             {
+                // Solo actualizar la contraseña, sin tocar el rol
                 asesor.Contrasenna = hashedPassword;
                 asesorManager.Update(asesor, true);
                 return;
             }
 
+            //Este admin esta buscando en todas las tablas
+            var adminManager = new AdminManager();
+            var admin = adminManager.RetrieveByCorreo(correo);
+            if (admin != null)
+            {
+                // Solo actualizar la contraseña, sin tocar el rol
+                admin.Contrasenna = hashedPassword;
+                adminManager.Update(admin, true); // true = ya viene hasheada
+                return;
+            }
+
+           
+
             throw new ArgumentException("No se encontró un usuario con ese correo.");
         }
+
 
     }
 }

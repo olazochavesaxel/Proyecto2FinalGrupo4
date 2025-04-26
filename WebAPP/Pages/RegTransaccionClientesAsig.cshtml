@@ -1,0 +1,124 @@
+﻿@page
+@model WebAPP.Pages.RegTransaccionClientesAsigModel
+@{
+    ViewData["Title"] = "Transacciones de Clientes Asignados";
+    Layout = "~/Pages/Shared/AsesorLayout.cshtml";
+}
+
+<style>
+    .col-id {
+        width: 80px !important;
+        text-align: center;
+    }
+</style>
+
+<h2 style="color:white; text-align:center;">Transacciones de mis Clientes Asignados</h2>
+
+<table id="tablaTransaccionesClientesAsig" class="display" style="width:100%">
+    <thead>
+        <tr>
+            <th>Id Transacción</th>
+            <th>Monto</th>
+            <th>Tipo</th>
+            <th>Estado</th>
+            <th>Fecha</th>
+            <th>Correo Cliente</th>
+            <th>Id PayPal</th>
+        </tr>
+    </thead>
+</table>
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const usuarioData = sessionStorage.getItem("usuario");
+
+            if (!usuarioData) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Tu sesión ha sido cerrada",
+                    text: "Para ingresar nuevamente por favor inicia sesión.",
+                    backdrop: `rgba(0, 0, 0, 0.95)`,
+                    confirmButtonColor: "#8F5AF5"
+                }).then(() => window.location.href = "/Index");
+                return;
+            }
+
+            let usuario;
+            try {
+                usuario = JSON.parse(usuarioData);
+            } catch (e) {
+                sessionStorage.clear();
+                Swal.fire({
+                    icon: "warning",
+                    title: "Sesión inválida",
+                    text: "Para ingresar nuevamente por favor inicia sesión.",
+                    backdrop: `rgba(0, 0, 0, 0.95)`,
+                    confirmButtonColor: "#8F5AF5"
+                }).then(() => window.location.href = "/Index");
+                return;
+            }
+
+            try {
+                const idAsesor = usuario.id;
+                const clientesResponse = await fetch(`https://localhost:7057/api/Cliente/Asignados/${idAsesor}`);
+                const clientes = await clientesResponse.json();
+
+                const todasTransacciones = [];
+
+                for (const cliente of clientes) {
+                    const transResponse = await fetch(`https://localhost:7057/api/TransaccionCliente/RetrieveByCliente/${cliente.id}`);
+                    if (transResponse.ok) {
+                        const transacciones = await transResponse.json();
+                        transacciones.forEach(t => {
+                            t.correoCliente = cliente.correo;
+                            todasTransacciones.push(t);
+                        });
+                    }
+                }
+
+                console.log("Transacciones recopiladas:", todasTransacciones);
+
+                const tabla = $('#tablaTransaccionesClientesAsig').DataTable({
+                    data: todasTransacciones,
+                    columns: [
+                        { data: "id", className: "col-id" },
+                        { data: "monto" },
+                        { data: "tipo" },
+                        { data: "estado" },
+                        {
+                            data: "created", // 🔥 Aquí corregido
+                            render: function (data) {
+                                if (!data) return "Sin fecha";
+                                try {
+                                    const fecha = new Date(data);
+                                    return fecha.toLocaleString("es-CR");
+                                } catch (e) {
+                                    return "Fecha inválida";
+                                }
+                            }
+                        },
+                        { data: "correoCliente" },
+                        {
+                            data: "idPaypalTransaccion",
+                            render: data => data ?? "N/A"
+                        }
+                    ]
+                });
+
+            } catch (err) {
+                console.error("Error al cargar transacciones de clientes asignados:", err);
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "No se pudo cargar la información.",
+                    backdrop: `rgba(0, 0, 0, 0.95)`,
+                    confirmButtonColor: "#8F5AF5"
+                });
+            }
+        });
+    </script>
+}
