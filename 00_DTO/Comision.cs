@@ -15,5 +15,10 @@ namespace DTO
         public double Tarifa2 { get; set; }
         public double Tarifa3 { get; set; }
         public int idAdmin { get; set; }
+        public double MontoMin {  get; set; }
+
+        public double MontoMax { get; set; }
+
+        public double PorcentajeAsesor { get; set; }
     }
 }

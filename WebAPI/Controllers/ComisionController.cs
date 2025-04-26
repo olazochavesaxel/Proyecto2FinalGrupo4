@@ -8,11 +8,11 @@ namespace WebAPI.Controllers
     [ApiController]
     public class ComisionController : ControllerBase
     {
-        private readonly ComisionManager _userManager;
+        private readonly ComisionManager _comisionManager;
 
         public ComisionController()
         {
-            _userManager = new ComisionManager(); // Se recomienda inyección de dependencias en lugar de instanciarlo aquí.
+            _comisionManager = new ComisionManager(); // Se recomienda inyección de dependencias en lugar de instanciarlo aquí.
         }
 
         // POST -> Create
@@ -22,7 +22,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                _userManager.Create(comision);
+                _comisionManager.Create(comision);
                 return Ok(comision);
             }
             catch (Exception ex)
@@ -38,7 +38,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var listResults = _userManager.RetrieveAll() ?? new List<Comision>();
+                var listResults = _comisionManager.RetrieveAll() ?? new List<Comision>();
                 Console.WriteLine($"📡 Datos enviados: {System.Text.Json.JsonSerializer.Serialize(listResults)}");
                 return Ok(listResults);
             }
@@ -58,7 +58,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var listResults = _userManager.RetrieveById(id);
+                var listResults = _comisionManager.RetrieveById(id);
                 return Ok(listResults);
             }
             catch (Exception ex)
@@ -75,7 +75,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                var listResults = _userManager.RetrieveByTipo(tipo);
+                var listResults = _comisionManager.RetrieveByTipo(tipo);
                 return Ok(listResults);
             }
             catch (Exception ex)
@@ -91,7 +91,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                _userManager.Update(comision);
+                _comisionManager.Update(comision);
                 return Ok(comision);
             }
             catch (Exception ex)
@@ -107,7 +107,7 @@ namespace WebAPI.Controllers
         {
             try
             {
-                _userManager.Delete(user);
+                _comisionManager.Delete(user);
                 return Ok("Comisión eliminada correctamente.");
             }
             catch (Exception ex)
