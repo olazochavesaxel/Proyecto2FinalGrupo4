@@ -43,6 +43,19 @@
                 <a asp-page="/TransaccionesRegCliente"><span>Registro</span></a>
             </li>
             <li>
+
+                <button onclick="toggleSubMenu(this)" class="dropdown-btn">
+                    <span>Mi Cuenta</span>
+                </button>
+                <ul class="sub-menu">
+                    <div>
+                    <li><a asp-page="/PagoPayPal">PayPal</a></li>
+                    <li><a asp-page="/Confirmacion">Confirmación</a></li>
+                    </div>
+                </ul>
+            </li>
+            <li>
+
                 <a asp-page="/Index" id="btnLogout"><span>Cerrar Sesión</span></a>
             </li>
         </ul>
