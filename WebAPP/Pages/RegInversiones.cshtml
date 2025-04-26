@@ -1,0 +1,84 @@
+﻿@page
+@model WebAPP.Pages.RegInversionesModel
+@{
+    ViewData["Title"] = "Inversiones";
+    Layout = "~/Pages/Shared/ClienteLayout.cshtml";
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<div class="content">
+    <h1 class="text-white">Mis Inversiones</h1>
+    <table id="tablaInversiones" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>ID Inversión</th>
+                <th>Cliente</th>
+                <th>Acción</th>
+                <th>Cantidad</th>
+                <th>Tipo</th>
+                <th>Precio Acción</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<style>
+    body, html {
+        background-color: black;
+        color: white;
+        margin: 0;
+        padding: 0;
+    }
+
+    .content {
+        padding: 30px;
+        margin-left: 220px;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const usuarioData = sessionStorage.getItem("usuario");
+
+        if (!usuarioData) {
+            Swal.fire({
+                icon: "warning",
+                title: "Tu sesión ha sido cerrada",
+                text: "Para ingresar nuevamente por favor inicia sesión.",
+                backdrop: `rgba(0, 0, 0, 0.95)`,
+                confirmButtonColor: "#8F5AF5"
+            }).then(() => window.location.href = "/Index");
+            return;
+        }
+
+        try {
+            const res = await fetch("https://localhost:7057/api/Inversion/RetrieveAll");
+            if (!res.ok) throw new Error("No se pudieron cargar las inversiones.");
+
+            const data = await res.json();
+
+            $('#tablaInversiones').DataTable({
+                data: data,
+                columns: [
+                    { data: "id" },
+                    { data: "intCliente" },
+                    { data: "intAccion" },
+                    { data: "cantidad" },
+                    { data: "tipo" },
+                    { data: "precioAccion", render: data => data != null ? `$${data.toFixed(2)}` : "-" },
+                    { data: "created", render: data => data ? new Date(data).toLocaleDateString() : "-" }
+                ]
+            });
+
+        } catch (error) {
+            console.error("Error al cargar inversiones:", error);
+            Swal.fire("Error", "No se pudieron cargar las inversiones.", "error");
+        }
+    });
+</script>

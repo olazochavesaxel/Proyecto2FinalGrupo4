@@ -7,9 +7,6 @@
 }
 
 <div class="profile-page">
-   
-
-    <!-- Contenido principal -->
     <div class="content">
         <h1>Mi Perfil</h1>
         <div class="profile-box">
@@ -29,38 +26,23 @@
                     <p><strong>Segundo Apellido:</strong> <span id="apellido2"></span></p>
                     <p><strong>Correo Electrónico:</strong> <span id="correo"></span></p>
                 </div>
-
-                <div class="col-md-6">
-                    <h4>Acciones</h4>
-                    <div class="d-grid gap-3 mt-3">
-                        <button class="btn-action">Crear usuario</button>
-                        <button class="btn-action">Ver reportes</button>
-                        <button class="btn-action">Ver solicitudes</button>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 </div>
 
-
-
-<!-- Script para mostrar datos del usuario -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const usuarioData = sessionStorage.getItem("usuario");
 
         if (!usuarioData) {
-            // Fondo negro al cuerpo para cubrir el layout anterior
             document.body.style.backgroundColor = "#000";
-
             Swal.fire({
                 icon: "warning",
                 title: "Tu sesión ha sido cerrada",
                 text: "Para ingresar nuevamente por favor inicia sesión.",
-                backdrop: `
-                    rgba(0, 0, 0, 0.95)
-                `,
+                backdrop: `rgba(0, 0, 0, 0.95)`,
                 confirmButtonColor: "#8F5AF5"
             }).then(() => {
                 window.location.href = "/Index";
@@ -73,16 +55,12 @@
             usuario = JSON.parse(usuarioData);
         } catch (e) {
             sessionStorage.clear();
-
             document.body.style.backgroundColor = "#000";
-
             Swal.fire({
                 icon: "warning",
                 title: "Sesión inválida",
                 text: "Para ingresar nuevamente por favor inicia sesión.",
-                backdrop: `
-                    rgba(0, 0, 0, 0.95)
-                `,
+                backdrop: `rgba(0, 0, 0, 0.95)`,
                 confirmButtonColor: "#8F5AF5"
             }).then(() => {
                 window.location.href = "/Index";
@@ -99,8 +77,6 @@
     });
 </script>
 
-
-
 <style>
     body, html {
         background-color: black;
@@ -114,35 +90,6 @@
         flex-direction: row;
         margin-top: 60px;
     }
-
-    .sidebar {
-        background-color: #00D395;
-        width: 220px;
-        height: calc(100vh - 60px);
-        position: fixed;
-        top: 60px;
-        left: 0;
-        padding-top: 30px;
-        z-index: 1000;
-    }
-
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-            .sidebar ul li {
-                margin: 20px 0;
-                text-align: center;
-            }
-
-                .sidebar ul li a {
-                    text-decoration: none;
-                    color: black;
-                    font-weight: bold;
-                    font-size: 16px;
-                }
 
     .content {
         flex: 1;
@@ -172,17 +119,4 @@
         border-radius: 50%;
         margin-right: 20px;
     }
-
-    .btn-action {
-        background-color: #8F5AF5;
-        color: white;
-        border: none;
-        padding: 12px 24px;
-        border-radius: 20px;
-        font-weight: bold;
-        width: 100%;
-    }
 </style>
-
-
-<!-- comentario de prueba -->

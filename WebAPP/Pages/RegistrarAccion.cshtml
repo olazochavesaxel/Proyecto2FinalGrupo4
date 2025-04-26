@@ -1,0 +1,126 @@
+﻿@page
+@model WebAPP.Pages.RegistrarAccionModel
+@{
+    ViewData["Title"] = "Registrar Nueva Acción";
+    Layout = "~/Pages/Shared/ClienteLayout.cshtml";
+}
+
+<div class="content">
+    <h1>Registrar Nueva Acción</h1>
+
+    <form id="formAccion">
+        <div class="form-group">
+            <label for="simbolo">Símbolo:</label>
+            <input type="text" id="simbolo" class="form-control" placeholder="Ej: AAPL" required>
+        </div>
+        <button type="submit" class="btn-register">Registrar Acción</button>
+    </form>
+</div>
+
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+    body, html {
+        background-color: black;
+        color: white;
+        margin: 0;
+        padding: 0;
+    }
+
+    .content {
+        margin-left: 220px;
+        padding: 40px;
+    }
+
+    h1 {
+        color: white;
+        margin-bottom: 30px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: none;
+        background-color: white;
+        color: black;
+    }
+
+    .btn-register {
+        background-color: #8F5AF5;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .btn-register:hover {
+        background-color: #A379F7;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const usuarioData = sessionStorage.getItem("usuario");
+
+        if (!usuarioData) {
+            Swal.fire({
+                icon: "warning",
+                title: "Tu sesión ha sido cerrada",
+                text: "Para ingresar nuevamente por favor inicia sesión.",
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 0.95)`
+            }).then(() => {
+                window.location.href = "/Index";
+            });
+            return;
+        }
+
+        document.getElementById("formAccion").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const simbolo = document.getElementById("simbolo").value.trim().toUpperCase();
+
+            if (!simbolo) {
+                Swal.fire("Error", "Por favor ingresa un símbolo.", "warning");
+                return;
+            }
+
+            try {
+                const res = await fetch("https://localhost:7057/api/Accion/CreateUpdate", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ simbolo: simbolo })
+                });
+
+                if (res.ok) {
+                    Swal.fire({
+                        icon: "success",
+                        title: "Acción registrada",
+                        text: `El símbolo ${simbolo} fue registrado exitosamente!`,
+                        confirmButtonColor: "#8F5AF5",
+                        backdrop: `rgba(0, 0, 0, 0.95)`
+                    });
+                    document.getElementById("formAccion").reset();
+                } else {
+                    const errorData = await res.json();
+                    const mensaje = errorData?.errors?.general?.[0] || "No se pudo registrar la acción.";
+                    Swal.fire("Error", mensaje, "error");
+                }
+            } catch (err) {
+                console.error("Error registrando acción:", err);
+                Swal.fire("Error", "Error de red al intentar registrar la acción.", "error");
+            }
+        });
+    });
+</script>
+

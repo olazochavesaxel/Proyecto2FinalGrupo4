@@ -25,14 +25,6 @@
                     <p><strong>Segundo Apellido:</strong> <span id="segundo-apellido"></span></p>
                     <p><strong>Correo Electrónico:</strong> <span id="correo"></span></p>
                 </div>
-
-                <div class="col-md-6">
-                    <h4>Acciones</h4>
-                    <div class="d-grid gap-3 mt-3">
-                        <button class="btn-action">Clientes asignados</button>
-                        <button class="btn-action">Ver inversiones de clientes</button>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -81,18 +73,9 @@
         border-radius: 50%;
         margin-right: 20px;
     }
-
-    .btn-action {
-        background-color: #8F5AF5;
-        color: white;
-        border: none;
-        padding: 12px 24px;
-        border-radius: 20px;
-        font-weight: bold;
-        width: 100%;
-    }
 </style>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const usuarioData = sessionStorage.getItem("usuario");
@@ -102,7 +85,7 @@
                 icon: "warning",
                 title: "Tu sesión ha sido cerrada",
                 text: "Para ingresar nuevamente por favor inicia sesión.",
-                backdrop: `rgba(0, 0, 0, 0.95)`,  // <-- Fondo detrás del pop-up
+                backdrop: `rgba(0, 0, 0, 0.95)`,
                 confirmButtonColor: "#8F5AF5"
             }).then(() => {
                 window.location.href = "/Index";
@@ -119,7 +102,7 @@
                 icon: "warning",
                 title: "Sesión inválida",
                 text: "Para ingresar nuevamente por favor inicia sesión.",
-                backdrop: `rgba(0, 0, 0, 0.95)`,  // <-- Fondo detrás del pop-up
+                backdrop: `rgba(0, 0, 0, 0.95)`,
                 confirmButtonColor: "#8F5AF5"
             }).then(() => {
                 window.location.href = "/Index";
@@ -135,7 +118,3 @@
         document.getElementById("correo").textContent = usuario.correo;
     });
 </script>
-
-
-
-
