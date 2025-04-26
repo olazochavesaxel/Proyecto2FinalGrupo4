@@ -24,7 +24,6 @@
                 <th>Regla Aplicada</th>
             </tr>
         </thead>
-        <tbody></tbody>
     </table>
 </div>
 
@@ -47,14 +46,25 @@
         const usuario = JSON.parse(usuarioData);
 
         try {
-            const response = await fetch(`https://localhost:7057/api/TransaccionCliente/RetrieveAll?idCliente=${usuario.id}`);
+            const response = await fetch(`https://localhost:7057/api/TransaccionCliente/RetrieveByCliente/${usuario.id}`);
             const data = await response.json();
 
             $('#tablaTransaccionesCliente').DataTable({
                 data: data,
                 columns: [
                     { data: "monto" },
-                    { data: "fechaCreacion" },
+                    {
+                        data: "created", // 🔥 Cambiado
+                        render: function (data) {
+                            if (!data) return "Sin fecha";
+                            try {
+                                const fecha = new Date(data);
+                                return fecha.toLocaleString("es-CR");
+                            } catch (e) {
+                                return "Fecha inválida";
+                            }
+                        }
+                    },
                     { data: "tipo" },
                     { data: "estado" },
                     { data: "tarifaBaseAplicada" },
@@ -68,6 +78,7 @@
             });
         } catch (err) {
             console.error("Error al cargar transacciones del cliente:", err);
+            Swal.fire("Error", "No se pudo obtener tus transacciones.", "error");
         }
     });
 </script>

@@ -34,7 +34,7 @@
 
     .content {
         flex: 1;
-        margin-left: 220px; /* Para ajustarse al sidebar del layout */
+        margin-left: 220px;
         padding: 40px;
     }
 
@@ -63,8 +63,8 @@
                 icon: "warning",
                 title: "Tu sesión ha sido cerrada",
                 text: "Para ingresar nuevamente por favor inicia sesión.",
-                backdrop: `rgba(0, 0, 0, 0.95)`,
-                confirmButtonColor: "#8F5AF5"
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 0.95)`
             }).then(() => {
                 window.location.href = "/Index";
             });
@@ -80,8 +80,8 @@
                 icon: "warning",
                 title: "Sesión inválida",
                 text: "Para ingresar nuevamente por favor inicia sesión.",
-                backdrop: `rgba(0, 0, 0, 0.95)`,
-                confirmButtonColor: "#8F5AF5"
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 0.95)`
             }).then(() => {
                 window.location.href = "/Index";
             });
@@ -117,7 +117,7 @@
 
     async function verPrecioActual(symbol) {
         try {
-            const res = await fetch(`https://localhost:7057/api/alpaca/precio/${symbol}`);
+            const res = await fetch(`https://localhost:7057/api/alpaca/precio/${encodeURIComponent(symbol)}`);
             if (!res.ok) throw new Error("No se pudo obtener el precio.");
             const data = await res.json();
 
@@ -132,11 +132,64 @@
         }
     }
 
-    function verHistorico(symbol) {
-        Swal.fire({
-            title: `📈 Histórico de ${symbol}`,
-            text: "Esta funcionalidad estará disponible pronto.",
-            icon: "info"
-        });
+    async function verHistorico(symbol) {
+        const to = new Date();
+        const from = new Date();
+        from.setDate(to.getDate() - 7);
+
+        try {
+            const url = `https://localhost:7057/api/alpaca/Historico?symbol=${encodeURIComponent(symbol)}&from=${from.toISOString()}&to=${to.toISOString()}`;
+            const response = await fetch(url);
+            if (!response.ok) throw new Error("No se pudo obtener el historial.");
+
+            const data = await response.json();
+            if (data.length === 0) {
+                Swal.fire("Sin datos", "No se encontró historial para este símbolo.", "info");
+                return;
+            }
+
+            let tablaHTML = `
+                <table style="width:100%;text-align:left;">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Apertura</th>
+                            <th>Cierre</th>
+                            <th>Máximo</th>
+                            <th>Mínimo</th>
+                            <th>Volumen</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            data.forEach(bar => {
+                tablaHTML += `
+                    <tr>
+                        <td>${new Date(bar.fecha).toLocaleDateString()}</td>
+                        <td>$${bar.apertura.toFixed(2)}</td>
+                        <td>$${bar.cierre.toFixed(2)}</td>
+                        <td>$${bar.maximo.toFixed(2)}</td>
+                        <td>$${bar.minimo.toFixed(2)}</td>
+                        <td>${bar.volumen}</td>
+                    </tr>
+                `;
+            });
+
+            tablaHTML += "</tbody></table>";
+
+            Swal.fire({
+                title: `📊 Historial de ${symbol}`,
+                html: tablaHTML,
+                width: "90%",
+                customClass: {
+                    popup: 'text-start'
+                }
+            });
+
+        } catch (err) {
+            console.error("Error al obtener historial:", err);
+            Swal.fire("Error", "No se pudo obtener el historial.", "error");
+        }
     }
 </script>
