@@ -141,6 +141,25 @@
                 let usuario = data.usuario;
                 const rol = usuario.rol.toLowerCase();
 
+                // 🔥 Validación especial para asesores 🔥
+                if (rol === "asesor") {
+                    const asesorResponse = await fetch(`http://localhost:5197/api/Asesor/RetrieveByCorreo?correo=${usuario.correo}`);
+                    if (asesorResponse.ok) {
+                        const asesorData = await asesorResponse.json();
+                        if (asesorData.estado.toLowerCase() !== "activo") {
+                            await Swal.fire({
+                                icon: "error",
+                                title: "Usuario inactivo",
+                                text: "No es posible ingresar, este usuario está desactivado.",
+                                confirmButtonColor: "#8F5AF5",
+                                backdrop: `rgba(0, 0, 0, 0.95)`
+                            });
+                            return; // No seguir con el login
+                        }
+                    }
+                }
+
+                // 🔥 En caso de que sea cliente, completar balance
                 if (rol === "cliente") {
                     const clienteRes = await fetch(`http://localhost:5197/api/Cliente/RetrieveByCorreo?correo=${usuario.correo}`);
                     usuario.balanceFinanciero = clienteRes.ok ? (await clienteRes.json()).balanceFinanciero : 0;
@@ -155,7 +174,7 @@
                 } else if (rol === "admin") {
                     window.location.href = "/UserAdminProfile";
                 } else {
-                    alert("Rol desconocido. Contacte al administrador.");
+                    Swal.fire("Error", "Rol desconocido. Contacte al administrador.", "error");
                 }
             } else {
                 errorMessage.textContent = "Usuario o contraseña incorrecta";
@@ -170,3 +189,4 @@
         }
     });
 </script>
+

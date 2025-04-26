@@ -6,10 +6,6 @@ using TransaccionAsesor = DTOs.TransaccionAsesor;
 using DTO;
 using Microsoft.AspNetCore.Identity;
 
-
-
-
-
 namespace WebAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -20,7 +16,7 @@ namespace WebAPI.Controllers
 
         public TransaccionAsesorController()
         {
-            _transaccionAsesorManager = new TransaccionAsesorManager(); // It's recommended to use dependency injection instead of instantiating here.
+            _transaccionAsesorManager = new TransaccionAsesorManager();
         }
 
         // POST -> Create
@@ -75,13 +71,9 @@ namespace WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new
-                {
-                    errores = new { general = new[] { $"Error interno del servidor: {ex.Message}" } }
-                });
+                return StatusCode(500, new { errores = new { general = new[] { $"Error interno del servidor: {ex.Message}" } } });
             }
         }
-
 
         [HttpGet]
         [Route("RetrieveByAsesor/{id}")]
@@ -101,13 +93,9 @@ namespace WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new
-                {
-                    errores = new { general = new[] { $"Error al recuperar transacciones: {ex.Message}" } }
-                });
+                return StatusCode(500, new { errores = new[] { $"Error al recuperar transacciones: {ex.Message}" } });
             }
         }
-
 
         [HttpGet]
         [Route("RetrieveByTipo/{tipo}")]
@@ -115,7 +103,6 @@ namespace WebAPI.Controllers
         {
             try
             {
-                // Crear una lista con el único tipo recibido
                 var tipos = new List<string> { tipo };
                 var transacciones = _transaccionAsesorManager.RetrieveByTipo(tipos);
 
@@ -132,9 +119,6 @@ namespace WebAPI.Controllers
             }
         }
 
-
-
-        // GET -> Retrieve By Comision
         [HttpGet]
         [Route("RetrieveByPayPal/{idPaypal}")]
         public ActionResult RetrieveByPaypall(int idPaypal)
@@ -177,8 +161,6 @@ namespace WebAPI.Controllers
             }
         }
 
-
-
         // PUT -> Update
         [HttpPut]
         [Route("Update")]
@@ -195,11 +177,31 @@ namespace WebAPI.Controllers
             }
         }
 
+        // 🔥 NUEVO -> Reporte de Totales por Asesor
+        [HttpGet]
+        [Route("ReporteTotalesPorAsesor")]
+        public ActionResult ReporteTotalesPorAsesor()
+        {
+            try
+            {
+                var transacciones = _transaccionAsesorManager.RetrieveAll();
 
+
+                var reporte = transacciones
+                    .GroupBy(t => t.IdAsesor)
+                    .Select(g => new
+                    {
+                        idAsesor = g.Key,
+                        totalGenerado = g.Sum(t => t.Monto)
+                    })
+                    .ToList();
+
+                return Ok(reporte);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al obtener reporte: {ex.Message}");
+            }
+        }
     }
 }
-
-
-
-
-
