@@ -210,8 +210,10 @@ function AsesorViewController() {
 
 // $ referencia a jQuery
 $(document).ready(function () {
-    var vc = new AsesorViewController(); // Corrección del controlador
-    vc.InitView();
+    if ($("#tblAsesores").length) {
+        var vc = new AsesorViewController();
+        vc.InitView();
+    }
 });
 
 

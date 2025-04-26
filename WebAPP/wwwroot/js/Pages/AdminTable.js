@@ -202,6 +202,8 @@ function AdminViewController() {
 
 // Inicialización cuando el documento esté listo
 $(document).ready(function () {
-    var vc = new AdminViewController();
-    vc.InitView();
+    if ($("#tblAdmins").length) {
+        var vc = new AdminViewController();
+        vc.InitView();
+    }
 });
