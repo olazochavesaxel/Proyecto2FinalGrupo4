@@ -172,32 +172,31 @@ namespace WebAPI.Controllers
             }
         }
 
-        /*Nuevo Subir imagen*/
-        //[HttpPost("UploadFotoPerfil")]
-        //public async Task<IActionResult> UploadFotoPerfil(IFormFile archivo)
-        //{
-        //    Console.WriteLine("¡Recibido archivo en el backend!");
+        // ✅ NUEVO SUBIR IMAGEN PERFIL
+        [HttpPost("UploadFotoPerfil")]
+        public async Task<IActionResult> UploadFotoPerfil(IFormFile archivo)
+        {
+            Console.WriteLine("¡Recibido archivo en el backend!");
 
-        //    if (archivo == null || archivo.Length == 0)
-        //        return BadRequest("Archivo inválido");
+            if (archivo == null || archivo.Length == 0)
+                return BadRequest("Archivo inválido");
 
-        //    var rutaCarpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "perfiles");
+            var rutaCarpeta = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "perfiles");
 
-        //    if (!Directory.Exists(rutaCarpeta))
-        //        Directory.CreateDirectory(rutaCarpeta);
+            if (!Directory.Exists(rutaCarpeta))
+                Directory.CreateDirectory(rutaCarpeta);
 
-        //    var nombreArchivo = Guid.NewGuid().ToString() + Path.GetExtension(archivo.FileName);
-        //    var rutaCompleta = Path.Combine(rutaCarpeta, nombreArchivo);
+            var nombreArchivo = Guid.NewGuid().ToString() + Path.GetExtension(archivo.FileName);
+            var rutaCompleta = Path.Combine(rutaCarpeta, nombreArchivo);
 
-        //    using (var stream = new FileStream(rutaCompleta, FileMode.Create))
-        //    {
-        //        await archivo.CopyToAsync(stream);
-        //    }
+            using (var stream = new FileStream(rutaCompleta, FileMode.Create))
+            {
+                await archivo.CopyToAsync(stream);
+            }
 
-        //    var rutaPublica = $"/uploads/perfiles/{nombreArchivo}";
+            var rutaPublica = $"/uploads/perfiles/{nombreArchivo}";
 
-        //    return Ok(new { url = rutaPublica });
-        //}
+            return Ok(new { url = rutaPublica });
+        }
     }
-
 }

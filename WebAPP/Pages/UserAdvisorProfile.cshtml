@@ -10,7 +10,7 @@
         <h1>Mi Perfil</h1>
         <div class="profile-box">
             <div class="profile-header">
-                <div class="profile-photo"></div>
+                <img id="fotoPerfil" class="profile-photo" src="" alt="Foto de perfil">
                 <div>
                     <h2 id="nombre-usuario">Usuario</h2>
                     <p id="rol-usuario">Asesor</p>
@@ -24,6 +24,14 @@
                     <p><strong>Primer Apellido:</strong> <span id="primer-apellido"></span></p>
                     <p><strong>Segundo Apellido:</strong> <span id="segundo-apellido"></span></p>
                     <p><strong>Correo Electrónico:</strong> <span id="correo"></span></p>
+                </div>
+
+                <div class="col-md-6">
+                    <h4>Acciones</h4>
+                    <div class="d-grid gap-3 mt-3">
+                        <button class="btn-action">Clientes asignados</button>
+                        <button class="btn-action">Ver inversiones de clientes</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -69,9 +77,20 @@
     .profile-photo {
         width: 100px;
         height: 100px;
+        object-fit: cover; /* para que no se deforme */
         background-color: white;
         border-radius: 50%;
         margin-right: 20px;
+    }
+
+    .btn-action {
+        background-color: #8F5AF5;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 20px;
+        font-weight: bold;
+        width: 100%;
     }
 </style>
 
@@ -116,5 +135,6 @@
         document.getElementById("primer-apellido").textContent = usuario.primerApellido;
         document.getElementById("segundo-apellido").textContent = usuario.segundoApellido;
         document.getElementById("correo").textContent = usuario.correo;
+        document.getElementById("fotoPerfil").src = "https://localhost:7057" + usuario.fotoPerfil;
     });
 </script>

@@ -36,6 +36,12 @@
             <label for="direccion" class="form-label">Dirección</label>
             <input type="text" class="form-control" id="direccion">
         </div>
+
+        <!-- Aquí agregamos el mapa debajo del input de dirección -->
+        <div class="full-width-map mb-3">
+            <div id="map" style="width: 100%; height: 300px; border-radius: 10px;"></div>
+        </div>
+
         <div class="mb-3">
             <label for="fotoPerfil" class="form-label">Foto de Perfil</label>
             <input type="file" class="form-control" id="fotoPerfil" accept="image/png, image/jpeg">
@@ -84,3 +90,61 @@
 <script src="~/js/Pages/Register.js"></script>
 <!-- Enlace al CSS -->
 <link rel="stylesheet" href="/css/Register.css">
+
+<!-- Script para inicializar Google Maps -->
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        function initializeMap() {
+            console.log("Google Maps Loaded");
+
+            const defaultLocation = { lat: 9.7489, lng: -83.7534 }; // Costa Rica
+
+            const map = new google.maps.Map(document.getElementById("map"), {
+                center: defaultLocation,
+                zoom: 8,
+            });
+
+            const geocoder = new google.maps.Geocoder();
+            let marker = null;
+
+            map.addListener("click", function (event) {
+                const clickedLocation = event.latLng;
+
+                if (marker) {
+                    marker.setPosition(clickedLocation);
+                } else {
+                    marker = new google.maps.Marker({
+                        position: clickedLocation,
+                        map: map,
+                    });
+                }
+
+                geocoder.geocode({ location: clickedLocation }, function (results, status) {
+                    if (status === "OK") {
+                        if (results[0]) {
+                            const direccion = results[0].formatted_address;
+                            document.getElementById("direccion").value = direccion;
+                        } else {
+                            Swal.fire("Sin resultados", "No se encontraron resultados.", "info");
+                        }
+                    } else {
+                        Swal.fire("Error", "Geocoder falló por: " + status, "error");
+                    }
+                });
+            });
+        }
+
+        if (typeof google !== 'undefined' && typeof google.maps !== 'undefined') {
+            console.log("Google Maps API ya cargada, inicializando mapa...");
+            initializeMap();
+        } else {
+            console.log("Esperando que se cargue la API de Google Maps...");
+            window.initMap = initializeMap;
+        }
+    });
+</script>
+
+<!-- Cargar API de Google Maps con tu API KEY -->
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC7fsyA7-m71NW5F-HlQBgzm6VIiKbbQw4&callback=initMap&libraries=places">
+</script>

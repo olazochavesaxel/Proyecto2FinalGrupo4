@@ -10,7 +10,7 @@
         <h1 class="text-center">Mi Perfil</h1>
         <div class="profile-box">
             <div class="profile-header">
-                <div class="profile-photo"></div>
+                <img id="fotoPerfil" class="profile-photo" src="" alt="Foto de perfil">
                 <div>
                     <h2 id="nombreUsuario">Usuario</h2>
                 </div>
@@ -26,6 +26,7 @@
                     <p><strong>Correo Electrónico:</strong> <span id="correo"></span></p>
                     <p><strong>Fecha de Nacimiento:</strong> <span id="fechaNacimiento"></span></p>
                 </div>
+
                 <div class="col-md-6">
                     <h4>Datos Financieros</h4>
                     <p><strong>Capital disponible:</strong> <span id="capitalDisponible"></span></p>
@@ -35,7 +36,6 @@
 
             <div class="text-end mt-4">
                 <a href="/EditarPerfil" class="btn-edit">Editar Perfil</a>
-
             </div>
         </div>
     </div>
@@ -77,6 +77,7 @@
     .profile-photo {
         width: 100px;
         height: 100px;
+        object-fit: cover; /* para que la imagen no se deforme */
         background-color: white;
         border-radius: 50%;
         margin-right: 20px;
@@ -96,6 +97,7 @@
     }
 </style>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const usuarioData = sessionStorage.getItem("usuario");
@@ -141,5 +143,8 @@
         const balance = parseFloat(user.balanceFinanciero);
         const capitalDisponible = (!isNaN(balance) && balance >= 0) ? `$${balance.toFixed(2)}` : "$0.00";
         document.getElementById("capitalDisponible").textContent = capitalDisponible;
+
+        // Agregamos la foto de perfil real
+        document.getElementById("fotoPerfil").src = "https://localhost:7057" + user.fotoPerfil;
     });
 </script>

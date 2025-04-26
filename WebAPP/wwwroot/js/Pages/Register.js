@@ -15,6 +15,11 @@
     form.addEventListener("submit", async function (e) {
         e.preventDefault();
 
+        if (!validarInputs()) {
+            alert("Por favor, corrige los errores antes de continuar.");
+            return;
+        }
+
         const rol = document.getElementById("rol").value;
 
         const datos = {
@@ -33,7 +38,6 @@
             rol: rol
         };
 
-        // Agregar campos según el rol
         if (rol === "Cliente") {
             datos.balanceFinanciero = parseFloat(document.getElementById("balanceFinanciero").value) || 0;
         }
@@ -105,3 +109,108 @@
         }
     });
 });
+
+// -------- Funciones de validación --------
+function validarCorreo(correo) {
+    const patron = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+    return patron.test(correo);
+}
+
+function validarContrasenna(contrasenna) {
+    const patron = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    return patron.test(contrasenna);
+}
+
+function validarTelefono(telefono) {
+    const patron = /^\d{8,11}$/;
+    return patron.test(telefono);
+}
+
+function validarCedula(cedula) {
+    const patron = /^\d{5,9}$/;
+    return patron.test(cedula);
+}
+
+function limpiarErrores() {
+    const inputs = document.querySelectorAll("input, select");
+    inputs.forEach(input => {
+        input.classList.remove("input-error");
+
+        const errorSpan = document.getElementById(input.id + "-error");
+        if (errorSpan) {
+            errorSpan.textContent = "";
+        }
+    });
+}
+
+function marcarError(id, mensaje) {
+    const input = document.getElementById(id);
+    if (input) {
+        input.classList.add("input-error");
+
+        let errorSpan = document.getElementById(id + "-error");
+        if (!errorSpan) {
+            errorSpan = document.createElement("span");
+            errorSpan.id = id + "-error";
+            errorSpan.classList.add("error-message");
+            input.parentNode.appendChild(errorSpan);
+        }
+        errorSpan.textContent = mensaje;
+    }
+}
+
+function validarInputs() {
+    limpiarErrores();
+    let valido = true;
+
+    const correo = document.getElementById("email").value.trim();
+    const contrasenna = document.getElementById("password").value.trim();
+    const confirmContrasenna = document.getElementById("confirmPassword") ? document.getElementById("confirmPassword").value.trim() : "";
+    const telefono = document.getElementById("telefono").value.trim();
+    const cedula = document.getElementById("cedula").value.trim();
+    const nombre = document.getElementById("nombre").value.trim();
+    const balance = document.getElementById("balanceFinanciero") ? parseFloat(document.getElementById("balanceFinanciero").value) : 0;
+    const comisiones = document.getElementById("ingresoComisiones") ? parseFloat(document.getElementById("ingresoComisiones").value) : 0;
+
+    if (!nombre) {
+        marcarError("nombre", "El nombre es obligatorio.");
+        valido = false;
+    }
+
+    if (!validarCorreo(correo)) {
+        marcarError("email", "Por favor ingresa un correo válido.");
+        valido = false;
+    }
+
+    if (!validarContrasenna(contrasenna)) {
+        marcarError("password", "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo.");
+        valido = false;
+    }
+
+    if (confirmContrasenna && contrasenna !== confirmContrasenna) {
+        marcarError("confirmPassword", "Las contraseñas no coinciden.");
+        valido = false;
+    }
+
+    if (!validarTelefono(telefono)) {
+        marcarError("telefono", "El teléfono debe tener entre 8 y 11 dígitos.");
+        valido = false;
+    }
+
+    if (!validarCedula(cedula)) {
+        marcarError("cedula", "La cédula debe tener entre 5 y 9 dígitos.");
+        valido = false;
+    }
+
+    if (balance < 0) {
+        marcarError("balanceFinanciero", "El balance no puede ser negativo.");
+        valido = false;
+    }
+
+    if (comisiones < 0) {
+        marcarError("ingresoComisiones", "El ingreso por comisiones no puede ser negativo.");
+        valido = false;
+    }
+
+    return valido;
+}

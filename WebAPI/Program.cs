@@ -42,9 +42,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 
-app.MapControllers();
-
-app.Run();
+// Sirve archivos estáticos de wwwroot (por defecto) y uploads (personalizado)
+app.UseStaticFiles(); // Sirve wwwroot
 
 app.UseStaticFiles(new StaticFileOptions
 {
@@ -53,3 +52,8 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = "/uploads"
 });
 
+// Mapear controladores
+app.MapControllers();
+
+// Ejecutar la app
+app.Run();
