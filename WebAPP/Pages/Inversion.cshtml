@@ -1,0 +1,164 @@
+﻿@page
+@model WebAPP.Pages.InversionModel
+@{
+    ViewData["Title"] = "Registrar Inversión";
+    Layout = "~/Pages/Shared/ClienteLayout.cshtml";
+}
+
+<div class="content">
+    <h1>Registrar Inversión</h1>
+
+    <form id="formInversion">
+        <div class="form-group">
+            <label for="accion">Símbolo de la Acción</label>
+            <input list="listaAcciones" id="accion" class="form-control" placeholder="Escribe o selecciona un símbolo" required />
+            <datalist id="listaAcciones">
+                <!-- Aquí se llenan dinámicamente las opciones -->
+            </datalist>
+        </div>
+
+        <div class="form-group">
+            <label for="cantidad">Cantidad</label>
+            <input type="number" id="cantidad" class="form-control" min="1" required />
+        </div>
+
+        <div class="form-group">
+            <label for="tipo">Tipo de Transacción</label>
+            <select id="tipo" class="form-control" required>
+                <option value="">Seleccione</option>
+                <option value="Compra">Compra</option>
+                <option value="Venta">Venta</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-purple">Registrar Inversión</button>
+    </form>
+</div>
+
+<style>
+    body, html {
+        background-color: black;
+        color: white;
+        margin: 0;
+        padding: 0;
+    }
+
+    .content {
+        padding: 30px;
+        margin-left: 220px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: none;
+        background-color: white;
+        color: black;
+    }
+
+    .btn-purple {
+        background-color: #8F5AF5;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+        .btn-purple:hover {
+            background-color: #A379F7;
+        }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const usuarioData = sessionStorage.getItem("usuario");
+
+        if (!usuarioData) {
+            Swal.fire({
+                icon: "warning",
+                title: "Tu sesión ha sido cerrada",
+                text: "Por favor inicia sesión nuevamente.",
+                confirmButtonColor: "#8F5AF5",
+                backdrop: `rgba(0, 0, 0, 0.95)`
+            }).then(() => {
+                window.location.href = "/Index";
+            });
+            return;
+        }
+
+        try {
+            // 🔥 Cargar símbolos disponibles
+            const res = await fetch("https://localhost:7057/api/Accion/RetrieveAll");
+            const acciones = await res.json();
+
+            const datalist = document.getElementById("listaAcciones");
+            acciones.forEach(a => {
+                const option = document.createElement("option");
+                option.value = a.simbolo;
+                datalist.appendChild(option);
+            });
+
+        } catch (error) {
+            console.error("Error al cargar acciones:", error);
+        }
+
+        // 🔥 Manejar submit
+        document.getElementById("formInversion").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const usuario = JSON.parse(sessionStorage.getItem("usuario"));
+            const simbolo = document.getElementById("accion").value.trim();
+            const cantidad = parseInt(document.getElementById("cantidad").value.trim());
+            const tipo = document.getElementById("tipo").value.trim();
+
+            if (!simbolo || !cantidad || !tipo) {
+                Swal.fire("Error", "Por favor completa todos los campos.", "error");
+                return;
+            }
+
+            try {
+                // 🔥 Buscar el ID de la acción basado en el símbolo
+                const accionRes = await fetch("https://localhost:7057/api/Accion/RetrieveAll");
+                const acciones = await accionRes.json();
+                const accionSeleccionada = acciones.find(a => a.simbolo.toLowerCase() === simbolo.toLowerCase());
+
+                if (!accionSeleccionada) {
+                    Swal.fire("Error", "No se encontró una acción con ese símbolo.", "error");
+                    return;
+                }
+
+                const inversion = {
+                    idCliente: usuario.id,
+                    idAccion: accionSeleccionada.id,
+                    cantidad: cantidad,
+                    tipo: tipo
+                };
+
+                // 🔥 Enviar la inversión
+                const response = await fetch("https://localhost:7057/api/CompraVenta/RegistrarInversion", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(inversion)
+                });
+
+                if (response.ok) {
+                    Swal.fire("¡Éxito!", "Inversión registrada correctamente.", "success")
+                        .then(() => window.location.reload());
+                } else {
+                    Swal.fire("Error", "No se pudo registrar la inversión.", "error");
+                }
+            } catch (error) {
+                console.error("Error al registrar inversión:", error);
+                Swal.fire("Error", "Error en el sistema al registrar.", "error");
+            }
+        });
+    });
+</script>
