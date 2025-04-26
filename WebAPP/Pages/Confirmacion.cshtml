@@ -1,4 +1,4 @@
-﻿@page
+@page
 @model WebAPP.Pages.ConfirmacionModel
 @{
 }
@@ -49,7 +49,7 @@
 
     async function guardarTransaccionPaypal(orderId, tipo, rol, userId) {
         if (!orderId || !tipo || !rol || isNaN(userId)) {
-            console.error("❌ Faltan datos para guardar la transacción", { orderId, tipo, rol, userId });
+            console.error(" Faltan datos para guardar la transacción", { orderId, tipo, rol, userId });
             return;
         }
 
@@ -72,12 +72,12 @@
             const result = await response.json();
 
             if (response.ok) {
-                console.log("✅ Transacción guardada exitosamente:", result.message);
+                console.log(" Transacción guardada exitosamente:", result.message);
             } else {
-                console.error("❌ Error al guardar la transacción:", result);
+                console.error(" Error al guardar la transacción:", result);
             }
         } catch (error) {
-            console.error("❌ Error inesperado al guardar transacción:", error.message);
+            console.error(" Error inesperado al guardar transacción:", error.message);
         }
     }
 </script>

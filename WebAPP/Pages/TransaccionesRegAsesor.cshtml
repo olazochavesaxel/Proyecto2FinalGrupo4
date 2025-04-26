@@ -1,0 +1,110 @@
+﻿@page
+@model WebAPP.Pages.TransaccionesRegAsesorModel
+@{
+    ViewData["Title"] = "Transacciones de mis clientes";
+    Layout = "~/Pages/Shared/AsesorLayout.cshtml";
+}
+
+<h2 style="color:white; text-align:center;">Transacciones de mis clientes</h2>
+
+<div style="margin-bottom: 20px;">
+    <input type="text" id="buscadorCorreo" placeholder="Buscar por correo..." class="form-control" />
+</div>
+
+<table id="tablaTransaccionesAsesor" class="display" style="width:100%">
+    <thead>
+        <tr>
+            <th>Monto</th>
+            <th>Tipo</th>
+            <th>Estado</th>
+            <th>Fecha</th>
+            <th>Correo del Cliente</th>
+            <th>Realizada por</th>
+        </tr>
+    </thead>
+</table>
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            const usuarioData = sessionStorage.getItem("usuario");
+
+            if (!usuarioData) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Tu sesión ha sido cerrada",
+                    text: "Para ingresar nuevamente por favor inicia sesión.",
+                    backdrop: `rgba(0, 0, 0, 0.95)`,
+                    confirmButtonColor: "#8F5AF5"
+                }).then(() => {
+                    window.location.href = "/Index";
+                });
+                return;
+            }
+
+            let usuario;
+            try {
+                usuario = JSON.parse(usuarioData);
+            } catch (e) {
+                sessionStorage.clear();
+                Swal.fire({
+                    icon: "warning",
+                    title: "Sesión inválida",
+                    text: "Para ingresar nuevamente por favor inicia sesión.",
+                    backdrop: `rgba(0, 0, 0, 0.95)`,
+                    confirmButtonColor: "#8F5AF5"
+                }).then(() => {
+                    window.location.href = "/Index";
+                });
+                return;
+            }
+
+            try {
+                const idAsesor = usuario.id;
+                const response = await fetch(`https://localhost:7057/api/TransaccionAsesor/RetrieveByAsesor/${idAsesor}`);
+
+                if (!response.ok) {
+                    throw new Error("No se pudo cargar la información.");
+                }
+
+                const data = await response.json();
+
+                const tabla = $('#tablaTransaccionesAsesor').DataTable({
+                    data: data,
+                    columns: [
+                        { data: "monto" },
+                        { data: "tipo" },
+                        { data: "estado" },
+                        {
+                            data: "created",
+                            render: fecha => new Date(fecha).toLocaleString()
+                        },
+                        { data: "correoCliente" }, // Campo esperado en el DTO
+                        {
+                            data: "realizadaPorAsesor",
+                            render: valor => valor ? "Asesor" : "Cliente"
+                        }
+                    ]
+                });
+
+                // Buscador de correo
+                $('#buscadorCorreo').on('keyup', function () {
+                    tabla.column(4).search(this.value).draw();
+                });
+
+            } catch (err) {
+                console.error("Error al cargar transacciones:", err);
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "No se pudo cargar el historial de transacciones.",
+                    backdrop: `rgba(0, 0, 0, 0.95)`,
+                    confirmButtonColor: "#8F5AF5"
+                });
+            }
+        });
+    </script>
+}

@@ -157,15 +157,23 @@
                 return;
             }
 
-            const trans = {
-                monto,
-                tipo,
-                estado,
-                idCliente: user.id
-            };
+                const trans = {
+      id: 0,
+      created: "2025-04-24T22:34:10.239Z",
+      monto: 0,
+      tipo: "string",
+      idCliente: 0,
+      idComision: 0,
+      tarifaBaseAplicada: 0,
+      impuestoAplicado: 0,
+      montoComision: 0,
+      reglaUsada: "string",
+      idAsesorEjecutor: 0,
+      id_Paypal: 0
+    };
 
             try {
-                const res = await fetch("https://localhost:7057/api/transaccioncliente", {
+                const res = await fetch("https://localhost:7057/api/TransaccionCliente/Create", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(trans)
