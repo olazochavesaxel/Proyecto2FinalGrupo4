@@ -19,7 +19,7 @@ namespace DataAccess.CRUDs
 
             var sqlOperation = new SqlOperation()
             {
-                ProcedureName = "CREAR_TRANSACCION_CLIENTE"
+                ProcedureName = "CRE_TRANSACCION_CLIENTE"
             };
 
             sqlOperation.AddDoubleParameter("Monto", trans.Monto);

@@ -7,10 +7,6 @@
 
 <h2 style="color:white; text-align:center;">Transacciones de mis clientes</h2>
 
-<div style="margin-bottom: 20px;">
-    <input type="text" id="buscadorCorreo" placeholder="Buscar por correo..." class="form-control" />
-</div>
-
 <table id="tablaTransaccionesAsesor" class="display" style="width:100%">
     <thead>
         <tr>
@@ -18,8 +14,10 @@
             <th>Tipo</th>
             <th>Estado</th>
             <th>Fecha</th>
-            <th>Correo del Cliente</th>
-            <th>Realizada por</th>
+            <th>ID Cliente</th>
+            <th>ID Asesor</th>
+            <th>ID Transacción</th>
+            <th>ID PayPal</th>
         </tr>
     </thead>
 </table>
@@ -72,7 +70,7 @@
 
                 const data = await response.json();
 
-                const tabla = $('#tablaTransaccionesAsesor').DataTable({
+                $('#tablaTransaccionesAsesor').DataTable({
                     data: data,
                     columns: [
                         { data: "monto" },
@@ -82,19 +80,12 @@
                             data: "created",
                             render: fecha => new Date(fecha).toLocaleString()
                         },
-                        { data: "correoCliente" }, // Campo esperado en el DTO
-                        {
-                            data: "realizadaPorAsesor",
-                            render: valor => valor ? "Asesor" : "Cliente"
-                        }
+                        { data: "idCliente" },
+                        { data: "idAsesor" },
+                        { data: "id" },
+                        { data: "id_Paypal" }
                     ]
                 });
-
-                // Buscador de correo
-                $('#buscadorCorreo').on('keyup', function () {
-                    tabla.column(4).search(this.value).draw();
-                });
-
             } catch (err) {
                 console.error("Error al cargar transacciones:", err);
                 Swal.fire({
