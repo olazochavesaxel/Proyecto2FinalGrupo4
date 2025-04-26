@@ -9,19 +9,24 @@
 
 <label for="monto">Monto:</label>
 <input type="number" id="monto" step="0.01" placeholder="Ingrese el monto">
-<button onclick="crearOrden()">Pagar con PayPal</button>
+
+<div style="margin-top: 10px;">
+    <button onclick="crearOrden('Ingreso')">Pagar como Ingreso</button>
+    <button onclick="crearOrden('Egreso')">Pagar como Egreso</button>
+</div>
 
 <div id="resultado"></div>
 
 <script>
-    async function crearOrden() {
+    async function crearOrden(tipoTransaccion) {
         const monto = document.getElementById("monto").value;
-
 
         if (!monto || parseFloat(monto) <= 0) {
             alert("Ingrese un monto válido.");
             return;
         }
+
+        localStorage.setItem("tipo_transaccion", tipoTransaccion); // Guardar tipo en localStorage
 
         try {
             const response = await fetch('https://localhost:7057/api/Paypal/crear-orden', {
@@ -33,11 +38,11 @@
             const data = await response.json();
 
             if (data.link) {
-                localStorage.setItem("paypal_order_id", data.orderId);
-                window.location.href = data.link;
+                localStorage.setItem("paypal_order_id", data.orderId); // Guardar ID de orden
+                window.location.href = data.link; // Redirigir a PayPal
             } else {
                 document.getElementById("resultado").innerText = "Error creando orden.";
-                console.error("Respuesta de backend:", data);
+                console.error("Respuesta del backend:", data);
             }
         } catch (error) {
             document.getElementById("resultado").innerText = "Error: " + error.message;
